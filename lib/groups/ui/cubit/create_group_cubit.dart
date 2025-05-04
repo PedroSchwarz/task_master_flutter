@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:task_master/groups/data/repository/groups_repository.dart';
+import 'package:task_master/invites/invites.dart';
 import 'package:task_master/users/data/models/user_response.dart';
 import 'package:task_master/users/data/repository/users_repository.dart';
 
@@ -9,6 +10,7 @@ part 'create_group_cubit.freezed.dart';
 class CreateGroupCubit extends Cubit<CreateGroupState> {
   CreateGroupCubit({
     required this.groupsRepository,
+    required this.invitesRepository,
     required this.usersRepository,
   }) : super(
          const CreateGroupState(
@@ -24,6 +26,9 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
 
   @visibleForTesting
   final GroupsRepository groupsRepository;
+
+  @visibleForTesting
+  final InvitesRepository invitesRepository;
 
   @visibleForTesting
   final UsersRepository usersRepository;
@@ -60,10 +65,16 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
   Future<void> createGroup() async {
     emit(state.copyWith(isLoading: true));
     try {
-      await groupsRepository.createGroup(
+      final groupId = await groupsRepository.createGroup(
         name: state.name,
         description: state.description,
       );
+
+      await Future.wait([
+        for (final id in state.selectedUsersIds)
+          invitesRepository.create(groupId: groupId, userId: id),
+      ]);
+
       emit(state.copyWith(shouldGoBack: true));
     } catch (e) {
       print(e);

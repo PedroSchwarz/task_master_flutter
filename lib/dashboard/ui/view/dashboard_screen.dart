@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
+import 'package:task_master/dashboard/ui/cubit/dashboard_cubit.dart';
+import 'package:task_master/groups/groups.dart';
 import 'package:task_master/groups/ui/view/create_group_screen.dart';
+import 'package:task_master/groups/ui/view/group_content_unavailable.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -13,51 +17,89 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  final bloc = getIt<DashboardCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    bloc.load();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Dashboard')),
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.s),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "You don't belong to any groups yet.",
-                style: theme.textTheme.titleLarge,
-                textAlign: TextAlign.center,
-              ),
-              RichText(
-                text: TextSpan(
-                  style: theme.textTheme.titleMedium,
-                  children: [
-                    const TextSpan(
-                      text: 'You can create a new group by tapping the',
-                    ),
-                    TextSpan(
-                      text: ' + ',
-                      style: theme.textTheme.headlineLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    const TextSpan(text: 'button or join an existing one.'),
-                  ],
+      appBar: AppBar(
+        title: const Text('Dashboard'),
+        actions: [
+          BlocSelector<DashboardCubit, DashboardState, int>(
+            bloc: bloc,
+            selector: (state) => state.invites.length,
+            builder:
+                (context, invitesCount) => Badge.count(
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                  offset: const Offset(-5, 0),
+                  count: invitesCount,
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.mail_outline),
+                  ),
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+          ),
+        ],
+      ),
+      drawer: Drawer(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.s),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Spacer(),
+                TextButton(
+                  onPressed: bloc.signOut,
+                  child: const Text('Sign out'),
+                ),
+              ],
+            ),
           ),
         ),
+      ),
+      body: Column(
+        children: [
+          BlocSelector<DashboardCubit, DashboardState, bool>(
+            bloc: bloc,
+            selector: (state) => state.isLoading,
+            builder:
+                (context, isLoading) =>
+                    isLoading
+                        ? const LinearProgressIndicator()
+                        : const SizedBox.shrink(),
+          ),
+          BlocBuilder<DashboardCubit, DashboardState>(
+            bloc: bloc,
+            builder:
+                (context, state) =>
+                    state.groups.isEmpty
+                        ? const Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(AppSpacing.s),
+                            child: GroupContentUnavailable(),
+                          ),
+                        )
+                        : Expanded(child: GroupsList(groups: state.groups)),
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         label: const Text('Create Group'),
         icon: const Icon(Icons.add),
-        onPressed: () => context.goNamed(CreateGroupScreen.routeName),
+        onPressed: () async {
+          if (context.mounted) {
+            await context.pushNamed(CreateGroupScreen.routeName);
+            bloc.load();
+          }
+        },
       ),
     );
   }

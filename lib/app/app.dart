@@ -4,4 +4,5 @@ export './design_system/components/app_sliver_header_wrapper.dart';
 export './design_system/components/app_text_field.dart';
 export './design_system/theme/app_spacing.dart';
 export './design_system/theme/app_theme.dart';
+export './storage/app_local_storage.dart';
 export './ui/app.dart';

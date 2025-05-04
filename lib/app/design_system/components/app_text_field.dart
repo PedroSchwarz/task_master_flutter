@@ -8,7 +8,7 @@ class AppTextField extends StatefulWidget {
     this.textCapitalization = TextCapitalization.sentences,
     this.initialValue,
     this.error,
-    this.maxLines,
+    this.maxLines = 1,
     this.obscureText,
     this.suffixIcon,
     super.key,

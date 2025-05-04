@@ -16,5 +16,5 @@ abstract class GroupsRemoteDataSource {
 
   @POST('/')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
-  Future<GroupResponse> create(@Body() CreateGroupRequest request);
+  Future<String> create(@Body() CreateGroupRequest request);
 }

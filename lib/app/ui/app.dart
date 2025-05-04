@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_master/app/design_system/theme/app_theme.dart';
-import 'package:task_master/app/ui/navigation.dart';
+import 'package:go_router/go_router.dart';
+import 'package:task_master/app/app.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -16,7 +16,7 @@ class App extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.system, // Light/dark based on system
-      routerConfig: router,
+      routerConfig: getIt<GoRouter>(),
     );
   }
 }

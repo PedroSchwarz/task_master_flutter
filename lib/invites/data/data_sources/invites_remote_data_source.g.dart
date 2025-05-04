@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'groups_remote_data_source.dart';
+part of 'invites_remote_data_source.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,9 +8,9 @@ part of 'groups_remote_data_source.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
-class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
-  _GroupsRemoteDataSource(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= '/groups';
+class _InvitesRemoteDataSource implements InvitesRemoteDataSource {
+  _InvitesRemoteDataSource(this._dio, {this.baseUrl, this.errorLogger}) {
+    baseUrl ??= '/invites';
   }
 
   final Dio _dio;
@@ -20,13 +20,13 @@ class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<List<GroupResponse>> fetchAll() async {
+  Future<List<InviteResponse>> fetchAll() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': 'application/json'};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<GroupResponse>>(
+    final _options = _setStreamType<List<InviteResponse>>(
       Options(
             method: 'GET',
             headers: _headers,
@@ -42,13 +42,13 @@ class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<GroupResponse> _value;
+    late List<InviteResponse> _value;
     try {
       _value =
           _result.data!
               .map(
                 (dynamic i) =>
-                    GroupResponse.fromJson(i as Map<String, dynamic>),
+                    InviteResponse.fromJson(i as Map<String, dynamic>),
               )
               .toList();
     } on Object catch (e, s) {
@@ -59,13 +59,13 @@ class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
   }
 
   @override
-  Future<String> create(CreateGroupRequest request) async {
+  Future<void> create(CreateInviteRequest request) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': 'application/json'};
     _headers.removeWhere((k, v) => v == null);
     final _data = request;
-    final _options = _setStreamType<String>(
+    final _options = _setStreamType<void>(
       Options(
             method: 'POST',
             headers: _headers,
@@ -80,15 +80,7 @@ class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    final _result = await _dio.fetch<String>(_options);
-    late String _value;
-    try {
-      _value = _result.data!;
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
+    await _dio.fetch<void>(_options);
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

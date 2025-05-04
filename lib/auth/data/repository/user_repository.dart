@@ -9,10 +9,8 @@ class UserRepository {
   @visibleForTesting
   final UserLocalDataSource userLocalDataSource;
 
-  BehaviorSubject<UserData?> userController = BehaviorSubject<UserData?>.seeded(
-    null,
-  );
-  UserData? get currentUser => userController.value;
+  final userController = BehaviorSubject<UserData?>.seeded(null);
+  ValueStream<UserData?> get currentUser => userController.stream;
 
   Future<void> init() async {
     final storedUser = await userLocalDataSource.load();

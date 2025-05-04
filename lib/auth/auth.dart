@@ -2,6 +2,7 @@ export './data/data_sources/auth_remote_data_source.dart';
 export './data/data_sources/credentials_local_data_source.dart';
 export './data/data_sources/user_local_data_source.dart';
 export './data/interceptors/auth_interceptor.dart';
+export './data/models/user_data.dart';
 export './data/repository/auth_repository.dart';
 export './data/repository/credentials_repository.dart';
 export './data/repository/user_repository.dart';

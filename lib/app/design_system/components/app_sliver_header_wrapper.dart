@@ -32,9 +32,7 @@ class AppSliverHeaderWrapper extends StatelessWidget {
       pinned: pinned,
       delegate: _AppPersistentHeaderDelegate(
         child: DecoratedBox(
-          decoration: BoxDecoration(
-            color: backgroundColor ?? Theme.of(context).colorScheme.onPrimary,
-          ),
+          decoration: const BoxDecoration(),
           child: Padding(padding: EdgeInsets.all(padding), child: child),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:rxdart/streams.dart';
 import 'package:task_master/auth/data/data_sources/auth_remote_data_source.dart';
 import 'package:task_master/auth/data/models/credentials_data.dart';
 import 'package:task_master/auth/data/models/login_request.dart';
@@ -24,7 +25,7 @@ class AuthRepository {
   @visibleForTesting
   final CredentialsRepository credentialsRepository;
 
-  UserData? get currentUser => userRepository.currentUser;
+  ValueStream<UserData?> get currentUser => userRepository.currentUser;
 
   Future<void> init() async {
     await userRepository.init();
@@ -100,6 +101,11 @@ class AuthRepository {
     } catch (e) {
       return RegisterResult.networkError;
     }
+  }
+
+  Future<void> signOut() async {
+    await credentialsRepository.updateCredentials(null);
+    await userRepository.updateUser(null);
   }
 }
 
