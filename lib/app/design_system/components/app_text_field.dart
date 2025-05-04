@@ -8,6 +8,7 @@ class AppTextField extends StatefulWidget {
     this.textCapitalization = TextCapitalization.sentences,
     this.initialValue,
     this.error,
+    this.maxLines,
     this.obscureText,
     this.suffixIcon,
     super.key,
@@ -19,6 +20,7 @@ class AppTextField extends StatefulWidget {
   final TextCapitalization textCapitalization;
   final String? initialValue;
   final String? error;
+  final int? maxLines;
   final bool? obscureText;
   final Widget? suffixIcon;
 
@@ -43,6 +45,7 @@ class _AppTextFieldState extends State<AppTextField> {
       obscureText: widget.obscureText ?? false,
       keyboardType: widget.keyboardType,
       textCapitalization: widget.textCapitalization,
+      maxLines: widget.maxLines,
       decoration: InputDecoration(
         label: Text(widget.label),
         error: widget.error != null ? Text(widget.error!) : null,

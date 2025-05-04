@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
-import 'package:task_master/auth/ui/view/login_screen.dart';
-import 'package:task_master/auth/ui/view/register_screen.dart';
+import 'package:task_master/auth/auth.dart';
+import 'package:task_master/dashboard/ui/view/dashboard_screen.dart';
 import 'package:task_master/splash/ui/cubit/splash_cubit.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void _listenNavigationFlow(BuildContext context, SplashState state) {
     switch (state.navigation) {
       case SplashNavigation.home:
-        context.goNamed(RegisterScreen.routeName);
+        context.goNamed(DashboardScreen.routeName);
       default:
         context.goNamed(LoginScreen.routeName);
     }

@@ -6,6 +6,7 @@ part 'user_data.g.dart';
 @freezed
 abstract class UserData with _$UserData {
   const factory UserData({
+    @JsonKey(name: '_id', includeIfNull: false) String? id,
     required String firstName,
     required String lastName,
     required String email,

@@ -6,8 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_master/app/configurations/configurations.dart';
 import 'package:task_master/app/storage/app_local_storage.dart';
 import 'package:task_master/auth/auth.dart';
+import 'package:task_master/groups/data/data_sources/groups_remote_data_source.dart';
+import 'package:task_master/groups/data/repository/groups_repository.dart';
+import 'package:task_master/groups/ui/cubit/create_group_cubit.dart';
 import 'package:task_master/splash/data/repository/splash_repository.dart';
 import 'package:task_master/splash/ui/cubit/splash_cubit.dart';
+import 'package:task_master/users/data/data_sources/users_remote_data_source.dart';
+import 'package:task_master/users/data/repository/users_repository.dart';
 
 final getIt = GetIt.instance;
 
@@ -88,7 +93,17 @@ class Locators extends BaseServiceLocators {
       ..registerSingleton(SplashRepository(authRepository: getIt()))
       ..registerFactory(() => SplashCubit(splashRepository: getIt()))
       ..registerFactory(() => LoginCubit(authRepository: getIt()))
-      ..registerFactory(() => RegisterCubit(authRepository: getIt()));
+      ..registerFactory(() => RegisterCubit(authRepository: getIt()))
+      ..registerSingleton(UsersRemoteDataSource(getIt()))
+      ..registerSingleton(UsersRepository(usersRemoteDataSource: getIt()))
+      ..registerSingleton(GroupsRemoteDataSource(getIt()))
+      ..registerSingleton(GroupsRepository(groupsRemoteDataSource: getIt()))
+      ..registerFactory(
+        () => CreateGroupCubit(
+          groupsRepository: getIt(),
+          usersRepository: getIt(),
+        ),
+      );
   }
 
   Dio createDio({required String baseUrl}) {

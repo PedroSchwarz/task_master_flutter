@@ -28,9 +28,13 @@ class AppTheme {
     ),
     scaffoldBackgroundColor: lightBackgroundColor,
     textTheme: AppTypography.defaultTextTheme,
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       backgroundColor: lightBackgroundColor,
       foregroundColor: darkBackgroundColor,
+      titleTextStyle: AppTypography.defaultTextTheme.displaySmall?.copyWith(
+        color: primaryRed,
+      ),
+      centerTitle: false,
     ),
     inputDecorationTheme: InputDecorationTheme(
       border: OutlineInputBorder(
@@ -52,9 +56,13 @@ class AppTheme {
       secondary: secondaryColor,
     ),
     scaffoldBackgroundColor: darkBackgroundColor,
-    appBarTheme: const AppBarTheme(
+    appBarTheme: AppBarTheme(
       backgroundColor: darkBackgroundColor,
       foregroundColor: lightBackgroundColor,
+      titleTextStyle: AppTypography.defaultTextTheme.displaySmall?.copyWith(
+        color: primaryRed,
+      ),
+      centerTitle: false,
     ),
     textTheme: AppTypography.defaultTextTheme,
     inputDecorationTheme: InputDecorationTheme(
