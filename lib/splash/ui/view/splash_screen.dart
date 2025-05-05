@@ -32,14 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
       listener: _listenNavigationFlow,
       child: const Scaffold(
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Loading...'),
-              Gap(AppSpacing.s),
-              CircularProgressIndicator(),
-            ],
-          ),
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Loading...'), Gap(AppSpacing.s), CircularProgressIndicator()]),
         ),
       ),
     );

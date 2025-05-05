@@ -21,9 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return BlocListener<RegisterCubit, RegisterState>(
       bloc: bloc,
-      listenWhen:
-          (previous, current) =>
-              previous.isAuthenticated != current.isAuthenticated,
+      listenWhen: (previous, current) => previous.isAuthenticated != current.isAuthenticated,
       listener: _listenNavigationFlow,
       child: GestureDetector(
         onTap: () {
@@ -44,23 +42,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   BlocSelector<RegisterCubit, RegisterState, bool>(
                     bloc: bloc,
                     selector: (state) => state.isLoading,
-                    builder:
-                        (context, isLoading) =>
-                            isLoading
-                                ? const LinearProgressIndicator()
-                                : const SizedBox.shrink(),
+                    builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
                   ),
                   const Spacer(),
-                  AppTextField(
-                    label: 'First Name',
-                    onChanged: bloc.updateFirstName,
-                    textCapitalization: TextCapitalization.words,
-                  ),
-                  AppTextField(
-                    label: 'Last Name',
-                    onChanged: bloc.updateLastName,
-                    textCapitalization: TextCapitalization.words,
-                  ),
+                  AppTextField(label: 'First Name', onChanged: bloc.updateFirstName, textCapitalization: TextCapitalization.words),
+                  AppTextField(label: 'Last Name', onChanged: bloc.updateLastName, textCapitalization: TextCapitalization.words),
                   BlocSelector<RegisterCubit, RegisterState, String?>(
                     bloc: bloc,
                     selector: (state) => state.emailError,
@@ -84,20 +70,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               onChanged: bloc.updatePassword,
                               obscureText: state.hidePassword,
                               error: state.passwordError,
-                              suffixIcon: TogglePasswordButton(
-                                onPressed: bloc.togglePasswordVisibility,
-                                value: state.hidePassword,
-                              ),
+                              suffixIcon: TogglePasswordButton(onPressed: bloc.togglePasswordVisibility, value: state.hidePassword),
                             ),
                             AppTextField(
                               label: 'Confirm Password',
                               onChanged: bloc.updateConfirmPassword,
                               obscureText: state.hidePassword,
                               error: state.confirmPasswordError,
-                              suffixIcon: TogglePasswordButton(
-                                onPressed: bloc.togglePasswordVisibility,
-                                value: state.hidePassword,
-                              ),
+                              suffixIcon: TogglePasswordButton(onPressed: bloc.togglePasswordVisibility, value: state.hidePassword),
                             ),
                           ],
                         ),
@@ -105,11 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   BlocSelector<RegisterCubit, RegisterState, String?>(
                     bloc: bloc,
                     selector: (state) => state.errorMessage,
-                    builder:
-                        (context, errorMessage) =>
-                            errorMessage != null
-                                ? Text(errorMessage)
-                                : const SizedBox.shrink(),
+                    builder: (context, errorMessage) => errorMessage != null ? Text(errorMessage) : const SizedBox.shrink(),
                   ),
                   const Spacer(),
                   Column(
@@ -118,23 +94,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       BlocSelector<RegisterCubit, RegisterState, bool>(
                         bloc: bloc,
                         selector: (state) => state.isButtonEnabled,
-                        builder:
-                            (context, isEnabled) => FilledButton(
-                              onPressed: isEnabled ? bloc.register : null,
-                              child: const Text('Register'),
-                            ),
+                        builder: (context, isEnabled) => FilledButton(onPressed: isEnabled ? bloc.register : null, child: const Text('Register')),
                       ),
                       BlocSelector<RegisterCubit, RegisterState, bool>(
                         bloc: bloc,
                         selector: (state) => state.isLoading,
                         builder:
-                            (context, isLoading) => TextButton(
-                              onPressed: isLoading ? null : context.pop,
-                              child: const Text(
-                                'Login',
-                                textAlign: TextAlign.start,
-                              ),
-                            ),
+                            (context, isLoading) =>
+                                TextButton(onPressed: isLoading ? null : context.pop, child: const Text('Login', textAlign: TextAlign.start)),
                       ),
                     ],
                   ),

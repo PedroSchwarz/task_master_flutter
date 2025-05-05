@@ -12,23 +12,13 @@ class GroupContentUnavailable extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const Spacer(),
-        Text(
-          "You don't belong to any groups yet.",
-          style: theme.textTheme.titleLarge,
-          textAlign: TextAlign.center,
-        ),
+        Text("You don't belong to any groups yet.", style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
         RichText(
           text: TextSpan(
             style: theme.textTheme.titleMedium,
             children: [
               const TextSpan(text: 'You can create a new group by tapping the'),
-              TextSpan(
-                text: ' + ',
-                style: theme.textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.primary,
-                ),
-              ),
+              TextSpan(text: ' + ', style: theme.textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary)),
               const TextSpan(text: 'button or join an existing one.'),
             ],
           ),

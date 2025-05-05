@@ -3,10 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:task_master/auth/data/repository/credentials_repository.dart';
 
 class AuthInterceptor extends Interceptor {
-  const AuthInterceptor({
-    required this.credentialsRepository,
-    required this.dio,
-  });
+  const AuthInterceptor({required this.credentialsRepository, required this.dio});
 
   @visibleForTesting
   final CredentialsRepository credentialsRepository;
@@ -15,10 +12,7 @@ class AuthInterceptor extends Interceptor {
   final Dio dio;
 
   @override
-  void onRequest(
-    RequestOptions options,
-    RequestInterceptorHandler handler,
-  ) async {
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final credentials = await credentialsRepository.getCredentials();
 
     if (credentials != null) {

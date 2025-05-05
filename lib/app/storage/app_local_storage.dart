@@ -2,10 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppLocalStorage {
-  const AppLocalStorage({
-    required this.secureStorage,
-    required this.sharedPreferences,
-  });
+  const AppLocalStorage({required this.secureStorage, required this.sharedPreferences});
 
   final FlutterSecureStorage secureStorage;
   final SharedPreferences sharedPreferences;

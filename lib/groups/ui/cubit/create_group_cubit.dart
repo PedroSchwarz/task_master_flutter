@@ -8,21 +8,18 @@ import 'package:task_master/users/data/repository/users_repository.dart';
 part 'create_group_cubit.freezed.dart';
 
 class CreateGroupCubit extends Cubit<CreateGroupState> {
-  CreateGroupCubit({
-    required this.groupsRepository,
-    required this.invitesRepository,
-    required this.usersRepository,
-  }) : super(
-         const CreateGroupState(
-           users: [],
-           selectedUsersIds: [],
-           name: '',
-           description: '',
-           showInviteUsersSheet: false,
-           isLoading: false,
-           shouldGoBack: false,
-         ),
-       );
+  CreateGroupCubit({required this.groupsRepository, required this.invitesRepository, required this.usersRepository})
+    : super(
+        const CreateGroupState(
+          users: [],
+          selectedUsersIds: [],
+          name: '',
+          description: '',
+          showInviteUsersSheet: false,
+          isLoading: false,
+          shouldGoBack: false,
+        ),
+      );
 
   @visibleForTesting
   final GroupsRepository groupsRepository;
@@ -65,15 +62,9 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
   Future<void> createGroup() async {
     emit(state.copyWith(isLoading: true));
     try {
-      final groupId = await groupsRepository.createGroup(
-        name: state.name,
-        description: state.description,
-      );
+      final groupId = await groupsRepository.createGroup(name: state.name, description: state.description);
 
-      await Future.wait([
-        for (final id in state.selectedUsersIds)
-          invitesRepository.create(groupId: groupId, userId: id),
-      ]);
+      await Future.wait([for (final id in state.selectedUsersIds) invitesRepository.create(groupId: groupId, userId: id)]);
 
       emit(state.copyWith(shouldGoBack: true));
     } catch (e) {

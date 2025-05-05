@@ -44,9 +44,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   void updatePassword(String password) {
     emit(state.copyWith(password: password, errorMessage: null));
 
-    final passwordRegex = RegExp(
-      r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$',
-    );
+    final passwordRegex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$');
     if (!passwordRegex.hasMatch(password)) {
       emit(state.copyWith(passwordError: 'Invalid password'));
     } else {
@@ -77,12 +75,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   Future<void> register() async {
     emit(state.copyWith(isLoading: true, errorMessage: null));
 
-    final result = await authRepository.register(
-      firstName: state.firstName,
-      lastName: state.lastName,
-      email: state.email,
-      password: state.password,
-    );
+    final result = await authRepository.register(firstName: state.firstName, lastName: state.lastName, email: state.email, password: state.password);
 
     switch (result) {
       case RegisterResult.success:

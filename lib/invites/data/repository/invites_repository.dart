@@ -9,13 +9,19 @@ class InvitesRepository {
   @visibleForTesting
   final InvitesRemoteDataSource invitesRemoteDataSource;
 
-  Future<List<InviteResponse>> getInvites() async {
-    return await invitesRemoteDataSource.fetchAll();
+  Future<List<InviteResponse>> getInvites({String status = 'all'}) async {
+    return await invitesRemoteDataSource.fetchAll(status);
   }
 
   Future<void> create({required String userId, required String groupId}) async {
-    return await invitesRemoteDataSource.create(
-      CreateInviteRequest(to: userId, groupId: groupId),
-    );
+    return await invitesRemoteDataSource.create(CreateInviteRequest(to: userId, groupId: groupId));
+  }
+
+  Future<void> accept({required String inviteId, required String groupId}) async {
+    return await invitesRemoteDataSource.accept(inviteId, groupId);
+  }
+
+  Future<void> reject({required String inviteId, required String groupId}) async {
+    return await invitesRemoteDataSource.reject(inviteId, groupId);
   }
 }

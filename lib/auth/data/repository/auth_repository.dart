@@ -10,11 +10,7 @@ import 'package:task_master/auth/data/repository/credentials_repository.dart';
 import 'package:task_master/auth/data/repository/user_repository.dart';
 
 class AuthRepository {
-  const AuthRepository({
-    required this.authRemoteDataSource,
-    required this.userRepository,
-    required this.credentialsRepository,
-  });
+  const AuthRepository({required this.authRemoteDataSource, required this.userRepository, required this.credentialsRepository});
 
   @visibleForTesting
   final AuthRemoteDataSource authRemoteDataSource;
@@ -33,21 +29,11 @@ class AuthRepository {
 
   Future<LoginResult> login(String email, String password) async {
     try {
-      final response = await authRemoteDataSource.login(
-        LoginRequest(email: email, password: password),
-      );
+      final response = await authRemoteDataSource.login(LoginRequest(email: email, password: password));
 
-      await credentialsRepository.updateCredentials(
-        CredentialsData(accessToken: response.accessToken),
-      );
+      await credentialsRepository.updateCredentials(CredentialsData(accessToken: response.accessToken));
 
-      await userRepository.updateUser(
-        UserData(
-          firstName: response.firstName,
-          lastName: response.lastName,
-          email: response.email,
-        ),
-      );
+      await userRepository.updateUser(UserData(firstName: response.firstName, lastName: response.lastName, email: response.email));
 
       return LoginResult.success;
     } on DioException catch (e) {
@@ -62,33 +48,15 @@ class AuthRepository {
     }
   }
 
-  Future<RegisterResult> register({
-    required String firstName,
-    required String lastName,
-    required String email,
-    required String password,
-  }) async {
+  Future<RegisterResult> register({required String firstName, required String lastName, required String email, required String password}) async {
     try {
       final response = await authRemoteDataSource.register(
-        RegisterRequest(
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          password: password,
-        ),
+        RegisterRequest(firstName: firstName, lastName: lastName, email: email, password: password),
       );
 
-      await credentialsRepository.updateCredentials(
-        CredentialsData(accessToken: response.accessToken),
-      );
+      await credentialsRepository.updateCredentials(CredentialsData(accessToken: response.accessToken));
 
-      await userRepository.updateUser(
-        UserData(
-          firstName: response.firstName,
-          lastName: response.lastName,
-          email: response.email,
-        ),
-      );
+      await userRepository.updateUser(UserData(firstName: response.firstName, lastName: response.lastName, email: response.email));
 
       return RegisterResult.success;
     } on DioException catch (e) {

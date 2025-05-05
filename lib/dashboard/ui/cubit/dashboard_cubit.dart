@@ -7,11 +7,8 @@ import 'package:task_master/invites/invites.dart';
 part 'dashboard_cubit.freezed.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {
-  DashboardCubit({
-    required this.authRepository,
-    required this.groupsRepository,
-    required this.invitesRepository,
-  }) : super(const DashboardState(isLoading: false, groups: [], invites: []));
+  DashboardCubit({required this.authRepository, required this.groupsRepository, required this.invitesRepository})
+    : super(const DashboardState(isLoading: false, groups: [], invites: []));
 
   @visibleForTesting
   final AuthRepository authRepository;
@@ -29,8 +26,8 @@ class DashboardCubit extends Cubit<DashboardState> {
 
     try {
       final groups = await groupsRepository.getGroups();
-      emit(state.copyWith(groups: groups));
-      final invites = await invitesRepository.getInvites();
+      emit(state.copyWith(groups: groups..sort((a, b) => b.createdAt.compareTo(a.createdAt)), invites: []));
+      final invites = await invitesRepository.getInvites(status: InviteStatus.pending.name);
       emit(state.copyWith(invites: invites));
     } catch (e) {
       print(e);
@@ -46,9 +43,6 @@ class DashboardCubit extends Cubit<DashboardState> {
 
 @freezed
 sealed class DashboardState with _$DashboardState {
-  const factory DashboardState({
-    required bool isLoading,
-    required List<GroupResponse> groups,
-    required List<InviteResponse> invites,
-  }) = _DashboardState;
+  const factory DashboardState({required bool isLoading, required List<GroupResponse> groups, required List<InviteResponse> invites}) =
+      _DashboardState;
 }

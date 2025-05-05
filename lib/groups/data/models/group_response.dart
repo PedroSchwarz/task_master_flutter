@@ -15,6 +15,5 @@ abstract class GroupResponse with _$GroupResponse {
     required List<UserResponse> members,
   }) = _GroupResponse;
 
-  factory GroupResponse.fromJson(Map<String, dynamic> json) =>
-      _$GroupResponseFromJson(json);
+  factory GroupResponse.fromJson(Map<String, dynamic> json) => _$GroupResponseFromJson(json);
 }

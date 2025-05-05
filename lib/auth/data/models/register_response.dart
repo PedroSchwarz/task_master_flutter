@@ -12,6 +12,5 @@ abstract class RegisterResponse with _$RegisterResponse {
     required String email,
   }) = _RegisterResponse;
 
-  factory RegisterResponse.fromJson(Map<String, dynamic> json) =>
-      _$RegisterResponseFromJson(json);
+  factory RegisterResponse.fromJson(Map<String, dynamic> json) => _$RegisterResponseFromJson(json);
 }

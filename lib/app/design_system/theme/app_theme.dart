@@ -6,12 +6,7 @@ class AppTheme {
   static const Color primaryRed = Color(0xFFB71C1C);
   static const Color secondaryColor = Color(0xFFE57373);
   static const Color lightBackgroundColor = Color(0xFFFDFDFD);
-  static const Color lightInputBackgroundColor = Color.fromARGB(
-    255,
-    225,
-    225,
-    225,
-  );
+  static const Color lightInputBackgroundColor = Color.fromARGB(255, 225, 225, 225);
   static const Color darkBackgroundColor = Color.fromARGB(255, 46, 46, 46);
   static const Color darkInputBackgroundColor = Color.fromARGB(255, 62, 62, 62);
 
@@ -31,18 +26,16 @@ class AppTheme {
     appBarTheme: AppBarTheme(
       backgroundColor: lightBackgroundColor,
       foregroundColor: darkBackgroundColor,
-      titleTextStyle: AppTypography.defaultTextTheme.displaySmall?.copyWith(
-        color: primaryRed,
-      ),
+      titleTextStyle: AppTypography.defaultTextTheme.displaySmall?.copyWith(color: primaryRed),
       centerTitle: false,
     ),
     inputDecorationTheme: InputDecorationTheme(
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppSpacing.xs),
-      ),
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
       filled: true,
       fillColor: lightInputBackgroundColor,
     ),
+    filledButtonTheme: FilledButtonThemeData(style: FilledButton.styleFrom(textStyle: AppTypography.defaultTextTheme.titleMedium)),
+    progressIndicatorTheme: ProgressIndicatorThemeData(trackGap: 3, strokeCap: StrokeCap.round, circularTrackColor: Colors.grey.shade300),
   );
 
   static final ThemeData darkTheme = ThemeData(
@@ -59,9 +52,7 @@ class AppTheme {
     appBarTheme: AppBarTheme(
       backgroundColor: darkBackgroundColor,
       foregroundColor: lightBackgroundColor,
-      titleTextStyle: AppTypography.defaultTextTheme.displaySmall?.copyWith(
-        color: primaryRed,
-      ),
+      titleTextStyle: AppTypography.defaultTextTheme.displaySmall?.copyWith(color: primaryRed),
       centerTitle: false,
     ),
     textTheme: AppTypography.defaultTextTheme,
@@ -73,10 +64,7 @@ class AppTheme {
       filled: true,
       fillColor: darkInputBackgroundColor,
     ),
-    filledButtonTheme: FilledButtonThemeData(
-      style: FilledButton.styleFrom(
-        textStyle: AppTypography.defaultTextTheme.titleMedium,
-      ),
-    ),
+    filledButtonTheme: FilledButtonThemeData(style: FilledButton.styleFrom(textStyle: AppTypography.defaultTextTheme.titleMedium)),
+    progressIndicatorTheme: ProgressIndicatorThemeData(trackGap: 3, strokeCap: StrokeCap.round, circularTrackColor: Colors.grey.shade300),
   );
 }

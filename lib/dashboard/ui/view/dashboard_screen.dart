@@ -5,7 +5,8 @@ import 'package:task_master/app/app.dart';
 import 'package:task_master/dashboard/ui/cubit/dashboard_cubit.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/groups/ui/view/create_group_screen.dart';
-import 'package:task_master/groups/ui/view/group_content_unavailable.dart';
+import 'package:task_master/groups/ui/view/group_details_screen.dart';
+import 'package:task_master/invites/invites.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -27,6 +28,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -40,7 +43,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   offset: const Offset(-5, 0),
                   count: invitesCount,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await context.pushNamed(InvitesScreen.routeName);
+                      bloc.load();
+                    },
                     icon: const Icon(Icons.mail_outline),
                   ),
                 ),
@@ -54,11 +60,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                Text('${bloc.currentUser.firstName} ${bloc.currentUser.lastName}', style: theme.textTheme.headlineSmall),
+                Text(bloc.currentUser.email),
                 const Spacer(),
-                TextButton(
-                  onPressed: bloc.signOut,
-                  child: const Text('Sign out'),
-                ),
+                TextButton(onPressed: bloc.signOut, child: const Text('Sign out')),
               ],
             ),
           ),
@@ -69,24 +74,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
           BlocSelector<DashboardCubit, DashboardState, bool>(
             bloc: bloc,
             selector: (state) => state.isLoading,
-            builder:
-                (context, isLoading) =>
-                    isLoading
-                        ? const LinearProgressIndicator()
-                        : const SizedBox.shrink(),
+            builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
           ),
           BlocBuilder<DashboardCubit, DashboardState>(
             bloc: bloc,
             builder:
                 (context, state) =>
                     state.groups.isEmpty
-                        ? const Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(AppSpacing.s),
-                            child: GroupContentUnavailable(),
+                        ? const Expanded(child: Padding(padding: EdgeInsets.all(AppSpacing.s), child: GroupContentUnavailable()))
+                        : Expanded(
+                          child: GroupsList(
+                            groups: state.groups,
+                            onSelected:
+                                (group) => context.goNamed(
+                                  GroupDetailsScreen.routeName,
+                                  pathParameters: {'id': group.id},
+                                  queryParameters: {'name': group.name},
+                                ),
+                            onRefresh: bloc.load,
                           ),
-                        )
-                        : Expanded(child: GroupsList(groups: state.groups)),
+                        ),
           ),
         ],
       ),

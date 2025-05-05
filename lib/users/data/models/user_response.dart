@@ -5,13 +5,8 @@ part 'user_response.g.dart';
 
 @freezed
 abstract class UserResponse with _$UserResponse {
-  const factory UserResponse({
-    @JsonKey(name: '_id') required String id,
-    required String firstName,
-    required String lastName,
-    required String email,
-  }) = _UserResponse;
+  const factory UserResponse({@JsonKey(name: '_id') required String id, required String firstName, required String lastName, required String email}) =
+      _UserResponse;
 
-  factory UserResponse.fromJson(Map<String, dynamic> json) =>
-      _$UserResponseFromJson(json);
+  factory UserResponse.fromJson(Map<String, dynamic> json) => _$UserResponseFromJson(json);
 }

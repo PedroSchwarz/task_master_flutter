@@ -28,33 +28,22 @@ sealed class BaseServiceLocators {
 class Locators extends BaseServiceLocators {
   @override
   BuildConfigurations get buildConfigurations {
-    return const BuildConfigurations(
-      baseUrl: 'http://localhost:3000/',
-      environment: Environment.production,
-    );
+    return const BuildConfigurations(baseUrl: 'http://localhost:3000/', environment: Environment.production);
   }
 
   @override
   Future<void> setup() async {
     getIt.registerSingleton(
       const FlutterSecureStorage(
-        iOptions: IOSOptions(
-          accessibility: KeychainAccessibility.first_unlock_this_device,
-        ),
-        aOptions: AndroidOptions(
-          sharedPreferencesName: 'task_master_secure_storage',
-          encryptedSharedPreferences: true,
-        ),
+        iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock_this_device),
+        aOptions: AndroidOptions(sharedPreferencesName: 'task_master_secure_storage', encryptedSharedPreferences: true),
       ),
     );
 
     final sharedPreferences = await SharedPreferences.getInstance();
     getIt.registerSingleton(sharedPreferences);
 
-    final appStorage = AppLocalStorage(
-      secureStorage: getIt(),
-      sharedPreferences: getIt(),
-    );
+    final appStorage = AppLocalStorage(secureStorage: getIt(), sharedPreferences: getIt());
     await appStorage.create();
 
     getIt
@@ -62,32 +51,12 @@ class Locators extends BaseServiceLocators {
       ..registerSingleton(buildConfigurations)
       ..registerSingleton(CredentialsLocalDataSource(localStorage: getIt()))
       ..registerSingleton(UserLocalDataSource(localStorage: getIt()))
-      ..registerSingleton(
-        CredentialsRepository(credentialsLocalDataSource: getIt()),
-      )
+      ..registerSingleton(CredentialsRepository(credentialsLocalDataSource: getIt()))
       ..registerSingleton(UserRepository(userLocalDataSource: getIt()))
-      ..registerSingleton(
-        createAuthenticatedDio(
-          baseUrl: buildConfigurations.baseUrl,
-          credentialsRepository: getIt(),
-        ),
-      )
-      ..registerSingleton(
-        createDio(baseUrl: buildConfigurations.baseUrl),
-        instanceName: BaseServiceLocators.noAuthDio,
-      )
-      ..registerSingleton(
-        AuthRemoteDataSource(
-          getIt(instanceName: BaseServiceLocators.noAuthDio),
-        ),
-      )
-      ..registerSingleton(
-        AuthRepository(
-          authRemoteDataSource: getIt(),
-          userRepository: getIt(),
-          credentialsRepository: getIt(),
-        ),
-      )
+      ..registerSingleton(createAuthenticatedDio(baseUrl: buildConfigurations.baseUrl, credentialsRepository: getIt()))
+      ..registerSingleton(createDio(baseUrl: buildConfigurations.baseUrl), instanceName: BaseServiceLocators.noAuthDio)
+      ..registerSingleton(AuthRemoteDataSource(getIt(instanceName: BaseServiceLocators.noAuthDio)))
+      ..registerSingleton(AuthRepository(authRemoteDataSource: getIt(), userRepository: getIt(), credentialsRepository: getIt()))
       ..registerSingleton(createRouter(authRepository: getIt()))
       ..registerSingleton(SplashRepository(authRepository: getIt()))
       ..registerFactory(() => SplashCubit(splashRepository: getIt()))
@@ -99,35 +68,19 @@ class Locators extends BaseServiceLocators {
       ..registerSingleton(InvitesRepository(invitesRemoteDataSource: getIt()))
       ..registerSingleton(GroupsRemoteDataSource(getIt()))
       ..registerSingleton(GroupsRepository(groupsRemoteDataSource: getIt()))
-      ..registerFactory(
-        () => CreateGroupCubit(
-          groupsRepository: getIt(),
-          invitesRepository: getIt(),
-          usersRepository: getIt(),
-        ),
-      )
-      ..registerFactory(
-        () => DashboardCubit(
-          authRepository: getIt(),
-          groupsRepository: getIt(),
-          invitesRepository: getIt(),
-        ),
-      );
+      ..registerFactory(() => CreateGroupCubit(groupsRepository: getIt(), invitesRepository: getIt(), usersRepository: getIt()))
+      ..registerFactory(() => DashboardCubit(authRepository: getIt(), groupsRepository: getIt(), invitesRepository: getIt()))
+      ..registerFactory(() => InvitesCubit(invitesRepository: getIt()))
+      ..registerFactory(() => GroupDetailsCubit(authRepository: getIt(), invitesRepository: getIt()));
   }
 
   Dio createDio({required String baseUrl}) {
     return Dio(BaseOptions(baseUrl: baseUrl));
   }
 
-  Dio createAuthenticatedDio({
-    required String baseUrl,
-    required CredentialsRepository credentialsRepository,
-  }) {
+  Dio createAuthenticatedDio({required String baseUrl, required CredentialsRepository credentialsRepository}) {
     final dio = Dio(BaseOptions(baseUrl: baseUrl));
-    final authInterceptor = AuthInterceptor(
-      credentialsRepository: credentialsRepository,
-      dio: dio,
-    );
+    final authInterceptor = AuthInterceptor(credentialsRepository: credentialsRepository, dio: dio);
     dio.interceptors.add(authInterceptor);
     return dio;
   }

@@ -22,9 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return BlocListener<LoginCubit, LoginState>(
       bloc: bloc,
-      listenWhen:
-          (previous, current) =>
-              previous.isAuthenticated != current.isAuthenticated,
+      listenWhen: (previous, current) => previous.isAuthenticated != current.isAuthenticated,
       listener: _listenNavigationFlow,
       child: GestureDetector(
         onTap: () {
@@ -45,11 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   BlocSelector<LoginCubit, LoginState, bool>(
                     bloc: bloc,
                     selector: (state) => state.isLoading,
-                    builder:
-                        (context, isLoading) =>
-                            isLoading
-                                ? const LinearProgressIndicator()
-                                : const SizedBox.shrink(),
+                    builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
                   ),
                   const Spacer(),
                   AppTextField(
@@ -66,20 +60,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           label: 'Password',
                           onChanged: bloc.updatePassword,
                           obscureText: hidePassword,
-                          suffixIcon: TogglePasswordButton(
-                            onPressed: bloc.togglePasswordVisibility,
-                            value: hidePassword,
-                          ),
+                          suffixIcon: TogglePasswordButton(onPressed: bloc.togglePasswordVisibility, value: hidePassword),
                         ),
                   ),
                   BlocSelector<LoginCubit, LoginState, String?>(
                     bloc: bloc,
                     selector: (state) => state.errorMessage,
-                    builder:
-                        (context, errorMessage) =>
-                            errorMessage != null
-                                ? Text(errorMessage)
-                                : const SizedBox.shrink(),
+                    builder: (context, errorMessage) => errorMessage != null ? Text(errorMessage) : const SizedBox.shrink(),
                   ),
                   const Spacer(),
                   Column(
@@ -91,12 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         builder:
                             (context, isEnabled) => Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                FilledButton(
-                                  onPressed: isEnabled ? bloc.login : null,
-                                  child: const Text('Login'),
-                                ),
-                              ],
+                              children: [FilledButton(onPressed: isEnabled ? bloc.login : null, child: const Text('Login'))],
                             ),
                       ),
                       BlocSelector<LoginCubit, LoginState, bool>(
@@ -104,16 +86,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         selector: (state) => state.isLoading,
                         builder:
                             (context, isLoading) => TextButton(
-                              onPressed:
-                                  isLoading
-                                      ? null
-                                      : () => context.pushNamed(
-                                        RegisterScreen.routeName,
-                                      ),
-                              child: const Text(
-                                'Create a New Account',
-                                textAlign: TextAlign.start,
-                              ),
+                              onPressed: isLoading ? null : () => context.pushNamed(RegisterScreen.routeName),
+                              child: const Text('Create a New Account', textAlign: TextAlign.start),
                             ),
                       ),
                     ],

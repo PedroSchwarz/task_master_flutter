@@ -4,12 +4,7 @@ import 'package:task_master/app/app.dart';
 import 'package:task_master/users/data/models/user_response.dart';
 
 class InviteUsersSheet extends StatefulWidget {
-  const InviteUsersSheet({
-    required this.users,
-    required this.selectedUsersIds,
-    required this.onPressed,
-    super.key,
-  });
+  const InviteUsersSheet({required this.users, required this.selectedUsersIds, required this.onPressed, super.key});
 
   final List<UserResponse> users;
   final List<String> selectedUsersIds;
@@ -37,13 +32,7 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: context.pop,
-          icon: const Icon(Icons.close),
-        ),
-        automaticallyImplyLeading: false,
-      ),
+      appBar: AppBar(leading: IconButton(onPressed: context.pop, icon: const Icon(Icons.close)), automaticallyImplyLeading: false),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -66,15 +55,9 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
                                 widget.users
                                     .where(
                                       (element) =>
-                                          element.firstName
-                                              .toLowerCase()
-                                              .contains(value.toLowerCase()) ||
-                                          element.lastName
-                                              .toLowerCase()
-                                              .contains(value.toLowerCase()) ||
-                                          element.email.toLowerCase().contains(
-                                            value.toLowerCase(),
-                                          ),
+                                          element.firstName.toLowerCase().contains(value.toLowerCase()) ||
+                                          element.lastName.toLowerCase().contains(value.toLowerCase()) ||
+                                          element.email.toLowerCase().contains(value.toLowerCase()),
                                     )
                                     .toList();
                           });
@@ -92,11 +75,7 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
                         value: isSelected,
                         title: Text(user.firstName),
                         subtitle: Text('${user.lastName} - ${user.email}'),
-                        secondary: CircleAvatar(
-                          child: Text(
-                            '${user.firstName.substring(0, 1)}${user.lastName.substring(0, 1)}',
-                          ),
-                        ),
+                        secondary: CircleAvatar(child: Text('${user.firstName.substring(0, 1)}${user.lastName.substring(0, 1)}')),
                         checkboxShape: const CircleBorder(),
                         checkboxScaleFactor: 1.2,
                         selected: isSelected,
@@ -107,10 +86,7 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
                             });
                           } else {
                             setState(() {
-                              _selectedIds =
-                                  _selectedIds
-                                      .where((id) => id != user.id)
-                                      .toList();
+                              _selectedIds = _selectedIds.where((id) => id != user.id).toList();
                             });
                           }
                         },
@@ -122,10 +98,7 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
             ),
             Padding(
               padding: const EdgeInsets.all(AppSpacing.s),
-              child: FilledButton(
-                onPressed: () => widget.onPressed(_selectedIds),
-                child: const Text('Invite'),
-              ),
+              child: FilledButton(onPressed: () => widget.onPressed(_selectedIds), child: const Text('Invite')),
             ),
           ],
         ),

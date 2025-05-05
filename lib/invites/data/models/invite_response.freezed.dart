@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$InviteResponse {
 
- UserResponse get from; InviteGroupResponse get group; DateTime get createdAt;
+@JsonKey(name: '_id') String get id; UserResponse get from; InviteGroupResponse get group; InviteStatus get status; DateTime get createdAt;
 /// Create a copy of InviteResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $InviteResponseCopyWith<InviteResponse> get copyWith => _$InviteResponseCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InviteResponse&&(identical(other.from, from) || other.from == from)&&(identical(other.group, group) || other.group == group)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InviteResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.from, from) || other.from == from)&&(identical(other.group, group) || other.group == group)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,from,group,createdAt);
+int get hashCode => Object.hash(runtimeType,id,from,group,status,createdAt);
 
 @override
 String toString() {
-  return 'InviteResponse(from: $from, group: $group, createdAt: $createdAt)';
+  return 'InviteResponse(id: $id, from: $from, group: $group, status: $status, createdAt: $createdAt)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $InviteResponseCopyWith<$Res>  {
   factory $InviteResponseCopyWith(InviteResponse value, $Res Function(InviteResponse) _then) = _$InviteResponseCopyWithImpl;
 @useResult
 $Res call({
- UserResponse from, InviteGroupResponse group, DateTime createdAt
+@JsonKey(name: '_id') String id, UserResponse from, InviteGroupResponse group, InviteStatus status, DateTime createdAt
 });
 
 
@@ -66,11 +66,13 @@ class _$InviteResponseCopyWithImpl<$Res>
 
 /// Create a copy of InviteResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? from = null,Object? group = null,Object? createdAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? from = null,Object? group = null,Object? status = null,Object? createdAt = null,}) {
   return _then(_self.copyWith(
-from: null == from ? _self.from : from // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,from: null == from ? _self.from : from // ignore: cast_nullable_to_non_nullable
 as UserResponse,group: null == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
-as InviteGroupResponse,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as InviteGroupResponse,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as InviteStatus,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
@@ -100,11 +102,13 @@ $InviteGroupResponseCopyWith<$Res> get group {
 @JsonSerializable()
 
 class _InviteResponse implements InviteResponse {
-  const _InviteResponse({required this.from, required this.group, required this.createdAt});
+  const _InviteResponse({@JsonKey(name: '_id') required this.id, required this.from, required this.group, required this.status, required this.createdAt});
   factory _InviteResponse.fromJson(Map<String, dynamic> json) => _$InviteResponseFromJson(json);
 
+@override@JsonKey(name: '_id') final  String id;
 @override final  UserResponse from;
 @override final  InviteGroupResponse group;
+@override final  InviteStatus status;
 @override final  DateTime createdAt;
 
 /// Create a copy of InviteResponse
@@ -120,16 +124,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InviteResponse&&(identical(other.from, from) || other.from == from)&&(identical(other.group, group) || other.group == group)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InviteResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.from, from) || other.from == from)&&(identical(other.group, group) || other.group == group)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,from,group,createdAt);
+int get hashCode => Object.hash(runtimeType,id,from,group,status,createdAt);
 
 @override
 String toString() {
-  return 'InviteResponse(from: $from, group: $group, createdAt: $createdAt)';
+  return 'InviteResponse(id: $id, from: $from, group: $group, status: $status, createdAt: $createdAt)';
 }
 
 
@@ -140,7 +144,7 @@ abstract mixin class _$InviteResponseCopyWith<$Res> implements $InviteResponseCo
   factory _$InviteResponseCopyWith(_InviteResponse value, $Res Function(_InviteResponse) _then) = __$InviteResponseCopyWithImpl;
 @override @useResult
 $Res call({
- UserResponse from, InviteGroupResponse group, DateTime createdAt
+@JsonKey(name: '_id') String id, UserResponse from, InviteGroupResponse group, InviteStatus status, DateTime createdAt
 });
 
 
@@ -157,11 +161,13 @@ class __$InviteResponseCopyWithImpl<$Res>
 
 /// Create a copy of InviteResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? from = null,Object? group = null,Object? createdAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? from = null,Object? group = null,Object? status = null,Object? createdAt = null,}) {
   return _then(_InviteResponse(
-from: null == from ? _self.from : from // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,from: null == from ? _self.from : from // ignore: cast_nullable_to_non_nullable
 as UserResponse,group: null == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
-as InviteGroupResponse,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as InviteGroupResponse,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as InviteStatus,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
 }
@@ -191,7 +197,7 @@ $InviteGroupResponseCopyWith<$Res> get group {
 /// @nodoc
 mixin _$InviteGroupResponse {
 
- String get name;
+@JsonKey(name: '_id') String get id; String get name;
 /// Create a copy of InviteGroupResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -204,16 +210,16 @@ $InviteGroupResponseCopyWith<InviteGroupResponse> get copyWith => _$InviteGroupR
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InviteGroupResponse&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InviteGroupResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name);
+int get hashCode => Object.hash(runtimeType,id,name);
 
 @override
 String toString() {
-  return 'InviteGroupResponse(name: $name)';
+  return 'InviteGroupResponse(id: $id, name: $name)';
 }
 
 
@@ -224,7 +230,7 @@ abstract mixin class $InviteGroupResponseCopyWith<$Res>  {
   factory $InviteGroupResponseCopyWith(InviteGroupResponse value, $Res Function(InviteGroupResponse) _then) = _$InviteGroupResponseCopyWithImpl;
 @useResult
 $Res call({
- String name
+@JsonKey(name: '_id') String id, String name
 });
 
 
@@ -241,9 +247,10 @@ class _$InviteGroupResponseCopyWithImpl<$Res>
 
 /// Create a copy of InviteGroupResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,}) {
   return _then(_self.copyWith(
-name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -255,9 +262,10 @@ as String,
 @JsonSerializable()
 
 class _InviteGroupResponse implements InviteGroupResponse {
-  const _InviteGroupResponse({required this.name});
+  const _InviteGroupResponse({@JsonKey(name: '_id') required this.id, required this.name});
   factory _InviteGroupResponse.fromJson(Map<String, dynamic> json) => _$InviteGroupResponseFromJson(json);
 
+@override@JsonKey(name: '_id') final  String id;
 @override final  String name;
 
 /// Create a copy of InviteGroupResponse
@@ -273,16 +281,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InviteGroupResponse&&(identical(other.name, name) || other.name == name));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InviteGroupResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name);
+int get hashCode => Object.hash(runtimeType,id,name);
 
 @override
 String toString() {
-  return 'InviteGroupResponse(name: $name)';
+  return 'InviteGroupResponse(id: $id, name: $name)';
 }
 
 
@@ -293,7 +301,7 @@ abstract mixin class _$InviteGroupResponseCopyWith<$Res> implements $InviteGroup
   factory _$InviteGroupResponseCopyWith(_InviteGroupResponse value, $Res Function(_InviteGroupResponse) _then) = __$InviteGroupResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String name
+@JsonKey(name: '_id') String id, String name
 });
 
 
@@ -310,9 +318,10 @@ class __$InviteGroupResponseCopyWithImpl<$Res>
 
 /// Create a copy of InviteGroupResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,}) {
   return _then(_InviteGroupResponse(
-name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

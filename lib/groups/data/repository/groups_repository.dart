@@ -13,12 +13,7 @@ class GroupsRepository {
     return await groupsRemoteDataSource.fetchAll();
   }
 
-  Future<String> createGroup({
-    required String name,
-    required String description,
-  }) async {
-    return await groupsRemoteDataSource.create(
-      CreateGroupRequest(name: name, description: description),
-    );
+  Future<String> createGroup({required String name, required String description}) async {
+    return await groupsRemoteDataSource.create(CreateGroupRequest(name: name, description: description));
   }
 }

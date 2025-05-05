@@ -27,15 +27,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   Widget build(BuildContext context) {
     return BlocListener<CreateGroupCubit, CreateGroupState>(
       bloc: bloc,
-      listenWhen:
-          (previous, current) =>
-              previous.showInviteUsersSheet != current.showInviteUsersSheet,
+      listenWhen: (previous, current) => previous.showInviteUsersSheet != current.showInviteUsersSheet,
       listener: _listenInviteUsersSheet,
       child: BlocListener<CreateGroupCubit, CreateGroupState>(
         bloc: bloc,
-        listenWhen:
-            (previous, current) =>
-                previous.shouldGoBack != current.shouldGoBack,
+        listenWhen: (previous, current) => previous.shouldGoBack != current.shouldGoBack,
         listener: _listenNavigationFlow,
         child: GestureDetector(
           onTap: () {
@@ -56,17 +52,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     BlocSelector<CreateGroupCubit, CreateGroupState, bool>(
                       bloc: bloc,
                       selector: (state) => state.isLoading,
-                      builder:
-                          (context, isLoading) =>
-                              isLoading
-                                  ? const LinearProgressIndicator()
-                                  : const SizedBox.shrink(),
+                      builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
                     ),
-                    AppTextField(
-                      label: 'Name',
-                      onChanged: bloc.updateName,
-                      textCapitalization: TextCapitalization.words,
-                    ),
+                    AppTextField(label: 'Name', onChanged: bloc.updateName, textCapitalization: TextCapitalization.words),
                     AppTextField(
                       label: 'Description',
                       onChanged: bloc.updateDescription,
@@ -78,19 +66,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                       children: [
                         TextButton(
                           onPressed: bloc.toggleInviteUsersSheet,
-                          child: const Row(
-                            spacing: AppSpacing.s,
-                            children: [
-                              Icon(Icons.person_add_outlined),
-                              Text('Invite people'),
-                            ],
-                          ),
+                          child: const Row(spacing: AppSpacing.s, children: [Icon(Icons.person_add_outlined), Text('Invite people')]),
                         ),
                         BlocSelector<CreateGroupCubit, CreateGroupState, int>(
                           bloc: bloc,
                           selector: (state) => state.selectedUsersIds.length,
-                          builder:
-                              (context, idsCount) => Text('$idsCount selected'),
+                          builder: (context, idsCount) => Text('$idsCount selected'),
                         ),
                       ],
                     ),
@@ -98,11 +79,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     BlocSelector<CreateGroupCubit, CreateGroupState, bool>(
                       bloc: bloc,
                       selector: (state) => state.isButtonEnabled,
-                      builder:
-                          (context, isEnabled) => FilledButton(
-                            onPressed: isEnabled ? bloc.createGroup : null,
-                            child: const Text('Create'),
-                          ),
+                      builder: (context, isEnabled) => FilledButton(onPressed: isEnabled ? bloc.createGroup : null, child: const Text('Create')),
                     ),
                   ],
                 ),
@@ -114,10 +91,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     );
   }
 
-  Future<void> _listenInviteUsersSheet(
-    BuildContext context,
-    CreateGroupState state,
-  ) async {
+  Future<void> _listenInviteUsersSheet(BuildContext context, CreateGroupState state) async {
     if (state.showInviteUsersSheet) {
       await showModalBottomSheet(
         context: context,
@@ -138,10 +112,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     }
   }
 
-  Future<void> _listenNavigationFlow(
-    BuildContext context,
-    CreateGroupState state,
-  ) async {
+  Future<void> _listenNavigationFlow(BuildContext context, CreateGroupState state) async {
     if (state.shouldGoBack) {
       context.pop();
     }

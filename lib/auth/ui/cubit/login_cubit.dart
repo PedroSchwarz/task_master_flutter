@@ -6,15 +6,7 @@ part 'login_cubit.freezed.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit({required this.authRepository})
-    : super(
-        const LoginState(
-          email: 'pedro@hotmail.com',
-          password: 'Penacional1!',
-          hidePassword: true,
-          isLoading: false,
-          isAuthenticated: false,
-        ),
-      );
+    : super(const LoginState(email: 'pedro@hotmail.com', password: 'Penacional1!', hidePassword: true, isLoading: false, isAuthenticated: false));
 
   @visibleForTesting
   final AuthRepository authRepository;
