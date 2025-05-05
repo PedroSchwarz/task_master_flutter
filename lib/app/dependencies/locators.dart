@@ -10,6 +10,8 @@ import 'package:task_master/dashboard/ui/cubit/dashboard_cubit.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
 import 'package:task_master/splash/splash.dart';
+import 'package:task_master/tasks/tasks.dart';
+import 'package:task_master/tasks/ui/cubit/create_task_cubit.dart';
 import 'package:task_master/users/users.dart';
 
 final getIt = GetIt.instance;
@@ -71,7 +73,12 @@ class Locators extends BaseServiceLocators {
       ..registerFactory(() => CreateGroupCubit(groupsRepository: getIt(), invitesRepository: getIt(), usersRepository: getIt()))
       ..registerFactory(() => DashboardCubit(authRepository: getIt(), groupsRepository: getIt(), invitesRepository: getIt()))
       ..registerFactory(() => InvitesCubit(invitesRepository: getIt()))
-      ..registerFactory(() => GroupDetailsCubit(authRepository: getIt(), invitesRepository: getIt()));
+      ..registerSingleton(TasksRemoteDataSource(getIt()))
+      ..registerSingleton(TasksRepository(tasksRemoteDataSource: getIt()))
+      ..registerFactory(
+        () => GroupDetailsCubit(authRepository: getIt(), groupsRepository: getIt(), tasksRepository: getIt(), invitesRepository: getIt()),
+      )
+      ..registerFactory(() => CreateTaskCubit(groupsRepository: getIt(), tasksRepository: getIt()));
   }
 
   Dio createDio({required String baseUrl}) {

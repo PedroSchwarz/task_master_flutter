@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'groups_remote_data_source.dart';
+part of 'tasks_remote_data_source.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,9 +8,9 @@ part of 'groups_remote_data_source.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
-class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
-  _GroupsRemoteDataSource(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= '/groups';
+class _TasksRemoteDataSource implements TasksRemoteDataSource {
+  _TasksRemoteDataSource(this._dio, {this.baseUrl, this.errorLogger}) {
+    baseUrl ??= '/tasks';
   }
 
   final Dio _dio;
@@ -20,13 +20,13 @@ class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<List<GroupResponse>> fetchAll() async {
+  Future<List<TaskResponse>> fetchAll(String groupId) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': 'application/json'};
     _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<GroupResponse>>(
+    final _options = _setStreamType<List<TaskResponse>>(
       Options(
             method: 'GET',
             headers: _headers,
@@ -35,20 +35,19 @@ class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
           )
           .compose(
             _dio.options,
-            '/',
+            '/group/${groupId}',
             queryParameters: queryParameters,
             data: _data,
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<GroupResponse> _value;
+    late List<TaskResponse> _value;
     try {
       _value =
           _result.data!
               .map(
-                (dynamic i) =>
-                    GroupResponse.fromJson(i as Map<String, dynamic>),
+                (dynamic i) => TaskResponse.fromJson(i as Map<String, dynamic>),
               )
               .toList();
     } on Object catch (e, s) {
@@ -59,40 +58,7 @@ class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
   }
 
   @override
-  Future<GroupResponse> fetchById(String id) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Content-Type': 'application/json'};
-    _headers.removeWhere((k, v) => v == null);
-    const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<GroupResponse>(
-      Options(
-            method: 'GET',
-            headers: _headers,
-            extra: _extra,
-            contentType: 'application/json',
-          )
-          .compose(
-            _dio.options,
-            '/${id}',
-            queryParameters: queryParameters,
-            data: _data,
-          )
-          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
-    );
-    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late GroupResponse _value;
-    try {
-      _value = GroupResponse.fromJson(_result.data!);
-    } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
-      rethrow;
-    }
-    return _value;
-  }
-
-  @override
-  Future<String> create(CreateGroupRequest request) async {
+  Future<String> create(CreateTaskRequest request) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': 'application/json'};

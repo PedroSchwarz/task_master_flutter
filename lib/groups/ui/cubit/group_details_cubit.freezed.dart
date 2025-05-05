@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GroupDetailsState {
 
- bool get isLoading; List<InviteResponse> get invites;
+ bool get isLoading; List<TaskResponse> get tasks; List<InviteResponse> get invites; GroupResponse? get group;
 /// Create a copy of GroupDetailsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $GroupDetailsStateCopyWith<GroupDetailsState> get copyWith => _$GroupDetailsStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GroupDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.invites, invites));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GroupDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.tasks, tasks)&&const DeepCollectionEquality().equals(other.invites, invites)&&(identical(other.group, group) || other.group == group));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(invites));
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(tasks),const DeepCollectionEquality().hash(invites),group);
 
 @override
 String toString() {
-  return 'GroupDetailsState(isLoading: $isLoading, invites: $invites)';
+  return 'GroupDetailsState(isLoading: $isLoading, tasks: $tasks, invites: $invites, group: $group)';
 }
 
 
@@ -46,11 +46,11 @@ abstract mixin class $GroupDetailsStateCopyWith<$Res>  {
   factory $GroupDetailsStateCopyWith(GroupDetailsState value, $Res Function(GroupDetailsState) _then) = _$GroupDetailsStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, List<InviteResponse> invites
+ bool isLoading, List<TaskResponse> tasks, List<InviteResponse> invites, GroupResponse? group
 });
 
 
-
+$GroupResponseCopyWith<$Res>? get group;
 
 }
 /// @nodoc
@@ -63,14 +63,28 @@ class _$GroupDetailsStateCopyWithImpl<$Res>
 
 /// Create a copy of GroupDetailsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? invites = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? tasks = null,Object? invites = null,Object? group = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,invites: null == invites ? _self.invites : invites // ignore: cast_nullable_to_non_nullable
-as List<InviteResponse>,
+as bool,tasks: null == tasks ? _self.tasks : tasks // ignore: cast_nullable_to_non_nullable
+as List<TaskResponse>,invites: null == invites ? _self.invites : invites // ignore: cast_nullable_to_non_nullable
+as List<InviteResponse>,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
+as GroupResponse?,
   ));
 }
+/// Create a copy of GroupDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$GroupResponseCopyWith<$Res>? get group {
+    if (_self.group == null) {
+    return null;
+  }
 
+  return $GroupResponseCopyWith<$Res>(_self.group!, (value) {
+    return _then(_self.copyWith(group: value));
+  });
+}
 }
 
 
@@ -78,10 +92,17 @@ as List<InviteResponse>,
 
 
 class _GroupDetailsState implements GroupDetailsState {
-  const _GroupDetailsState({required this.isLoading, required final  List<InviteResponse> invites}): _invites = invites;
+  const _GroupDetailsState({required this.isLoading, required final  List<TaskResponse> tasks, required final  List<InviteResponse> invites, this.group}): _tasks = tasks,_invites = invites;
   
 
 @override final  bool isLoading;
+ final  List<TaskResponse> _tasks;
+@override List<TaskResponse> get tasks {
+  if (_tasks is EqualUnmodifiableListView) return _tasks;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_tasks);
+}
+
  final  List<InviteResponse> _invites;
 @override List<InviteResponse> get invites {
   if (_invites is EqualUnmodifiableListView) return _invites;
@@ -89,6 +110,7 @@ class _GroupDetailsState implements GroupDetailsState {
   return EqualUnmodifiableListView(_invites);
 }
 
+@override final  GroupResponse? group;
 
 /// Create a copy of GroupDetailsState
 /// with the given fields replaced by the non-null parameter values.
@@ -100,16 +122,16 @@ _$GroupDetailsStateCopyWith<_GroupDetailsState> get copyWith => __$GroupDetailsS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GroupDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._invites, _invites));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GroupDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._tasks, _tasks)&&const DeepCollectionEquality().equals(other._invites, _invites)&&(identical(other.group, group) || other.group == group));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_invites));
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_tasks),const DeepCollectionEquality().hash(_invites),group);
 
 @override
 String toString() {
-  return 'GroupDetailsState(isLoading: $isLoading, invites: $invites)';
+  return 'GroupDetailsState(isLoading: $isLoading, tasks: $tasks, invites: $invites, group: $group)';
 }
 
 
@@ -120,11 +142,11 @@ abstract mixin class _$GroupDetailsStateCopyWith<$Res> implements $GroupDetailsS
   factory _$GroupDetailsStateCopyWith(_GroupDetailsState value, $Res Function(_GroupDetailsState) _then) = __$GroupDetailsStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, List<InviteResponse> invites
+ bool isLoading, List<TaskResponse> tasks, List<InviteResponse> invites, GroupResponse? group
 });
 
 
-
+@override $GroupResponseCopyWith<$Res>? get group;
 
 }
 /// @nodoc
@@ -137,15 +159,29 @@ class __$GroupDetailsStateCopyWithImpl<$Res>
 
 /// Create a copy of GroupDetailsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? invites = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? tasks = null,Object? invites = null,Object? group = freezed,}) {
   return _then(_GroupDetailsState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,invites: null == invites ? _self._invites : invites // ignore: cast_nullable_to_non_nullable
-as List<InviteResponse>,
+as bool,tasks: null == tasks ? _self._tasks : tasks // ignore: cast_nullable_to_non_nullable
+as List<TaskResponse>,invites: null == invites ? _self._invites : invites // ignore: cast_nullable_to_non_nullable
+as List<InviteResponse>,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
+as GroupResponse?,
   ));
 }
 
+/// Create a copy of GroupDetailsState
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$GroupResponseCopyWith<$Res>? get group {
+    if (_self.group == null) {
+    return null;
+  }
 
+  return $GroupResponseCopyWith<$Res>(_self.group!, (value) {
+    return _then(_self.copyWith(group: value));
+  });
+}
 }
 
 // dart format on

@@ -13,6 +13,10 @@ abstract class GroupsRemoteDataSource {
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future<List<GroupResponse>> fetchAll();
 
+  @GET('/{id}')
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<GroupResponse> fetchById(@Path('id') String id);
+
   @POST('/')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future<String> create(@Body() CreateGroupRequest request);

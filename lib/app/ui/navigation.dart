@@ -7,6 +7,7 @@ import 'package:task_master/dashboard/ui/view/dashboard_screen.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
 import 'package:task_master/splash/ui/view/splash_screen.dart';
+import 'package:task_master/tasks/tasks.dart';
 
 GoRouter createRouter({required AuthRepository authRepository}) {
   final router = GoRouter(
@@ -37,6 +38,13 @@ GoRouter createRouter({required AuthRepository authRepository}) {
             path: '/${GroupDetailsScreen.routeName}/:id',
             name: GroupDetailsScreen.routeName,
             builder: (context, state) => GroupDetailsScreen(id: state.pathParameters['id'] ?? '', name: state.uri.queryParameters['name'] ?? ''),
+            routes: [
+              GoRoute(
+                path: '/${CreateTaskScreen.routeName}',
+                name: CreateTaskScreen.routeName,
+                builder: (context, state) => CreateTaskScreen(groupId: state.pathParameters['id'] ?? ''),
+              ),
+            ],
           ),
         ],
       ),
