@@ -26,35 +26,32 @@ class _InvitesScreenState extends State<InvitesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Invites')),
-      body: SafeArea(
-        child: Column(
-          children: [
-            BlocSelector<InvitesCubit, InvitesState, bool>(
-              bloc: bloc,
-              selector: (state) => state.isLoading,
-              builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
-            ),
-            BlocSelector<InvitesCubit, InvitesState, List<InviteResponse>>(
-              bloc: bloc,
-              selector: (state) => state.invites,
-              builder:
-                  (context, invites) =>
-                      invites.isEmpty
-                          ? const Expanded(
-                            child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Text('No invitations for now.')])),
-                          )
-                          : Expanded(
-                            child: ListView.separated(
-                              itemCount: invites.length,
-                              itemBuilder:
-                                  (context, index) =>
-                                      InviteItem(invite: invites[index], onAccepted: bloc.acceptInvite, onRejected: bloc.rejectInvite),
-                              separatorBuilder: (context, index) => const Divider(),
-                            ),
+      body: Column(
+        children: [
+          BlocSelector<InvitesCubit, InvitesState, bool>(
+            bloc: bloc,
+            selector: (state) => state.isLoading,
+            builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
+          ),
+          BlocSelector<InvitesCubit, InvitesState, List<InviteResponse>>(
+            bloc: bloc,
+            selector: (state) => state.invites,
+            builder:
+                (context, invites) =>
+                    invites.isEmpty
+                        ? const Expanded(
+                          child: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Text('No invitations for now.')])),
+                        )
+                        : Expanded(
+                          child: ListView.separated(
+                            itemCount: invites.length,
+                            itemBuilder:
+                                (context, index) => InviteItem(invite: invites[index], onAccepted: bloc.acceptInvite, onRejected: bloc.rejectInvite),
+                            separatorBuilder: (context, index) => const Divider(),
                           ),
-            ),
-          ],
-        ),
+                        ),
+          ),
+        ],
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
+import 'package:logging/logging.dart';
 import 'package:task_master/groups/data/models/group_response.dart';
 import 'package:task_master/groups/data/repository/groups_repository.dart';
 import 'package:task_master/tasks/data/models/task_values.dart';
@@ -23,6 +24,8 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
         ),
       );
 
+  static final _log = Logger('CreateTaskCubit');
+
   @visibleForTesting
   final GroupsRepository groupsRepository;
 
@@ -36,7 +39,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
       final group = await groupsRepository.getGroupById(groupId);
       emit(state.copyWith(group: group));
     } catch (e) {
-      print(e);
+      _log.severe('Error loading group: $e', e);
     } finally {
       emit(state.copyWith(isLoading: false));
     }
@@ -114,7 +117,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
         ),
       );
     } catch (e) {
-      print(e);
+      _log.severe('Error creating task: $e', e);
     } finally {
       emit(state.copyWith(isLoading: false));
     }

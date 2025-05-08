@@ -11,7 +11,6 @@ import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
 import 'package:task_master/splash/splash.dart';
 import 'package:task_master/tasks/tasks.dart';
-import 'package:task_master/tasks/ui/cubit/create_task_cubit.dart';
 import 'package:task_master/users/users.dart';
 
 final getIt = GetIt.instance;

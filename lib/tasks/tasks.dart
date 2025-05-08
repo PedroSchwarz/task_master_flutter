@@ -4,3 +4,4 @@ export './data/models/task_response.dart';
 export './data/repository/tasks_repository.dart';
 export './ui/cubit/create_task_cubit.dart';
 export './ui/view/create_task_screen.dart';
+export './ui/view/task_item.dart';

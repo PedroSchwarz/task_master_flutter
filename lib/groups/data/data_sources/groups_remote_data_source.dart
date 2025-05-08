@@ -7,7 +7,7 @@ part 'groups_remote_data_source.g.dart';
 
 @RestApi(baseUrl: '/groups')
 abstract class GroupsRemoteDataSource {
-  factory GroupsRemoteDataSource(Dio dio, {String? baseUrl}) = _GroupsRemoteDataSource;
+  factory GroupsRemoteDataSource(Dio dio, {String? baseUrl, ParseErrorLogger? errorLogger}) = _GroupsRemoteDataSource;
 
   @GET('/')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})

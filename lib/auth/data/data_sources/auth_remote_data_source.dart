@@ -9,7 +9,7 @@ part 'auth_remote_data_source.g.dart';
 
 @RestApi(baseUrl: '/auth')
 abstract class AuthRemoteDataSource {
-  factory AuthRemoteDataSource(Dio dio, {String? baseUrl}) = _AuthRemoteDataSource;
+  factory AuthRemoteDataSource(Dio dio, {String? baseUrl, ParseErrorLogger? errorLogger}) = _AuthRemoteDataSource;
 
   @POST('/login')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})

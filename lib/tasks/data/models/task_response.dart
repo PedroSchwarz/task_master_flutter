@@ -9,6 +9,7 @@ part 'task_response.g.dart';
 @freezed
 abstract class TaskResponse with _$TaskResponse {
   const factory TaskResponse({
+    @JsonKey(name: '_id') required String id,
     required String title,
     required TaskPriority priority,
     required TaskStatus status,

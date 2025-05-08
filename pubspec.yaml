@@ -1,6 +1,7 @@
 name: task_master
 description: "A new Flutter project."
 version: 1.0.0+1
+publish_to: "none"
 
 environment:
   sdk: ^3.7.2
@@ -23,6 +24,11 @@ dependencies:
   rxdart: ^0.28.0
   google_fonts: ^6.2.1
   intl: ^0.20.2
+  calendar_pager:
+    git: 
+      url: https://github.com/PedroSchwarz/calendar_pager.git
+      ref: main
+  logging: ^1.3.0
 
 dev_dependencies:
   flutter_test:

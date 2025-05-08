@@ -7,7 +7,7 @@ part 'invites_remote_data_source.g.dart';
 
 @RestApi(baseUrl: '/invites')
 abstract class InvitesRemoteDataSource {
-  factory InvitesRemoteDataSource(Dio dio, {String? baseUrl}) = _InvitesRemoteDataSource;
+  factory InvitesRemoteDataSource(Dio dio, {String? baseUrl, ParseErrorLogger? errorLogger}) = _InvitesRemoteDataSource;
 
   @GET('/')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})

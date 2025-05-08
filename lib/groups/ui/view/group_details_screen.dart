@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/groups/ui/cubit/group_details_cubit.dart';
@@ -31,11 +30,12 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
+    return BlocListener<GroupDetailsCubit, GroupDetailsState>(
+      bloc: bloc,
+      listenWhen: (previous, current) => previous.taskToDelete != current.taskToDelete,
+      listener: _listenTaskToDelete,
+      child: Scaffold(
+        body: Column(
           children: [
             BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
               bloc: bloc,
@@ -44,84 +44,94 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                     child: CustomScrollView(
                       slivers: [
                         SliverAppBar(
+                          pinned: true,
                           title: Text(title),
-                          snap: true,
-                          floating: true,
+                          actions: [
+                            IconButton(
+                              onPressed: bloc.toggleFiltersVisibility,
+                              icon: Icon(state.showFilters ? Icons.filter_alt_off : Icons.filter_alt_rounded),
+                            ),
+                          ],
                           bottom: state.isLoading ? const PreferredSize(preferredSize: Size(0, 0), child: LinearProgressIndicator()) : null,
                         ),
-                        SliverPadding(
-                          padding: const EdgeInsets.all(AppSpacing.s),
-                          sliver: SliverList.separated(
-                            itemCount: state.tasks.length,
-                            itemBuilder: (context, position) {
-                              final task = state.tasks[position];
-
-                              return Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Flexible(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        Text(task.title, style: theme.textTheme.titleLarge),
-                                        Text(task.description ?? 'No description', style: theme.textTheme.bodyLarge),
-                                        const Gap(AppSpacing.xs),
-                                        Row(
-                                          spacing: AppSpacing.xxs,
-                                          children: [const Icon(Icons.watch_later), Text(task.formattedDueDate, style: theme.textTheme.labelLarge)],
-                                        ),
-                                        const Gap(AppSpacing.xs),
-                                        Row(
-                                          spacing: AppSpacing.xs,
-                                          children: [
-                                            Chip(
-                                              label: Text(
-                                                task.priority.title,
-                                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                              ),
-                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-                                              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxxs, horizontal: AppSpacing.s),
-                                              backgroundColor: task.priority.color.withValues(alpha: 0.8),
-                                              side: BorderSide(color: task.priority.color, width: 3),
+                        if (state.showFilters)
+                          AppSliverHeaderWrapper.floating(
+                            maxSize: state.userFilter == TaskUserFilter.others ? 176 : 128,
+                            child: Column(
+                              children: [
+                                Row(
+                                  spacing: AppSpacing.xs,
+                                  children:
+                                      TaskUserFilter.values
+                                          .map(
+                                            (filter) => FilterChip(
+                                              selected: state.userFilter == filter,
+                                              label: Text(filter.title),
+                                              onSelected: (value) {
+                                                bloc.updateUserFilter(filter, value: value);
+                                              },
                                             ),
-                                            Chip(
-                                              label: Text(
-                                                task.status.title,
-                                                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                              ),
-                                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-                                              padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxxs, horizontal: AppSpacing.s),
-                                              backgroundColor: task.status.color.withValues(alpha: 0.8),
-                                              side: BorderSide(color: task.status.color, width: 3),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  Stack(
+                                          )
+                                          .toList(),
+                                ),
+                                if (state.userFilter == TaskUserFilter.others)
+                                  Row(
+                                    spacing: AppSpacing.xs,
                                     children:
-                                        task.assignedTo.indexed.map((item) {
-                                          final index = item.$1;
-                                          final assignee = item.$2;
-
-                                          return Transform.translate(
-                                            offset: Offset(index * 10, 0),
-                                            child: CircleAvatar(
-                                              child: Text(
-                                                '${assignee.firstName.substring(0, 1)}${assignee.lastName.substring(0, 1)}',
-                                                style: theme.textTheme.titleMedium,
+                                        state.assignedUsers
+                                            .map(
+                                              (user) => FilterChip(
+                                                selected: state.userToFilterBy == user,
+                                                label: Text(user.lastName),
+                                                onSelected: (value) {
+                                                  bloc.updateUserToFilterBy(user);
+                                                },
+                                                avatar: state.userToFilterBy == user ? null : CircleAvatar(child: Text(user.firstName[0])),
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
                                               ),
-                                            ),
-                                          );
-                                        }).toList(),
+                                            )
+                                            .toList(),
                                   ),
-                                ],
-                              );
-                            },
-                            separatorBuilder: (context, position) => const Divider(),
+                                Row(
+                                  spacing: AppSpacing.xs,
+                                  children:
+                                      TaskStatusFilter.values
+                                          .map(
+                                            (filter) => FilterChip(
+                                              selected: state.statusFilter == filter,
+                                              label: Text(filter.title),
+                                              onSelected: (value) {
+                                                bloc.updateStatusFilter(filter, value: value);
+                                              },
+                                            ),
+                                          )
+                                          .toList(),
+                                ),
+                              ],
+                            ),
                           ),
+                        SliverList.separated(
+                          itemCount: state.filteredTasks.length,
+                          itemBuilder: (context, position) {
+                            final task = state.filteredTasks[position];
+                            return TaskItem(
+                              task: task,
+                              onTap: () {},
+                              onComplete: () async {
+                                await bloc.toggleTaskStatus(task);
+                                return false;
+                              },
+                              onPending: () async {
+                                await bloc.toggleTaskStatus(task);
+                                return false;
+                              },
+                              onDelete: () async {
+                                bloc.setTaskToDelete(task);
+                                return false;
+                              },
+                            );
+                          },
+                          separatorBuilder: (context, position) => const Divider(),
                         ),
                       ],
                     ),
@@ -129,22 +139,40 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
             ),
           ],
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          if (context.mounted) {
-            await context.pushNamed(CreateTaskScreen.routeName, pathParameters: {'id': widget.id});
-            bloc.loadTasks(groupId: widget.id);
-          }
-        },
-        label: const Text('Create task'),
-        icon: const Icon(Icons.add),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () async {
+            if (context.mounted) {
+              await context.pushNamed(CreateTaskScreen.routeName, pathParameters: {'id': widget.id});
+              bloc.loadTasks(groupId: widget.id);
+            }
+          },
+          label: const Text('Create task'),
+          icon: const Icon(Icons.add),
+        ),
       ),
     );
   }
-}
 
-extension NullCheck<T> on T? {
-  bool get isNull => this == null;
+  void _listenTaskToDelete(BuildContext context, GroupDetailsState state) {
+    final task = state.taskToDelete;
+
+    if (task != null) {
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Delete ${task.title}?'),
+            content: const Text('This action cannot be undone.'),
+            actions: [
+              TextButton(onPressed: () => bloc.setTaskToDelete(null), child: const Text('Cancel', textAlign: TextAlign.end)),
+              TextButton(onPressed: () => bloc.deleteTask(task), child: const Text('Delete', textAlign: TextAlign.end)),
+            ],
+          );
+        },
+      );
+    } else {
+      context.pop();
+    }
+  }
 }

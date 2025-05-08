@@ -2,18 +2,31 @@ import 'package:dio/dio.dart' hide Headers;
 import 'package:retrofit/retrofit.dart';
 import 'package:task_master/tasks/data/models/create_task_request.dart';
 import 'package:task_master/tasks/data/models/task_response.dart';
+import 'package:task_master/tasks/data/models/update_task_request.dart';
 
 part 'tasks_remote_data_source.g.dart';
 
 @RestApi(baseUrl: '/tasks')
 abstract class TasksRemoteDataSource {
-  factory TasksRemoteDataSource(Dio dio, {String? baseUrl}) = _TasksRemoteDataSource;
+  factory TasksRemoteDataSource(Dio dio, {String? baseUrl, ParseErrorLogger? errorLogger}) = _TasksRemoteDataSource;
 
   @GET('/group/{groupId}')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future<List<TaskResponse>> fetchAll(@Path('groupId') String groupId);
 
+  @GET('/{id}')
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<TaskResponse> fetchById(@Path('id') String id);
+
   @POST('/')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
-  Future<String> create(@Body() CreateTaskRequest request);
+  Future<void> create(@Body() CreateTaskRequest request);
+
+  @PUT('/{id}')
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<void> update(@Path('id') String id, @Body() UpdateTaskRequest request);
+
+  @DELETE('/{id}')
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<void> delete(@Path('id') String id);
 }

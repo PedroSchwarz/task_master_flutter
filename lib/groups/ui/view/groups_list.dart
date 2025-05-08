@@ -14,27 +14,28 @@ class GroupsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: onRefresh,
-      child: ListView.builder(
-        itemCount: groups.length,
-        itemBuilder: (context, position) {
-          final group = groups[position];
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(child: GroupFeaturedItem(group: groups.first, onTap: () => onSelected(groups.first))),
+          SliverGrid.builder(
+            itemCount: groups.length - 1,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 2.5),
+            itemBuilder: (context, position) {
+              final group = groups[position + 1];
 
-          if (position == 0) {
-            return GroupFeaturedItem(group: group, onTap: () => onSelected(group));
-          }
-
-          return Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
-            child: ListTile(
-              title: Text(group.name),
-              subtitle: Text(group.description),
-              onTap: () => onSelected(group),
-              trailing: const CircularProgressIndicator(value: 0.5),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-            ),
-          );
-        },
+              return Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
+                margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
+                child: ListTile(
+                  title: Text(group.name),
+                  onTap: () => onSelected(group),
+                  trailing: const CircularProgressIndicator(value: 0.5),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

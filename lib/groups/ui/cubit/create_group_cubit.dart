@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logging/logging.dart';
 import 'package:task_master/groups/data/repository/groups_repository.dart';
 import 'package:task_master/invites/invites.dart';
 import 'package:task_master/users/data/models/user_response.dart';
@@ -21,6 +22,8 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
         ),
       );
 
+  static final _log = Logger('CreateGroupCubit');
+
   @visibleForTesting
   final GroupsRepository groupsRepository;
 
@@ -37,7 +40,7 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
       final users = await usersRepository.getUsers();
       emit(state.copyWith(users: users));
     } catch (e) {
-      print(e);
+      _log.severe('Error loading users: $e', e);
     } finally {
       emit(state.copyWith(isLoading: false));
     }
@@ -68,7 +71,7 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
 
       emit(state.copyWith(shouldGoBack: true));
     } catch (e) {
-      print(e);
+      _log.severe('Error creating group: $e', e);
     } finally {
       emit(state.copyWith(isLoading: false));
     }

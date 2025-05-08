@@ -4,8 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/dashboard/ui/cubit/dashboard_cubit.dart';
 import 'package:task_master/groups/groups.dart';
-import 'package:task_master/groups/ui/view/create_group_screen.dart';
-import 'package:task_master/groups/ui/view/group_details_screen.dart';
 import 'package:task_master/invites/invites.dart';
 
 class DashboardScreen extends StatefulWidget {

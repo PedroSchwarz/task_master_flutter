@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TaskResponse {
 
- String get title; TaskPriority get priority; TaskStatus get status; DateTime get dueDate; bool get completed; String get group; UserResponse get owner; List<UserResponse> get assignedTo; DateTime get createdAt; DateTime get updatedAt; String? get description;
+@JsonKey(name: '_id') String get id; String get title; TaskPriority get priority; TaskStatus get status; DateTime get dueDate; bool get completed; String get group; UserResponse get owner; List<UserResponse> get assignedTo; DateTime get createdAt; DateTime get updatedAt; String? get description;
 /// Create a copy of TaskResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $TaskResponseCopyWith<TaskResponse> get copyWith => _$TaskResponseCopyWithImpl<T
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskResponse&&(identical(other.title, title) || other.title == title)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.group, group) || other.group == group)&&(identical(other.owner, owner) || other.owner == owner)&&const DeepCollectionEquality().equals(other.assignedTo, assignedTo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.group, group) || other.group == group)&&(identical(other.owner, owner) || other.owner == owner)&&const DeepCollectionEquality().equals(other.assignedTo, assignedTo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,priority,status,dueDate,completed,group,owner,const DeepCollectionEquality().hash(assignedTo),createdAt,updatedAt,description);
+int get hashCode => Object.hash(runtimeType,id,title,priority,status,dueDate,completed,group,owner,const DeepCollectionEquality().hash(assignedTo),createdAt,updatedAt,description);
 
 @override
 String toString() {
-  return 'TaskResponse(title: $title, priority: $priority, status: $status, dueDate: $dueDate, completed: $completed, group: $group, owner: $owner, assignedTo: $assignedTo, createdAt: $createdAt, updatedAt: $updatedAt, description: $description)';
+  return 'TaskResponse(id: $id, title: $title, priority: $priority, status: $status, dueDate: $dueDate, completed: $completed, group: $group, owner: $owner, assignedTo: $assignedTo, createdAt: $createdAt, updatedAt: $updatedAt, description: $description)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $TaskResponseCopyWith<$Res>  {
   factory $TaskResponseCopyWith(TaskResponse value, $Res Function(TaskResponse) _then) = _$TaskResponseCopyWithImpl;
 @useResult
 $Res call({
- String title, TaskPriority priority, TaskStatus status, DateTime dueDate, bool completed, String group, UserResponse owner, List<UserResponse> assignedTo, DateTime createdAt, DateTime updatedAt, String? description
+@JsonKey(name: '_id') String id, String title, TaskPriority priority, TaskStatus status, DateTime dueDate, bool completed, String group, UserResponse owner, List<UserResponse> assignedTo, DateTime createdAt, DateTime updatedAt, String? description
 });
 
 
@@ -66,9 +66,10 @@ class _$TaskResponseCopyWithImpl<$Res>
 
 /// Create a copy of TaskResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? priority = null,Object? status = null,Object? dueDate = null,Object? completed = null,Object? group = null,Object? owner = null,Object? assignedTo = null,Object? createdAt = null,Object? updatedAt = null,Object? description = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? priority = null,Object? status = null,Object? dueDate = null,Object? completed = null,Object? group = null,Object? owner = null,Object? assignedTo = null,Object? createdAt = null,Object? updatedAt = null,Object? description = freezed,}) {
   return _then(_self.copyWith(
-title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
 as TaskPriority,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TaskStatus,dueDate: null == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
@@ -99,9 +100,10 @@ $UserResponseCopyWith<$Res> get owner {
 @JsonSerializable()
 
 class _TaskResponse extends TaskResponse {
-  const _TaskResponse({required this.title, required this.priority, required this.status, required this.dueDate, required this.completed, required this.group, required this.owner, required final  List<UserResponse> assignedTo, required this.createdAt, required this.updatedAt, this.description}): _assignedTo = assignedTo,super._();
+  const _TaskResponse({@JsonKey(name: '_id') required this.id, required this.title, required this.priority, required this.status, required this.dueDate, required this.completed, required this.group, required this.owner, required final  List<UserResponse> assignedTo, required this.createdAt, required this.updatedAt, this.description}): _assignedTo = assignedTo,super._();
   factory _TaskResponse.fromJson(Map<String, dynamic> json) => _$TaskResponseFromJson(json);
 
+@override@JsonKey(name: '_id') final  String id;
 @override final  String title;
 @override final  TaskPriority priority;
 @override final  TaskStatus status;
@@ -133,16 +135,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskResponse&&(identical(other.title, title) || other.title == title)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.group, group) || other.group == group)&&(identical(other.owner, owner) || other.owner == owner)&&const DeepCollectionEquality().equals(other._assignedTo, _assignedTo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.group, group) || other.group == group)&&(identical(other.owner, owner) || other.owner == owner)&&const DeepCollectionEquality().equals(other._assignedTo, _assignedTo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,priority,status,dueDate,completed,group,owner,const DeepCollectionEquality().hash(_assignedTo),createdAt,updatedAt,description);
+int get hashCode => Object.hash(runtimeType,id,title,priority,status,dueDate,completed,group,owner,const DeepCollectionEquality().hash(_assignedTo),createdAt,updatedAt,description);
 
 @override
 String toString() {
-  return 'TaskResponse(title: $title, priority: $priority, status: $status, dueDate: $dueDate, completed: $completed, group: $group, owner: $owner, assignedTo: $assignedTo, createdAt: $createdAt, updatedAt: $updatedAt, description: $description)';
+  return 'TaskResponse(id: $id, title: $title, priority: $priority, status: $status, dueDate: $dueDate, completed: $completed, group: $group, owner: $owner, assignedTo: $assignedTo, createdAt: $createdAt, updatedAt: $updatedAt, description: $description)';
 }
 
 
@@ -153,7 +155,7 @@ abstract mixin class _$TaskResponseCopyWith<$Res> implements $TaskResponseCopyWi
   factory _$TaskResponseCopyWith(_TaskResponse value, $Res Function(_TaskResponse) _then) = __$TaskResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String title, TaskPriority priority, TaskStatus status, DateTime dueDate, bool completed, String group, UserResponse owner, List<UserResponse> assignedTo, DateTime createdAt, DateTime updatedAt, String? description
+@JsonKey(name: '_id') String id, String title, TaskPriority priority, TaskStatus status, DateTime dueDate, bool completed, String group, UserResponse owner, List<UserResponse> assignedTo, DateTime createdAt, DateTime updatedAt, String? description
 });
 
 
@@ -170,9 +172,10 @@ class __$TaskResponseCopyWithImpl<$Res>
 
 /// Create a copy of TaskResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? priority = null,Object? status = null,Object? dueDate = null,Object? completed = null,Object? group = null,Object? owner = null,Object? assignedTo = null,Object? createdAt = null,Object? updatedAt = null,Object? description = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? priority = null,Object? status = null,Object? dueDate = null,Object? completed = null,Object? group = null,Object? owner = null,Object? assignedTo = null,Object? createdAt = null,Object? updatedAt = null,Object? description = freezed,}) {
   return _then(_TaskResponse(
-title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
 as TaskPriority,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as TaskStatus,dueDate: null == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable

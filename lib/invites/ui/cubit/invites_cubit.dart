@@ -1,11 +1,14 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:logging/logging.dart';
 import 'package:task_master/invites/invites.dart';
 
 part 'invites_cubit.freezed.dart';
 
 class InvitesCubit extends Cubit<InvitesState> {
   InvitesCubit({required this.invitesRepository}) : super(const InvitesState(isLoading: false, invites: []));
+
+  static final _log = Logger('InvitesCubit');
 
   @visibleForTesting
   final InvitesRepository invitesRepository;
@@ -16,7 +19,7 @@ class InvitesCubit extends Cubit<InvitesState> {
       final invites = await invitesRepository.getInvites(status: InviteStatus.pending.name);
       emit(state.copyWith(invites: invites));
     } catch (e) {
-      print(e);
+      _log.severe('Error loading invites: $e', e);
     } finally {
       emit(state.copyWith(isLoading: false));
     }
@@ -29,7 +32,7 @@ class InvitesCubit extends Cubit<InvitesState> {
         state.copyWith(invites: state.invites.map((item) => item.id == invite.id ? invite.copyWith(status: InviteStatus.accepted) : item).toList()),
       );
     } catch (e) {
-      print(e);
+      _log.severe('Error accepting invite: $e', e);
     }
   }
 
@@ -38,7 +41,7 @@ class InvitesCubit extends Cubit<InvitesState> {
       await invitesRepository.reject(inviteId: invite.id, groupId: invite.group.id);
       emit(state.copyWith(invites: state.invites.where((item) => item.id != invite.id).toList()));
     } catch (e) {
-      print(e);
+      _log.severe('Error rejecting invite: $e', e);
     }
   }
 }
