@@ -80,8 +80,12 @@ class TaskItem extends StatelessWidget {
                       const Gap(AppSpacing.xs),
                       Row(
                         spacing: AppSpacing.xxs,
-                        children: [const Icon(Icons.watch_later), Flexible(child: Text(task.formattedDueDate, style: theme.textTheme.labelLarge))],
+                        children: [
+                          const Icon(Icons.watch_later_outlined),
+                          Flexible(child: Text(task.formattedDueDate, style: theme.textTheme.labelLarge)),
+                        ],
                       ),
+                      const Gap(AppSpacing.xs),
                       Chip(
                         label: Text(task.status.title, style: theme.textTheme.bodySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),

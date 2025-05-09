@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/groups/data/models/group_response.dart';
 import 'package:task_master/groups/ui/view/group_featured_item.dart';
@@ -12,29 +13,24 @@ class GroupsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: GroupFeaturedItem(group: groups.first, onTap: () => onSelected(groups.first))),
-          SliverGrid.builder(
-            itemCount: groups.length - 1,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 2.5),
+          SliverPadding(
+            padding: const EdgeInsets.all(AppSpacing.s),
+            sliver: SliverToBoxAdapter(child: Text('Groups', style: theme.textTheme.headlineSmall)),
+          ),
+          SliverList.builder(
+            itemCount: groups.length,
             itemBuilder: (context, position) {
-              final group = groups[position + 1];
-
-              return Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-                margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.xxs),
-                child: ListTile(
-                  title: Text(group.name),
-                  onTap: () => onSelected(group),
-                  trailing: const CircularProgressIndicator(value: 0.5),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-                ),
-              );
+              final group = groups[position];
+              return GroupFeaturedItem(group: group, onTap: () => onSelected(group));
             },
           ),
+          const SliverToBoxAdapter(child: Gap(AppSpacing.max)),
         ],
       ),
     );

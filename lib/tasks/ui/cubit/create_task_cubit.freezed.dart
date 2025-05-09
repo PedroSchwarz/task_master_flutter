@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CreateTaskState {
 
- bool get isLoading; String get title; TaskPriority get priority; TaskStatus get status; DateTime get date; TimeOfDay get time; Set<String> get assignedIds; String? get description; GroupResponse? get group;
+ bool get isLoading; String get title; TaskPriority get priority; TaskStatus get status; DateTime get date; TimeOfDay get time; Set<String> get assignedIds; bool get shouldGoBack; String? get description; GroupResponse? get group;
 /// Create a copy of CreateTaskState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $CreateTaskStateCopyWith<CreateTaskState> get copyWith => _$CreateTaskStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateTaskState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.title, title) || other.title == title)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&const DeepCollectionEquality().equals(other.assignedIds, assignedIds)&&(identical(other.description, description) || other.description == description)&&(identical(other.group, group) || other.group == group));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateTaskState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.title, title) || other.title == title)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&const DeepCollectionEquality().equals(other.assignedIds, assignedIds)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&(identical(other.description, description) || other.description == description)&&(identical(other.group, group) || other.group == group));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,title,priority,status,date,time,const DeepCollectionEquality().hash(assignedIds),description,group);
+int get hashCode => Object.hash(runtimeType,isLoading,title,priority,status,date,time,const DeepCollectionEquality().hash(assignedIds),shouldGoBack,description,group);
 
 @override
 String toString() {
-  return 'CreateTaskState(isLoading: $isLoading, title: $title, priority: $priority, status: $status, date: $date, time: $time, assignedIds: $assignedIds, description: $description, group: $group)';
+  return 'CreateTaskState(isLoading: $isLoading, title: $title, priority: $priority, status: $status, date: $date, time: $time, assignedIds: $assignedIds, shouldGoBack: $shouldGoBack, description: $description, group: $group)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $CreateTaskStateCopyWith<$Res>  {
   factory $CreateTaskStateCopyWith(CreateTaskState value, $Res Function(CreateTaskState) _then) = _$CreateTaskStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, String title, TaskPriority priority, TaskStatus status, DateTime date, TimeOfDay time, Set<String> assignedIds, String? description, GroupResponse? group
+ bool isLoading, String title, TaskPriority priority, TaskStatus status, DateTime date, TimeOfDay time, Set<String> assignedIds, bool shouldGoBack, String? description, GroupResponse? group
 });
 
 
@@ -63,7 +63,7 @@ class _$CreateTaskStateCopyWithImpl<$Res>
 
 /// Create a copy of CreateTaskState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? title = null,Object? priority = null,Object? status = null,Object? date = null,Object? time = null,Object? assignedIds = null,Object? description = freezed,Object? group = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? title = null,Object? priority = null,Object? status = null,Object? date = null,Object? time = null,Object? assignedIds = null,Object? shouldGoBack = null,Object? description = freezed,Object? group = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -72,7 +72,8 @@ as TaskPriority,status: null == status ? _self.status : status // ignore: cast_n
 as TaskStatus,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as TimeOfDay,assignedIds: null == assignedIds ? _self.assignedIds : assignedIds // ignore: cast_nullable_to_non_nullable
-as Set<String>,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as Set<String>,shouldGoBack: null == shouldGoBack ? _self.shouldGoBack : shouldGoBack // ignore: cast_nullable_to_non_nullable
+as bool,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
 as GroupResponse?,
   ));
@@ -97,7 +98,7 @@ $GroupResponseCopyWith<$Res>? get group {
 
 
 class _CreateTaskState extends CreateTaskState {
-  const _CreateTaskState({required this.isLoading, required this.title, required this.priority, required this.status, required this.date, required this.time, required final  Set<String> assignedIds, this.description, this.group}): _assignedIds = assignedIds,super._();
+  const _CreateTaskState({required this.isLoading, required this.title, required this.priority, required this.status, required this.date, required this.time, required final  Set<String> assignedIds, required this.shouldGoBack, this.description, this.group}): _assignedIds = assignedIds,super._();
   
 
 @override final  bool isLoading;
@@ -113,6 +114,7 @@ class _CreateTaskState extends CreateTaskState {
   return EqualUnmodifiableSetView(_assignedIds);
 }
 
+@override final  bool shouldGoBack;
 @override final  String? description;
 @override final  GroupResponse? group;
 
@@ -126,16 +128,16 @@ _$CreateTaskStateCopyWith<_CreateTaskState> get copyWith => __$CreateTaskStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateTaskState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.title, title) || other.title == title)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&const DeepCollectionEquality().equals(other._assignedIds, _assignedIds)&&(identical(other.description, description) || other.description == description)&&(identical(other.group, group) || other.group == group));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateTaskState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.title, title) || other.title == title)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&const DeepCollectionEquality().equals(other._assignedIds, _assignedIds)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&(identical(other.description, description) || other.description == description)&&(identical(other.group, group) || other.group == group));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,title,priority,status,date,time,const DeepCollectionEquality().hash(_assignedIds),description,group);
+int get hashCode => Object.hash(runtimeType,isLoading,title,priority,status,date,time,const DeepCollectionEquality().hash(_assignedIds),shouldGoBack,description,group);
 
 @override
 String toString() {
-  return 'CreateTaskState(isLoading: $isLoading, title: $title, priority: $priority, status: $status, date: $date, time: $time, assignedIds: $assignedIds, description: $description, group: $group)';
+  return 'CreateTaskState(isLoading: $isLoading, title: $title, priority: $priority, status: $status, date: $date, time: $time, assignedIds: $assignedIds, shouldGoBack: $shouldGoBack, description: $description, group: $group)';
 }
 
 
@@ -146,7 +148,7 @@ abstract mixin class _$CreateTaskStateCopyWith<$Res> implements $CreateTaskState
   factory _$CreateTaskStateCopyWith(_CreateTaskState value, $Res Function(_CreateTaskState) _then) = __$CreateTaskStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, String title, TaskPriority priority, TaskStatus status, DateTime date, TimeOfDay time, Set<String> assignedIds, String? description, GroupResponse? group
+ bool isLoading, String title, TaskPriority priority, TaskStatus status, DateTime date, TimeOfDay time, Set<String> assignedIds, bool shouldGoBack, String? description, GroupResponse? group
 });
 
 
@@ -163,7 +165,7 @@ class __$CreateTaskStateCopyWithImpl<$Res>
 
 /// Create a copy of CreateTaskState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? title = null,Object? priority = null,Object? status = null,Object? date = null,Object? time = null,Object? assignedIds = null,Object? description = freezed,Object? group = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? title = null,Object? priority = null,Object? status = null,Object? date = null,Object? time = null,Object? assignedIds = null,Object? shouldGoBack = null,Object? description = freezed,Object? group = freezed,}) {
   return _then(_CreateTaskState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -172,7 +174,8 @@ as TaskPriority,status: null == status ? _self.status : status // ignore: cast_n
 as TaskStatus,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,time: null == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as TimeOfDay,assignedIds: null == assignedIds ? _self._assignedIds : assignedIds // ignore: cast_nullable_to_non_nullable
-as Set<String>,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as Set<String>,shouldGoBack: null == shouldGoBack ? _self.shouldGoBack : shouldGoBack // ignore: cast_nullable_to_non_nullable
+as bool,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
 as GroupResponse?,
   ));

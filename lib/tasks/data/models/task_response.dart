@@ -33,4 +33,11 @@ abstract class TaskResponse with _$TaskResponse {
 
     return formatter.format(localDate);
   }
+
+  String get formattedCreatedAt {
+    final localDate = createdAt.toLocal();
+    final formatter = DateFormat('EEEE, MMMM d hh:mm a');
+
+    return formatter.format(localDate);
+  }
 }

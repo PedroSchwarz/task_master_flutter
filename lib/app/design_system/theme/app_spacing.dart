@@ -25,4 +25,16 @@ class AppSpacing {
 
   /// Value: 56
   static const double l = 56;
+
+  /// Value: 64
+  static const double xl = 64;
+
+  /// Value: 72
+  static const double xxl = 72;
+
+  /// Value: 80
+  static const double xxxl = 80;
+
+  /// Value: 160
+  static const double max = 160;
 }

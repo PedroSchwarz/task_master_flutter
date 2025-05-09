@@ -44,7 +44,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             appBar: AppBar(title: const Text('Create Group')),
             body: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.s),
+                padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: AppSpacing.s,

@@ -34,7 +34,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           appBar: AppBar(title: const Text('Register'), centerTitle: false),
           body: SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.s),
+              padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
               child: Column(
                 spacing: AppSpacing.s,
                 crossAxisAlignment: CrossAxisAlignment.stretch,

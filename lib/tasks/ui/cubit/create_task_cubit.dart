@@ -21,6 +21,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
           date: DateTime.now(),
           time: const TimeOfDay(hour: 8, minute: 0),
           assignedIds: {},
+          shouldGoBack: false,
         ),
       );
 
@@ -116,6 +117,8 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
           assignedTo: state.assignedIds.toList(),
         ),
       );
+
+      emit(state.copyWith(shouldGoBack: true));
     } catch (e) {
       _log.severe('Error creating task: $e', e);
     } finally {
@@ -134,6 +137,7 @@ sealed class CreateTaskState with _$CreateTaskState {
     required DateTime date,
     required TimeOfDay time,
     required Set<String> assignedIds,
+    required bool shouldGoBack,
     String? description,
     GroupResponse? group,
   }) = _CreateTaskState;

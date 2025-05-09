@@ -16,10 +16,9 @@ class GroupFeaturedItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(padding: const EdgeInsets.all(AppSpacing.s), child: Text('Groups', style: theme.textTheme.headlineSmall)),
         Card(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
           child: InkWell(
             borderRadius: BorderRadius.circular(AppSpacing.xs),
             onTap: onTap,
@@ -49,7 +48,7 @@ class GroupFeaturedItem extends StatelessWidget {
             ),
           ),
         ),
-        const Gap(AppSpacing.m),
+        const Gap(AppSpacing.s),
       ],
     );
   }

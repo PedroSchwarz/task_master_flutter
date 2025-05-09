@@ -4,9 +4,11 @@ import 'package:logging/logging.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
+import 'package:task_master/tasks/data/models/task_values.dart';
 import 'package:task_master/tasks/data/models/update_task_request.dart';
 import 'package:task_master/tasks/tasks.dart';
 import 'package:task_master/users/users.dart';
+import 'package:collection/collection.dart';
 
 part 'group_details_cubit.freezed.dart';
 
@@ -17,9 +19,12 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
           isLoading: false,
           tasks: [],
           invites: [],
-          showFilters: false,
           userFilter: TaskUserFilter.all,
+          completionFilter: TaskCompletionFilter.all,
           statusFilter: TaskStatusFilter.all,
+          priorityFilter: TaskPriorityFilter.all,
+          dateSort: TaskDateSort.newest,
+          prioritySort: TaskPrioritySort.none,
         ),
       );
 
@@ -82,11 +87,27 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     }
   }
 
+  void updateCompletionFilter(TaskCompletionFilter filter, {required bool value}) {
+    if (value) {
+      emit(state.copyWith(completionFilter: filter));
+    } else {
+      emit(state.copyWith(completionFilter: TaskCompletionFilter.all));
+    }
+  }
+
   void updateStatusFilter(TaskStatusFilter filter, {required bool value}) {
     if (value) {
       emit(state.copyWith(statusFilter: filter));
     } else {
       emit(state.copyWith(statusFilter: TaskStatusFilter.all));
+    }
+  }
+
+  void updatePriorityFilter(TaskPriorityFilter filter, {required bool value}) {
+    if (value) {
+      emit(state.copyWith(priorityFilter: filter));
+    } else {
+      emit(state.copyWith(priorityFilter: TaskPriorityFilter.all));
     }
   }
 
@@ -98,8 +119,34 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     emit(state.copyWith(userToFilterBy: user));
   }
 
-  void toggleFiltersVisibility() {
-    emit(state.copyWith(showFilters: !state.showFilters));
+  void updateDateSort(TaskDateSort sort, {required bool value}) {
+    if (value) {
+      emit(state.copyWith(dateSort: sort));
+    } else {
+      emit(state.copyWith(dateSort: TaskDateSort.newest));
+    }
+  }
+
+  void updatePrioritySort(TaskPrioritySort sort, {required bool value}) {
+    if (value) {
+      emit(state.copyWith(prioritySort: sort));
+    } else {
+      emit(state.copyWith(prioritySort: TaskPrioritySort.none));
+    }
+  }
+
+  void resetFiltersAndSort() {
+    emit(
+      state.copyWith(
+        statusFilter: TaskStatusFilter.all,
+        userFilter: TaskUserFilter.all,
+        userToFilterBy: null,
+        priorityFilter: TaskPriorityFilter.all,
+        completionFilter: TaskCompletionFilter.all,
+        dateSort: TaskDateSort.newest,
+        prioritySort: TaskPrioritySort.none,
+      ),
+    );
   }
 
   void setTaskToDelete(TaskResponse? task) {
@@ -158,9 +205,12 @@ sealed class GroupDetailsState with _$GroupDetailsState {
     required bool isLoading,
     required List<TaskResponse> tasks,
     required List<InviteResponse> invites,
-    required bool showFilters,
     required TaskUserFilter userFilter,
+    required TaskCompletionFilter completionFilter,
     required TaskStatusFilter statusFilter,
+    required TaskPriorityFilter priorityFilter,
+    required TaskDateSort dateSort,
+    required TaskPrioritySort prioritySort,
     GroupResponse? group,
     UserData? currentUser,
     UserResponse? userToFilterBy,
@@ -169,7 +219,7 @@ sealed class GroupDetailsState with _$GroupDetailsState {
 
   const GroupDetailsState._();
 
-  Set<UserResponse> get assignedUsers => tasks.expand((task) => task.assignedTo).where((user) => user.id != currentUser?.id).toSet();
+  Set<UserResponse> get assignedUsers => group?.members.where((member) => member.id != currentUser?.id).toSet() ?? {};
 
   List<TaskResponse> get filteredTasks =>
       tasks
@@ -190,13 +240,63 @@ sealed class GroupDetailsState with _$GroupDetailsState {
             }
           })
           .where((task) {
+            switch (completionFilter) {
+              case TaskCompletionFilter.all:
+                return true;
+              case TaskCompletionFilter.pending:
+                return !task.completed;
+              case TaskCompletionFilter.completed:
+                return task.completed;
+            }
+          })
+          .where((task) {
             switch (statusFilter) {
               case TaskStatusFilter.all:
                 return true;
-              case TaskStatusFilter.pending:
-                return !task.completed;
-              case TaskStatusFilter.completed:
-                return task.completed;
+              case TaskStatusFilter.todo:
+                return task.status == TaskStatus.todo;
+              case TaskStatusFilter.inProgress:
+                return task.status == TaskStatus.inProgress;
+              case TaskStatusFilter.done:
+                return task.status == TaskStatus.done;
+            }
+          })
+          .where((task) {
+            switch (priorityFilter) {
+              case TaskPriorityFilter.all:
+                return true;
+              case TaskPriorityFilter.low:
+                return task.priority == TaskPriority.low;
+              case TaskPriorityFilter.medium:
+                return task.priority == TaskPriority.medium;
+              case TaskPriorityFilter.high:
+                return task.priority == TaskPriority.high;
+            }
+          })
+          .sorted((a, b) {
+            final completedCompare = a.completed.toString().compareTo(b.completed.toString());
+            if (completedCompare != 0) return completedCompare;
+
+            int priorityCompare = 0;
+
+            switch (prioritySort) {
+              case TaskPrioritySort.lowest:
+                priorityCompare = a.priority.index.compareTo(b.priority.index);
+                break;
+              case TaskPrioritySort.highest:
+                priorityCompare = b.priority.index.compareTo(a.priority.index);
+                break;
+              case TaskPrioritySort.none:
+                break;
+            }
+
+            if (priorityCompare != 0) return priorityCompare;
+
+            switch (dateSort) {
+              case TaskDateSort.newest:
+                return b.createdAt.compareTo(a.createdAt);
+              case TaskDateSort.oldest:
+                return a.createdAt.compareTo(b.createdAt);
             }
           })
           .toList();
@@ -211,11 +311,50 @@ enum TaskUserFilter {
   final String title;
 }
 
-enum TaskStatusFilter {
+enum TaskCompletionFilter {
   all(title: 'All'),
   pending(title: 'Pending'),
   completed(title: 'Completed');
 
+  const TaskCompletionFilter({required this.title});
+  final String title;
+}
+
+enum TaskStatusFilter {
+  all(title: 'All'),
+  todo(title: 'To Do'),
+  inProgress(title: 'In Progress'),
+  done(title: 'Done');
+
   const TaskStatusFilter({required this.title});
+  final String title;
+}
+
+enum TaskPriorityFilter {
+  all(title: 'All'),
+  low(title: 'Low'),
+  medium(title: 'Medium'),
+  high(title: 'High');
+
+  const TaskPriorityFilter({required this.title});
+  final String title;
+}
+
+enum TaskDateSort {
+  newest(title: 'Newest'),
+  oldest(title: 'Oldest');
+
+  const TaskDateSort({required this.title});
+
+  final String title;
+}
+
+enum TaskPrioritySort {
+  none(title: 'None'),
+  highest(title: 'Highest'),
+  lowest(title: 'Lowest');
+
+  const TaskPrioritySort({required this.title});
+
   final String title;
 }

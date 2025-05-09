@@ -97,7 +97,7 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(AppSpacing.s),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
               child: FilledButton(onPressed: () => widget.onPressed(_selectedIds), child: const Text('Invite')),
             ),
           ],
