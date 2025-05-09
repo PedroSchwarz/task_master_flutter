@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:task_master/app/app.dart';
+import 'package:task_master/auth/data/models/user_data.dart';
 import 'package:task_master/groups/data/models/group_response.dart';
 import 'package:task_master/groups/ui/view/group_featured_item.dart';
 
 class GroupsList extends StatelessWidget {
-  const GroupsList({required this.groups, required this.onSelected, required this.onRefresh, super.key});
+  const GroupsList({required this.groups, required this.currentUser, required this.onSelected, required this.onRefresh, super.key});
 
   final List<GroupResponse> groups;
+  final UserData currentUser;
   final void Function(GroupResponse) onSelected;
   final Future<void> Function() onRefresh;
 
@@ -27,7 +29,7 @@ class GroupsList extends StatelessWidget {
             itemCount: groups.length,
             itemBuilder: (context, position) {
               final group = groups[position];
-              return GroupFeaturedItem(group: group, onTap: () => onSelected(group));
+              return GroupFeaturedItem(group: group, isEditable: group.owner.id == currentUser.id, onTap: () => onSelected(group));
             },
           ),
           const SliverToBoxAdapter(child: Gap(AppSpacing.max)),

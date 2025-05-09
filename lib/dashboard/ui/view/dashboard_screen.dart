@@ -83,6 +83,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         : Expanded(
                           child: GroupsList(
                             groups: state.groups,
+                            currentUser: bloc.currentUser,
                             onSelected:
                                 (group) => context.goNamed(
                                   GroupDetailsScreen.routeName,

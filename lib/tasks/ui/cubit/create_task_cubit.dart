@@ -7,6 +7,7 @@ import 'package:task_master/groups/data/models/group_response.dart';
 import 'package:task_master/groups/data/repository/groups_repository.dart';
 import 'package:task_master/tasks/data/models/task_values.dart';
 import 'package:task_master/tasks/tasks.dart';
+import 'package:task_master/users/users.dart';
 
 part 'create_task_cubit.freezed.dart';
 
@@ -153,6 +154,8 @@ sealed class CreateTaskState with _$CreateTaskState {
     final formatter = DateFormat('hh:mm a');
     return formatter.format(DateTime(date.year, date.month, date.day, time.hour, time.minute));
   }
+
+  List<UserResponse> get assignableUsers => group != null ? [...group!.members, group!.owner] : [];
 
   bool get isFormValid => title.isNotEmpty;
 

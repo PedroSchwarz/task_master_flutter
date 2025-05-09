@@ -90,133 +90,130 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 ),
                 BlocBuilder<CreateTaskCubit, CreateTaskState>(
                   bloc: bloc,
-                  builder: (context, state) {
-                    final group = state.group;
-
-                    return Expanded(
-                      child: CustomScrollView(
-                        slivers: [
-                          SliverPadding(
-                            padding: const EdgeInsets.all(AppSpacing.s),
-                            sliver: SliverToBoxAdapter(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                spacing: AppSpacing.s,
-                                children: [
-                                  AppTextField(label: 'Title', onChanged: bloc.updateTitle, textCapitalization: TextCapitalization.words),
-                                  AppTextField(label: 'Description', onChanged: bloc.updateDescription, maxLines: 5),
-                                  Row(
-                                    spacing: AppSpacing.s,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Flexible(
-                                        child: DropdownMenu(
-                                          label: const Text('Priority'),
-                                          initialSelection: state.priority,
-                                          inputDecorationTheme: InputDecorationTheme(
-                                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
-                                            isCollapsed: true,
-                                            contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-                                          ),
-                                          menuStyle: MenuStyle(
-                                            backgroundColor: WidgetStateProperty.all(theme.scaffoldBackgroundColor),
-                                            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                                          ),
-                                          onSelected: bloc.updatePriority,
-                                          dropdownMenuEntries:
-                                              TaskPriority.values
-                                                  .map(
-                                                    (priority) => DropdownMenuEntry(
-                                                      value: priority,
-                                                      label: priority.title,
-                                                      leadingIcon: Icon(priority.icon, color: priority.color),
-                                                    ),
-                                                  )
-                                                  .toList(),
-                                        ),
-                                      ),
-                                      Flexible(
-                                        child: DropdownMenu(
-                                          label: const Text('Status'),
-                                          initialSelection: state.status,
-                                          inputDecorationTheme: InputDecorationTheme(
-                                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
-                                            isCollapsed: true,
-                                            contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-                                          ),
-                                          menuStyle: MenuStyle(
-                                            backgroundColor: WidgetStateProperty.all(theme.scaffoldBackgroundColor),
-                                            shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                                          ),
-                                          onSelected: bloc.updateStatus,
-                                          dropdownMenuEntries:
-                                              TaskStatus.values
-                                                  .map(
-                                                    (status) => DropdownMenuEntry(
-                                                      value: status,
-                                                      label: status.title,
-                                                      leadingIcon: Icon(status.icon, color: status.color),
-                                                    ),
-                                                  )
-                                                  .toList(),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Text('Due Date and Time', style: theme.textTheme.titleSmall),
-                                  Row(
-                                    spacing: AppSpacing.s,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: FilledButton(
-                                          onPressed: () async {
-                                            final date = await showDatePicker(
-                                              context: context,
-                                              initialDate: state.date,
-                                              firstDate: DateTime.now(),
-                                              lastDate: DateTime.now().add(const Duration(days: 365)),
-                                            );
-                                            bloc.updateDate(date);
-                                          },
-                                          child: Row(
-                                            children: [
-                                              const Icon(Icons.calendar_month_outlined),
-                                              const Gap(AppSpacing.xs),
-                                              Text(state.formattedDate),
-                                            ],
+                  builder:
+                      (context, state) => Expanded(
+                        child: CustomScrollView(
+                          slivers: [
+                            SliverPadding(
+                              padding: const EdgeInsets.all(AppSpacing.s),
+                              sliver: SliverToBoxAdapter(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  spacing: AppSpacing.s,
+                                  children: [
+                                    AppTextField(label: 'Title', onChanged: bloc.updateTitle, textCapitalization: TextCapitalization.words),
+                                    AppTextField(label: 'Description', onChanged: bloc.updateDescription, maxLines: 5),
+                                    Row(
+                                      spacing: AppSpacing.s,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Flexible(
+                                          child: DropdownMenu(
+                                            label: const Text('Priority'),
+                                            initialSelection: state.priority,
+                                            inputDecorationTheme: InputDecorationTheme(
+                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                                              isCollapsed: true,
+                                              contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+                                            ),
+                                            menuStyle: MenuStyle(
+                                              backgroundColor: WidgetStateProperty.all(theme.scaffoldBackgroundColor),
+                                              shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                                            ),
+                                            onSelected: bloc.updatePriority,
+                                            dropdownMenuEntries:
+                                                TaskPriority.values
+                                                    .map(
+                                                      (priority) => DropdownMenuEntry(
+                                                        value: priority,
+                                                        label: priority.title,
+                                                        leadingIcon: Icon(priority.icon, color: priority.color),
+                                                      ),
+                                                    )
+                                                    .toList(),
                                           ),
                                         ),
-                                      ),
-                                      Expanded(
-                                        child: FilledButton.tonal(
-                                          onPressed: () async {
-                                            final time = await showTimePicker(context: context, initialTime: state.time);
-                                            bloc.updateTime(time);
-                                          },
-                                          child: Row(
-                                            children: [const Icon(Icons.watch_later_outlined), const Gap(AppSpacing.xs), Text(state.formattedTime)],
+                                        Flexible(
+                                          child: DropdownMenu(
+                                            label: const Text('Status'),
+                                            initialSelection: state.status,
+                                            inputDecorationTheme: InputDecorationTheme(
+                                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                                              isCollapsed: true,
+                                              contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+                                            ),
+                                            menuStyle: MenuStyle(
+                                              backgroundColor: WidgetStateProperty.all(theme.scaffoldBackgroundColor),
+                                              shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
+                                            ),
+                                            onSelected: bloc.updateStatus,
+                                            dropdownMenuEntries:
+                                                TaskStatus.values
+                                                    .map(
+                                                      (status) => DropdownMenuEntry(
+                                                        value: status,
+                                                        label: status.title,
+                                                        leadingIcon: Icon(status.icon, color: status.color),
+                                                      ),
+                                                    )
+                                                    .toList(),
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                    Text('Due Date and Time', style: theme.textTheme.titleSmall),
+                                    Row(
+                                      spacing: AppSpacing.s,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: FilledButton(
+                                            onPressed: () async {
+                                              final date = await showDatePicker(
+                                                context: context,
+                                                initialDate: state.date,
+                                                firstDate: DateTime.now(),
+                                                lastDate: DateTime.now().add(const Duration(days: 365)),
+                                              );
+                                              bloc.updateDate(date);
+                                            },
+                                            child: Row(
+                                              children: [
+                                                const Icon(Icons.calendar_month_outlined),
+                                                const Gap(AppSpacing.xs),
+                                                Text(state.formattedDate),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: FilledButton.tonal(
+                                            onPressed: () async {
+                                              final time = await showTimePicker(context: context, initialTime: state.time);
+                                              bloc.updateTime(time);
+                                            },
+                                            child: Row(
+                                              children: [const Icon(Icons.watch_later_outlined), const Gap(AppSpacing.xs), Text(state.formattedTime)],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          if (group != null)
                             SliverPadding(
                               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
                               sliver: SliverGrid.builder(
-                                itemCount: group.members.length,
+                                itemCount: state.assignableUsers.length,
                                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                                   maxCrossAxisExtent: 40,
                                   mainAxisSpacing: AppSpacing.s,
                                   crossAxisSpacing: AppSpacing.s,
                                 ),
                                 itemBuilder: (context, position) {
-                                  final member = group.members[position];
+                                  final member = state.assignableUsers[position];
                                   final isAssigned = state.assignedIds.contains(member.id);
 
                                   return Theme(
@@ -239,10 +236,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 },
                               ),
                             ),
-                        ],
+                          ],
+                        ),
                       ),
-                    );
-                  },
                 ),
                 const Gap(AppSpacing.s),
                 Padding(

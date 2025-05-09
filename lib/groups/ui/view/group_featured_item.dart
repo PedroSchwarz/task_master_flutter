@@ -4,9 +4,10 @@ import 'package:task_master/app/design_system/theme/app_spacing.dart';
 import 'package:task_master/groups/groups.dart';
 
 class GroupFeaturedItem extends StatelessWidget {
-  const GroupFeaturedItem({required this.group, required this.onTap, super.key});
+  const GroupFeaturedItem({required this.group, required this.isEditable, required this.onTap, super.key});
 
   final GroupResponse group;
+  final bool isEditable;
   final VoidCallback onTap;
 
   @override
@@ -25,11 +26,18 @@ class GroupFeaturedItem extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.s),
               child: Column(
-                spacing: AppSpacing.s,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(group.name, style: theme.textTheme.titleLarge),
+                  Row(
+                    spacing: AppSpacing.s,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(child: Text(group.name, style: theme.textTheme.titleLarge)),
+                      if (isEditable) IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+                    ],
+                  ),
                   Text(group.description, maxLines: 3, overflow: TextOverflow.ellipsis),
+                  const Gap(AppSpacing.s),
                   SizedBox(
                     height: 30,
                     child: ListView.builder(
@@ -42,6 +50,7 @@ class GroupFeaturedItem extends StatelessWidget {
                       },
                     ),
                   ),
+                  const Gap(AppSpacing.s),
                   LinearProgressIndicator(value: 0.5, backgroundColor: Colors.grey.shade300),
                 ],
               ),
