@@ -3,5 +3,7 @@ export './data/models/create_task_request.dart';
 export './data/models/task_response.dart';
 export './data/repository/tasks_repository.dart';
 export './ui/cubit/create_task_cubit.dart';
+export './ui/cubit/task_details_cubit.dart';
 export './ui/view/create_task_screen.dart';
+export './ui/view/task_details_screen.dart';
 export './ui/view/task_item.dart';

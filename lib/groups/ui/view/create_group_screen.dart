@@ -41,7 +41,17 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             }
           },
           child: Scaffold(
-            appBar: AppBar(title: const Text('Create Group')),
+            appBar: AppBar(
+              title: const Text('Create Group'),
+              bottom: PreferredSize(
+                preferredSize: const Size(0, 10),
+                child: BlocSelector<CreateGroupCubit, CreateGroupState, bool>(
+                  bloc: bloc,
+                  selector: (state) => state.isLoading,
+                  builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
+                ),
+              ),
+            ),
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
@@ -49,11 +59,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   spacing: AppSpacing.s,
                   children: [
-                    BlocSelector<CreateGroupCubit, CreateGroupState, bool>(
-                      bloc: bloc,
-                      selector: (state) => state.isLoading,
-                      builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
-                    ),
                     AppTextField(label: 'Name', onChanged: bloc.updateName, textCapitalization: TextCapitalization.words),
                     AppTextField(
                       label: 'Description',

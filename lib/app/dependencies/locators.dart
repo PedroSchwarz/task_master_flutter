@@ -77,7 +77,8 @@ class Locators extends BaseServiceLocators {
       ..registerFactory(
         () => GroupDetailsCubit(authRepository: getIt(), groupsRepository: getIt(), tasksRepository: getIt(), invitesRepository: getIt()),
       )
-      ..registerFactory(() => CreateTaskCubit(groupsRepository: getIt(), tasksRepository: getIt()));
+      ..registerFactory(() => CreateTaskCubit(groupsRepository: getIt(), tasksRepository: getIt()))
+      ..registerFactory(() => TaskDetailsCubit(authRepository: getIt(), tasksRepository: getIt()));
   }
 
   Dio createDio({required String baseUrl}) {

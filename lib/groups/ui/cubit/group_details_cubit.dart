@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
@@ -8,7 +9,6 @@ import 'package:task_master/tasks/data/models/task_values.dart';
 import 'package:task_master/tasks/data/models/update_task_request.dart';
 import 'package:task_master/tasks/tasks.dart';
 import 'package:task_master/users/users.dart';
-import 'package:collection/collection.dart';
 
 part 'group_details_cubit.freezed.dart';
 
@@ -68,7 +68,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
 
   Future<void> loadTasks({required String groupId}) async {
     try {
-      final tasks = await tasksRepository.fetchAll(groupId);
+      final tasks = await tasksRepository.getAll(groupId);
       emit(state.copyWith(tasks: tasks));
     } catch (e) {
       _log.severe('Error loading tasks: $e', e);

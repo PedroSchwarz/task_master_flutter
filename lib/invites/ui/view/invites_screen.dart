@@ -25,14 +25,19 @@ class _InvitesScreenState extends State<InvitesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Invites')),
-      body: Column(
-        children: [
-          BlocSelector<InvitesCubit, InvitesState, bool>(
+      appBar: AppBar(
+        title: const Text('Invites'),
+        bottom: PreferredSize(
+          preferredSize: const Size(0, 10),
+          child: BlocSelector<InvitesCubit, InvitesState, bool>(
             bloc: bloc,
             selector: (state) => state.isLoading,
             builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
           ),
+        ),
+      ),
+      body: Column(
+        children: [
           BlocSelector<InvitesCubit, InvitesState, List<InviteResponse>>(
             bloc: bloc,
             selector: (state) => state.invites,

@@ -201,7 +201,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                         SliverAppBar(
                           pinned: true,
                           title: Text(title),
-                          bottom: state.isLoading ? const PreferredSize(preferredSize: Size(0, 0), child: LinearProgressIndicator()) : null,
+                          bottom: state.isLoading ? const PreferredSize(preferredSize: Size(0, 10), child: LinearProgressIndicator()) : null,
                         ),
                         SliverList.separated(
                           itemCount: state.filteredTasks.length,
@@ -209,7 +209,12 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                             final task = state.filteredTasks[position];
                             return TaskItem(
                               task: task,
-                              onTap: () {},
+                              canDelete:
+                                  task.owner.id == bloc.currentUser.id || task.assignedTo.any((assignee) => assignee.id == bloc.currentUser.id),
+                              onTap: () async {
+                                await context.pushNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.id});
+                                bloc.loadTasks(groupId: widget.id);
+                              },
                               onComplete: () async {
                                 await bloc.toggleTaskStatus(task);
                                 return false;
@@ -253,6 +258,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
     if (task != null) {
       showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (context) {
           return AlertDialog(

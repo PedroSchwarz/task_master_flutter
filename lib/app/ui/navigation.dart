@@ -10,17 +10,20 @@ import 'package:task_master/splash/ui/view/splash_screen.dart';
 import 'package:task_master/tasks/tasks.dart';
 
 GoRouter createRouter({required AuthRepository authRepository}) {
+  List<String> authWhiteList = [SplashScreen.routeName, LoginScreen.routeName, RegisterScreen.routeName];
+
   final router = GoRouter(
     initialLocation: '/${SplashScreen.routeName}',
     refreshListenable: GoRouterRefreshStreamListenable(authRepository.currentUser.distinct()),
     redirect: (context, state) {
-      if (state.topRoute?.name == SplashScreen.routeName) {
+      if (authWhiteList.contains(state.topRoute?.name)) {
         return null;
       }
 
       if (authRepository.currentUser.value == null) {
         return '/${LoginScreen.routeName}';
       }
+
       return null;
     },
     routes: [
@@ -42,9 +45,14 @@ GoRouter createRouter({required AuthRepository authRepository}) {
               GoRoute(
                 path: '/${CreateTaskScreen.routeName}',
                 name: CreateTaskScreen.routeName,
-                builder: (context, state) => CreateTaskScreen(groupId: state.pathParameters['id'] ?? ''),
+                builder: (context, state) => CreateTaskScreen(groupId: state.pathParameters['id'] ?? '', taskId: state.uri.queryParameters['taskId']),
               ),
             ],
+          ),
+          GoRoute(
+            path: '/${TaskDetailsScreen.routeName}/:id',
+            name: TaskDetailsScreen.routeName,
+            builder: (context, state) => TaskDetailsScreen(id: state.pathParameters['id'] ?? ''),
           ),
         ],
       ),

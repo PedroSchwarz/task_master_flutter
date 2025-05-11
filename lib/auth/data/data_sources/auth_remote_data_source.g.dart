@@ -20,13 +20,13 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<LoginResponse> login(LoginRequest request) async {
+  Future<AuthResponse> login(LoginRequest request) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': 'application/json'};
     _headers.removeWhere((k, v) => v == null);
     final _data = request;
-    final _options = _setStreamType<LoginResponse>(
+    final _options = _setStreamType<AuthResponse>(
       Options(
             method: 'POST',
             headers: _headers,
@@ -42,9 +42,9 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late LoginResponse _value;
+    late AuthResponse _value;
     try {
-      _value = LoginResponse.fromJson(_result.data!);
+      _value = AuthResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;
@@ -53,13 +53,13 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
   }
 
   @override
-  Future<RegisterResponse> register(RegisterRequest request) async {
+  Future<AuthResponse> register(RegisterRequest request) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': 'application/json'};
     _headers.removeWhere((k, v) => v == null);
     final _data = request;
-    final _options = _setStreamType<RegisterResponse>(
+    final _options = _setStreamType<AuthResponse>(
       Options(
             method: 'POST',
             headers: _headers,
@@ -75,9 +75,9 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late RegisterResponse _value;
+    late AuthResponse _value;
     try {
-      _value = RegisterResponse.fromJson(_result.data!);
+      _value = AuthResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

@@ -4,9 +4,18 @@ import 'package:task_master/app/design_system/theme/app_spacing.dart';
 import 'package:task_master/tasks/data/models/task_response.dart';
 
 class TaskItem extends StatelessWidget {
-  const TaskItem({required this.task, required this.onTap, required this.onComplete, required this.onPending, required this.onDelete, super.key});
+  const TaskItem({
+    required this.task,
+    required this.canDelete,
+    required this.onTap,
+    required this.onComplete,
+    required this.onPending,
+    required this.onDelete,
+    super.key,
+  });
 
   final TaskResponse task;
+  final bool canDelete;
   final VoidCallback onTap;
   final Future<bool> Function() onComplete;
   final Future<bool> Function() onPending;
@@ -18,6 +27,7 @@ class TaskItem extends StatelessWidget {
 
     return Dismissible(
       key: Key(task.title),
+      direction: canDelete ? DismissDirection.horizontal : DismissDirection.endToStart,
       dismissThresholds: const {DismissDirection.endToStart: 0.5, DismissDirection.startToEnd: 0.6},
       background: Container(
         padding: const EdgeInsets.all(AppSpacing.m),

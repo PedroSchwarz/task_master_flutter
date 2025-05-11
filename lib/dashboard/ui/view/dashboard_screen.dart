@@ -50,18 +50,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size(0, 10),
+          child: BlocSelector<DashboardCubit, DashboardState, bool>(
+            bloc: bloc,
+            selector: (state) => state.isLoading,
+            builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
+          ),
+        ),
       ),
       drawer: Drawer(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.s),
+            padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text('${bloc.currentUser.firstName} ${bloc.currentUser.lastName}', style: theme.textTheme.headlineSmall),
                 Text(bloc.currentUser.email),
                 const Spacer(),
-                TextButton(onPressed: bloc.signOut, child: const Text('Sign out')),
+                TextButton(onPressed: bloc.signOut, child: const Text('Sign Out')),
               ],
             ),
           ),
@@ -69,11 +77,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: Column(
         children: [
-          BlocSelector<DashboardCubit, DashboardState, bool>(
-            bloc: bloc,
-            selector: (state) => state.isLoading,
-            builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
-          ),
           BlocBuilder<DashboardCubit, DashboardState>(
             bloc: bloc,
             builder:

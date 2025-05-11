@@ -1,9 +1,8 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:retrofit/retrofit.dart';
+import 'package:task_master/auth/data/models/auth_response.dart';
 import 'package:task_master/auth/data/models/login_request.dart';
-import 'package:task_master/auth/data/models/login_response.dart';
 import 'package:task_master/auth/data/models/register_request.dart';
-import 'package:task_master/auth/data/models/register_response.dart';
 
 part 'auth_remote_data_source.g.dart';
 
@@ -13,9 +12,9 @@ abstract class AuthRemoteDataSource {
 
   @POST('/login')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
-  Future<LoginResponse> login(@Body() LoginRequest request);
+  Future<AuthResponse> login(@Body() LoginRequest request);
 
   @POST('/register')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
-  Future<RegisterResponse> register(@Body() RegisterRequest request);
+  Future<AuthResponse> register(@Body() RegisterRequest request);
 }

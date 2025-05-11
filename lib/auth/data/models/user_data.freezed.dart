@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserData {
 
-@JsonKey(name: '_id', includeIfNull: false) String? get id; String get firstName; String get lastName; String get email;
+ String get id; String get firstName; String get lastName; String get email;
 /// Create a copy of UserData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $UserDataCopyWith<$Res>  {
   factory $UserDataCopyWith(UserData value, $Res Function(UserData) _then) = _$UserDataCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id', includeIfNull: false) String? id, String firstName, String lastName, String email
+ String id, String firstName, String lastName, String email
 });
 
 
@@ -66,10 +66,10 @@ class _$UserDataCopyWithImpl<$Res>
 
 /// Create a copy of UserData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? firstName = null,Object? lastName = null,Object? email = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = null,Object? lastName = null,Object? email = null,}) {
   return _then(_self.copyWith(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String?,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,
@@ -83,10 +83,10 @@ as String,
 @JsonSerializable()
 
 class _UserData implements UserData {
-  const _UserData({@JsonKey(name: '_id', includeIfNull: false) this.id, required this.firstName, required this.lastName, required this.email});
+  const _UserData({required this.id, required this.firstName, required this.lastName, required this.email});
   factory _UserData.fromJson(Map<String, dynamic> json) => _$UserDataFromJson(json);
 
-@override@JsonKey(name: '_id', includeIfNull: false) final  String? id;
+@override final  String id;
 @override final  String firstName;
 @override final  String lastName;
 @override final  String email;
@@ -124,7 +124,7 @@ abstract mixin class _$UserDataCopyWith<$Res> implements $UserDataCopyWith<$Res>
   factory _$UserDataCopyWith(_UserData value, $Res Function(_UserData) _then) = __$UserDataCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id', includeIfNull: false) String? id, String firstName, String lastName, String email
+ String id, String firstName, String lastName, String email
 });
 
 
@@ -141,10 +141,10 @@ class __$UserDataCopyWithImpl<$Res>
 
 /// Create a copy of UserData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? firstName = null,Object? lastName = null,Object? email = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firstName = null,Object? lastName = null,Object? email = null,}) {
   return _then(_UserData(
-id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String?,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,

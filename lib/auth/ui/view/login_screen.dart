@@ -32,7 +32,18 @@ class _LoginScreenState extends State<LoginScreen> {
           }
         },
         child: Scaffold(
-          appBar: AppBar(title: const Text('Login'), centerTitle: false),
+          appBar: AppBar(
+            title: const Text('Login'),
+            centerTitle: false,
+            bottom: PreferredSize(
+              preferredSize: const Size(0, 10),
+              child: BlocSelector<LoginCubit, LoginState, bool>(
+                bloc: bloc,
+                selector: (state) => state.isLoading,
+                builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
+              ),
+            ),
+          ),
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
@@ -40,11 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 spacing: AppSpacing.s,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  BlocSelector<LoginCubit, LoginState, bool>(
-                    bloc: bloc,
-                    selector: (state) => state.isLoading,
-                    builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
-                  ),
                   const Spacer(),
                   AppTextField(
                     label: 'Email',

@@ -8,11 +8,11 @@ class TasksRepository {
   @visibleForTesting
   final TasksRemoteDataSource tasksRemoteDataSource;
 
-  Future<List<TaskResponse>> fetchAll(String groupId) async {
+  Future<List<TaskResponse>> getAll(String groupId) async {
     return tasksRemoteDataSource.fetchAll(groupId);
   }
 
-  Future<TaskResponse> fetchById(String id) async {
+  Future<TaskResponse> getById(String id) async {
     return tasksRemoteDataSource.fetchById(id);
   }
 
