@@ -2,14 +2,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:task_master/auth/auth.dart';
+import 'package:task_master/comments/comments.dart';
 import 'package:task_master/tasks/data/models/update_task_request.dart';
 import 'package:task_master/tasks/tasks.dart';
 
 part 'task_details_cubit.freezed.dart';
 
 class TaskDetailsCubit extends Cubit<TaskDetailsState> {
-  TaskDetailsCubit({required this.authRepository, required this.tasksRepository})
-    : super(const TaskDetailsState(isLoading: false, showDeleteDialog: false, shouldGoBack: false));
+  TaskDetailsCubit({required this.authRepository, required this.tasksRepository, required this.commentsRepository})
+    : super(const TaskDetailsState(isLoading: false, showDeleteDialog: false, shouldGoBack: false, comments: [], comment: ''));
 
   static final _log = Logger('TaskDetailsCubit');
 
@@ -19,18 +20,34 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
   @visibleForTesting
   final TasksRepository tasksRepository;
 
+  @visibleForTesting
+  final CommentsRepository commentsRepository;
+
   UserData get currentUser => authRepository.currentUser.value!;
 
   Future<void> load(String id) async {
     emit(state.copyWith(isLoading: true));
 
+    await Future.wait([loadTask(id), loadComments(id)]);
+
+    emit(state.copyWith(isLoading: false));
+  }
+
+  Future<void> loadTask(String id) async {
     try {
       final task = await tasksRepository.getById(id);
       emit(state.copyWith(task: task));
     } catch (e) {
       _log.severe('Error loading task: $e', e);
-    } finally {
-      emit(state.copyWith(isLoading: false));
+    }
+  }
+
+  Future<void> loadComments(String id) async {
+    try {
+      final comments = await commentsRepository.getAll(id);
+      emit(state.copyWith(comments: comments));
+    } catch (e) {
+      _log.severe('Error loading comments: $e', e);
     }
   }
 
@@ -83,10 +100,40 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
       emit(state.copyWith(isLoading: false));
     }
   }
+
+  void updateComment(String value) {
+    emit(state.copyWith(comment: value));
+  }
+
+  Future<void> createComment() async {
+    final task = state.task;
+
+    if (task == null) {
+      return;
+    }
+
+    try {
+      await commentsRepository.create(CreateCommentRequest(message: state.comment, task: task.id));
+      await loadComments(task.id);
+      emit(state.copyWith(comment: ''));
+    } catch (e) {
+      _log.severe('Error creating comment: $e', e);
+    }
+  }
 }
 
 @freezed
 sealed class TaskDetailsState with _$TaskDetailsState {
-  const factory TaskDetailsState({required bool isLoading, required bool showDeleteDialog, required bool shouldGoBack, TaskResponse? task}) =
-      _TaskDetailsState;
+  const factory TaskDetailsState({
+    required bool isLoading,
+    required bool showDeleteDialog,
+    required bool shouldGoBack,
+    required List<CommentResponse> comments,
+    required String comment,
+    TaskResponse? task,
+  }) = _TaskDetailsState;
+
+  const TaskDetailsState._();
+
+  bool get isButtonEnabled => comment.isNotEmpty;
 }

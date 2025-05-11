@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TaskDetailsState {
 
- bool get isLoading; bool get showDeleteDialog; bool get shouldGoBack; TaskResponse? get task;
+ bool get isLoading; bool get showDeleteDialog; bool get shouldGoBack; List<CommentResponse> get comments; String get comment; TaskResponse? get task;
 /// Create a copy of TaskDetailsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $TaskDetailsStateCopyWith<TaskDetailsState> get copyWith => _$TaskDetailsStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.showDeleteDialog, showDeleteDialog) || other.showDeleteDialog == showDeleteDialog)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&(identical(other.task, task) || other.task == task));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.showDeleteDialog, showDeleteDialog) || other.showDeleteDialog == showDeleteDialog)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&const DeepCollectionEquality().equals(other.comments, comments)&&(identical(other.comment, comment) || other.comment == comment)&&(identical(other.task, task) || other.task == task));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,showDeleteDialog,shouldGoBack,task);
+int get hashCode => Object.hash(runtimeType,isLoading,showDeleteDialog,shouldGoBack,const DeepCollectionEquality().hash(comments),comment,task);
 
 @override
 String toString() {
-  return 'TaskDetailsState(isLoading: $isLoading, showDeleteDialog: $showDeleteDialog, shouldGoBack: $shouldGoBack, task: $task)';
+  return 'TaskDetailsState(isLoading: $isLoading, showDeleteDialog: $showDeleteDialog, shouldGoBack: $shouldGoBack, comments: $comments, comment: $comment, task: $task)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $TaskDetailsStateCopyWith<$Res>  {
   factory $TaskDetailsStateCopyWith(TaskDetailsState value, $Res Function(TaskDetailsState) _then) = _$TaskDetailsStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, bool showDeleteDialog, bool shouldGoBack, TaskResponse? task
+ bool isLoading, bool showDeleteDialog, bool shouldGoBack, List<CommentResponse> comments, String comment, TaskResponse? task
 });
 
 
@@ -63,12 +63,14 @@ class _$TaskDetailsStateCopyWithImpl<$Res>
 
 /// Create a copy of TaskDetailsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? showDeleteDialog = null,Object? shouldGoBack = null,Object? task = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? showDeleteDialog = null,Object? shouldGoBack = null,Object? comments = null,Object? comment = null,Object? task = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,showDeleteDialog: null == showDeleteDialog ? _self.showDeleteDialog : showDeleteDialog // ignore: cast_nullable_to_non_nullable
 as bool,shouldGoBack: null == shouldGoBack ? _self.shouldGoBack : shouldGoBack // ignore: cast_nullable_to_non_nullable
-as bool,task: freezed == task ? _self.task : task // ignore: cast_nullable_to_non_nullable
+as bool,comments: null == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
+as List<CommentResponse>,comment: null == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
+as String,task: freezed == task ? _self.task : task // ignore: cast_nullable_to_non_nullable
 as TaskResponse?,
   ));
 }
@@ -91,13 +93,21 @@ $TaskResponseCopyWith<$Res>? get task {
 /// @nodoc
 
 
-class _TaskDetailsState implements TaskDetailsState {
-  const _TaskDetailsState({required this.isLoading, required this.showDeleteDialog, required this.shouldGoBack, this.task});
+class _TaskDetailsState extends TaskDetailsState {
+  const _TaskDetailsState({required this.isLoading, required this.showDeleteDialog, required this.shouldGoBack, required final  List<CommentResponse> comments, required this.comment, this.task}): _comments = comments,super._();
   
 
 @override final  bool isLoading;
 @override final  bool showDeleteDialog;
 @override final  bool shouldGoBack;
+ final  List<CommentResponse> _comments;
+@override List<CommentResponse> get comments {
+  if (_comments is EqualUnmodifiableListView) return _comments;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_comments);
+}
+
+@override final  String comment;
 @override final  TaskResponse? task;
 
 /// Create a copy of TaskDetailsState
@@ -110,16 +120,16 @@ _$TaskDetailsStateCopyWith<_TaskDetailsState> get copyWith => __$TaskDetailsStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.showDeleteDialog, showDeleteDialog) || other.showDeleteDialog == showDeleteDialog)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&(identical(other.task, task) || other.task == task));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.showDeleteDialog, showDeleteDialog) || other.showDeleteDialog == showDeleteDialog)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&const DeepCollectionEquality().equals(other._comments, _comments)&&(identical(other.comment, comment) || other.comment == comment)&&(identical(other.task, task) || other.task == task));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,showDeleteDialog,shouldGoBack,task);
+int get hashCode => Object.hash(runtimeType,isLoading,showDeleteDialog,shouldGoBack,const DeepCollectionEquality().hash(_comments),comment,task);
 
 @override
 String toString() {
-  return 'TaskDetailsState(isLoading: $isLoading, showDeleteDialog: $showDeleteDialog, shouldGoBack: $shouldGoBack, task: $task)';
+  return 'TaskDetailsState(isLoading: $isLoading, showDeleteDialog: $showDeleteDialog, shouldGoBack: $shouldGoBack, comments: $comments, comment: $comment, task: $task)';
 }
 
 
@@ -130,7 +140,7 @@ abstract mixin class _$TaskDetailsStateCopyWith<$Res> implements $TaskDetailsSta
   factory _$TaskDetailsStateCopyWith(_TaskDetailsState value, $Res Function(_TaskDetailsState) _then) = __$TaskDetailsStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, bool showDeleteDialog, bool shouldGoBack, TaskResponse? task
+ bool isLoading, bool showDeleteDialog, bool shouldGoBack, List<CommentResponse> comments, String comment, TaskResponse? task
 });
 
 
@@ -147,12 +157,14 @@ class __$TaskDetailsStateCopyWithImpl<$Res>
 
 /// Create a copy of TaskDetailsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? showDeleteDialog = null,Object? shouldGoBack = null,Object? task = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? showDeleteDialog = null,Object? shouldGoBack = null,Object? comments = null,Object? comment = null,Object? task = freezed,}) {
   return _then(_TaskDetailsState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,showDeleteDialog: null == showDeleteDialog ? _self.showDeleteDialog : showDeleteDialog // ignore: cast_nullable_to_non_nullable
 as bool,shouldGoBack: null == shouldGoBack ? _self.shouldGoBack : shouldGoBack // ignore: cast_nullable_to_non_nullable
-as bool,task: freezed == task ? _self.task : task // ignore: cast_nullable_to_non_nullable
+as bool,comments: null == comments ? _self._comments : comments // ignore: cast_nullable_to_non_nullable
+as List<CommentResponse>,comment: null == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
+as String,task: freezed == task ? _self.task : task // ignore: cast_nullable_to_non_nullable
 as TaskResponse?,
   ));
 }
