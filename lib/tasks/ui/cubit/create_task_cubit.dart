@@ -124,7 +124,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
   Future<void> saveTask() async {
     emit(state.copyWith(isLoading: true));
 
-    if (state.task != null) {
+    if (state.isUpdating) {
       await updateTask();
     } else {
       await createTask();
@@ -184,7 +184,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
 
       emit(state.copyWith(shouldGoBack: true));
     } catch (e) {
-      _log.severe('Error creating task: $e', e);
+      _log.severe('Error updating task: $e', e);
     }
   }
 }

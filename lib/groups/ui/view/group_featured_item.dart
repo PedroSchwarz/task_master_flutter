@@ -4,11 +4,12 @@ import 'package:task_master/app/design_system/theme/app_spacing.dart';
 import 'package:task_master/groups/groups.dart';
 
 class GroupFeaturedItem extends StatelessWidget {
-  const GroupFeaturedItem({required this.group, required this.isEditable, required this.onTap, super.key});
+  const GroupFeaturedItem({required this.group, required this.isEditable, required this.onTap, required this.onEdit, super.key});
 
   final GroupResponse group;
   final bool isEditable;
   final VoidCallback onTap;
+  final VoidCallback onEdit;
 
   @override
   Widget build(BuildContext context) {
@@ -33,14 +34,14 @@ class GroupFeaturedItem extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Flexible(child: Text(group.name, style: theme.textTheme.titleLarge)),
-                      if (isEditable) IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+                      if (isEditable) IconButton(onPressed: onEdit, icon: const Icon(Icons.edit)),
                     ],
                   ),
                   Text(group.description, maxLines: 3, overflow: TextOverflow.ellipsis),
                   const Gap(AppSpacing.s),
                   SizedBox(
-                    height: 30,
-                    child: ListView.builder(
+                    height: 40,
+                    child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: group.members.length,
                       itemBuilder: (context, index) {
@@ -48,10 +49,10 @@ class GroupFeaturedItem extends StatelessWidget {
 
                         return CircleAvatar(child: Text('${member.firstName.substring(0, 1)}${member.lastName.substring(0, 1)}'));
                       },
+                      separatorBuilder: (context, index) => const Gap(AppSpacing.xs),
                     ),
                   ),
-                  const Gap(AppSpacing.s),
-                  LinearProgressIndicator(value: 0.5, backgroundColor: Colors.grey.shade300),
+                  const Gap(AppSpacing.xxs),
                 ],
               ),
             ),

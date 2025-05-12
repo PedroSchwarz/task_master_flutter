@@ -35,7 +35,11 @@ GoRouter createRouter({required AuthRepository authRepository}) {
         name: DashboardScreen.routeName,
         builder: (context, state) => const DashboardScreen(),
         routes: [
-          GoRoute(path: '/${CreateGroupScreen.routeName}', name: CreateGroupScreen.routeName, builder: (context, state) => const CreateGroupScreen()),
+          GoRoute(
+            path: '/${CreateGroupScreen.routeName}',
+            name: CreateGroupScreen.routeName,
+            builder: (context, state) => CreateGroupScreen(id: state.uri.queryParameters['id']),
+          ),
           GoRoute(path: '/${InvitesScreen.routeName}', name: InvitesScreen.routeName, builder: (context, state) => const InvitesScreen()),
           GoRoute(
             path: '/${GroupDetailsScreen.routeName}/:id',

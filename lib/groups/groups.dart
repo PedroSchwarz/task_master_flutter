@@ -1,6 +1,7 @@
 export './data/data_sources/groups_remote_data_source.dart';
 export './data/models/create_group_request.dart';
 export './data/models/group_response.dart';
+export './data/models/update_group_request.dart';
 export './data/repository/groups_repository.dart';
 export './ui/cubit/create_group_cubit.dart';
 export './ui/cubit/group_details_cubit.dart';

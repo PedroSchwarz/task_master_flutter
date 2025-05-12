@@ -1,7 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:task_master/groups/data/data_sources/groups_remote_data_source.dart';
-import 'package:task_master/groups/data/models/create_group_request.dart';
-import 'package:task_master/groups/data/models/group_response.dart';
+import 'package:task_master/groups/groups.dart';
 
 class GroupsRepository {
   const GroupsRepository({required this.groupsRemoteDataSource});
@@ -10,14 +8,22 @@ class GroupsRepository {
   final GroupsRemoteDataSource groupsRemoteDataSource;
 
   Future<List<GroupResponse>> getGroups() async {
-    return await groupsRemoteDataSource.fetchAll();
+    return groupsRemoteDataSource.fetchAll();
   }
 
   Future<GroupResponse> getGroupById(String id) async {
-    return await groupsRemoteDataSource.fetchById(id);
+    return groupsRemoteDataSource.fetchById(id);
   }
 
   Future<String> createGroup({required String name, required String description}) async {
-    return await groupsRemoteDataSource.create(CreateGroupRequest(name: name, description: description));
+    return groupsRemoteDataSource.create(CreateGroupRequest(name: name, description: description));
+  }
+
+  Future<void> updateGroup(UpdateGroupRequest request, {required String id}) async {
+    return groupsRemoteDataSource.update(id, request);
+  }
+
+  Future<void> deleteGroup(String id) async {
+    return groupsRemoteDataSource.delete(id);
   }
 }

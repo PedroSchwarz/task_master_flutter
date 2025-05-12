@@ -6,9 +6,11 @@ import 'package:task_master/groups/ui/cubit/create_group_cubit.dart';
 import 'package:task_master/invites/invites.dart';
 
 class CreateGroupScreen extends StatefulWidget {
-  const CreateGroupScreen({super.key});
+  const CreateGroupScreen({this.id, super.key});
 
   static const String routeName = 'groups/create';
+
+  final String? id;
 
   @override
   State<CreateGroupScreen> createState() => _CreateGroupScreenState();
@@ -20,7 +22,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   @override
   void initState() {
     super.initState();
-    bloc.load();
+    bloc.load(widget.id);
   }
 
   @override
@@ -31,63 +33,96 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       listener: _listenInviteUsersSheet,
       child: BlocListener<CreateGroupCubit, CreateGroupState>(
         bloc: bloc,
-        listenWhen: (previous, current) => previous.shouldGoBack != current.shouldGoBack,
-        listener: _listenNavigationFlow,
-        child: GestureDetector(
-          onTap: () {
-            final scope = FocusScope.of(context);
-            if (!scope.hasPrimaryFocus) {
-              scope.unfocus();
-            }
-          },
-          child: Scaffold(
-            appBar: AppBar(
-              title: const Text('Create Group'),
-              bottom: PreferredSize(
-                preferredSize: const Size(0, 10),
-                child: BlocSelector<CreateGroupCubit, CreateGroupState, bool>(
+        listenWhen: (previous, current) => previous.showDeleteDialog != current.showDeleteDialog,
+        listener: _listenDeleteDialog,
+        child: BlocListener<CreateGroupCubit, CreateGroupState>(
+          bloc: bloc,
+          listenWhen: (previous, current) => previous.shouldGoBack != current.shouldGoBack,
+          listener: _listenNavigationFlow,
+          child: GestureDetector(
+            onTap: () {
+              final scope = FocusScope.of(context);
+              if (!scope.hasPrimaryFocus) {
+                scope.unfocus();
+              }
+            },
+            child: Scaffold(
+              appBar: AppBar(
+                title: BlocSelector<CreateGroupCubit, CreateGroupState, bool>(
                   bloc: bloc,
-                  selector: (state) => state.isLoading,
-                  builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
+                  selector: (state) => state.isUpdating,
+                  builder: (context, isUpdating) => Text('${isUpdating ? 'Update' : 'Create'} Group'),
+                ),
+                bottom: PreferredSize(
+                  preferredSize: const Size(0, 10),
+                  child: BlocSelector<CreateGroupCubit, CreateGroupState, bool>(
+                    bloc: bloc,
+                    selector: (state) => state.isLoading,
+                    builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
+                  ),
                 ),
               ),
-            ),
-            body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  spacing: AppSpacing.s,
-                  children: [
-                    AppTextField(label: 'Name', onChanged: bloc.updateName, textCapitalization: TextCapitalization.words),
-                    AppTextField(
-                      label: 'Description',
-                      onChanged: bloc.updateDescription,
-                      textCapitalization: TextCapitalization.sentences,
-                      maxLines: 5,
+              body: BlocBuilder<CreateGroupCubit, CreateGroupState>(
+                bloc: bloc,
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: AppSpacing.s,
+                        children: [
+                          AppTextField(
+                            label: 'Name',
+                            initialValue: state.name,
+                            onChanged: bloc.updateName,
+                            textCapitalization: TextCapitalization.words,
+                          ),
+                          AppTextField(
+                            label: 'Description',
+                            initialValue: state.description,
+                            onChanged: bloc.updateDescription,
+                            textCapitalization: TextCapitalization.sentences,
+                            maxLines: 5,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              TextButton(
+                                onPressed: bloc.toggleInviteUsersSheet,
+                                child: const Row(spacing: AppSpacing.s, children: [Icon(Icons.person_add_outlined), Text('Invite people')]),
+                              ),
+                              Text('${state.selectedUsersIds.length} selected'),
+                            ],
+                          ),
+                          const Spacer(),
+                          BlocSelector<CreateGroupCubit, CreateGroupState, bool>(
+                            bloc: bloc,
+                            selector: (state) => state.isUpdating,
+                            builder:
+                                (context, isUpdating) => Row(
+                                  spacing: AppSpacing.s,
+                                  children: [
+                                    Expanded(
+                                      child: FilledButton(
+                                        onPressed: state.isButtonEnabled ? bloc.saveGroup : null,
+                                        child: Text(state.isUpdating ? 'Update' : 'Create'),
+                                      ),
+                                    ),
+                                    if (isUpdating)
+                                      Expanded(child: FilledButton.tonal(onPressed: bloc.toggleDeleteDialog, child: const Text('Delete'))),
+                                  ],
+                                ),
+                          ),
+                        ],
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextButton(
-                          onPressed: bloc.toggleInviteUsersSheet,
-                          child: const Row(spacing: AppSpacing.s, children: [Icon(Icons.person_add_outlined), Text('Invite people')]),
-                        ),
-                        BlocSelector<CreateGroupCubit, CreateGroupState, int>(
-                          bloc: bloc,
-                          selector: (state) => state.selectedUsersIds.length,
-                          builder: (context, idsCount) => Text('$idsCount selected'),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    BlocSelector<CreateGroupCubit, CreateGroupState, bool>(
-                      bloc: bloc,
-                      selector: (state) => state.isButtonEnabled,
-                      builder: (context, isEnabled) => FilledButton(onPressed: isEnabled ? bloc.createGroup : null, child: const Text('Create')),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ),
@@ -114,6 +149,33 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       );
 
       bloc.toggleInviteUsersSheet();
+    }
+  }
+
+  Future<void> _listenDeleteDialog(BuildContext context, CreateGroupState state) async {
+    final group = state.group;
+
+    if (group == null) {
+      return;
+    }
+
+    if (state.showDeleteDialog) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Delete ${group.name}?'),
+            content: const Text('This action cannot be undone.'),
+            actions: [
+              TextButton(onPressed: bloc.toggleDeleteDialog, child: const Text('Cancel', textAlign: TextAlign.end)),
+              TextButton(onPressed: bloc.deleteGroup, child: const Text('Delete', textAlign: TextAlign.end)),
+            ],
+          );
+        },
+      );
+    } else {
+      context.pop();
     }
   }
 
