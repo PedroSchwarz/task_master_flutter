@@ -19,6 +19,10 @@ class GroupsRepository {
     return groupsRemoteDataSource.create(CreateGroupRequest(name: name, description: description));
   }
 
+  Future<void> addMemberToGroup(String id) async {
+    return groupsRemoteDataSource.addMember(id);
+  }
+
   Future<void> updateGroup(UpdateGroupRequest request, {required String id}) async {
     return groupsRemoteDataSource.update(id, request);
   }

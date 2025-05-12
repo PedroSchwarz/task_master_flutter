@@ -18,45 +18,52 @@ class GroupFeaturedItem extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(AppSpacing.xs),
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.s),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    spacing: AppSpacing.s,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        Stack(
+          alignment: Alignment.topRight,
+          children: [
+            Card(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
+              margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(AppSpacing.xs),
+                onTap: onTap,
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.s),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Flexible(child: Text(group.name, style: theme.textTheme.titleLarge)),
-                      if (isEditable) IconButton(onPressed: onEdit, icon: const Icon(Icons.edit)),
+                      Row(
+                        spacing: AppSpacing.s,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(child: Text(group.name, style: theme.textTheme.titleLarge)),
+                          // if (isEditable) IconButton.filledTonal(onPressed: onEdit, icon: const Icon(Icons.edit)),
+                        ],
+                      ),
+                      Text(group.description, maxLines: 3, overflow: TextOverflow.ellipsis),
+                      const Gap(AppSpacing.s),
+                      SizedBox(
+                        height: 40,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: group.members.length,
+                          itemBuilder: (context, index) {
+                            final member = group.members[index];
+
+                            return CircleAvatar(child: Text('${member.firstName.substring(0, 1)}${member.lastName.substring(0, 1)}'));
+                          },
+                          separatorBuilder: (context, index) => const Gap(AppSpacing.xs),
+                        ),
+                      ),
+                      const Gap(AppSpacing.xxs),
                     ],
                   ),
-                  Text(group.description, maxLines: 3, overflow: TextOverflow.ellipsis),
-                  const Gap(AppSpacing.s),
-                  SizedBox(
-                    height: 40,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: group.members.length,
-                      itemBuilder: (context, index) {
-                        final member = group.members[index];
-
-                        return CircleAvatar(child: Text('${member.firstName.substring(0, 1)}${member.lastName.substring(0, 1)}'));
-                      },
-                      separatorBuilder: (context, index) => const Gap(AppSpacing.xs),
-                    ),
-                  ),
-                  const Gap(AppSpacing.xxs),
-                ],
+                ),
               ),
             ),
-          ),
+            if (isEditable)
+              Transform.translate(offset: const Offset(0, -AppSpacing.s), child: IconButton.filled(onPressed: onEdit, icon: const Icon(Icons.edit))),
+          ],
         ),
         const Gap(AppSpacing.s),
       ],

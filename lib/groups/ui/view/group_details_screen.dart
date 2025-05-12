@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/groups/ui/cubit/group_details_cubit.dart';
+import 'package:task_master/groups/ui/view/group_details_filters.dart';
 import 'package:task_master/tasks/tasks.dart';
 
 class GroupDetailsScreen extends StatefulWidget {
@@ -31,8 +32,6 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return BlocListener<GroupDetailsCubit, GroupDetailsState>(
       bloc: bloc,
       listenWhen: (previous, current) => previous.taskToDelete != current.taskToDelete,
@@ -42,151 +41,23 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
           bloc: bloc,
           builder:
               (context, state) => Drawer(
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(AppSpacing.m, AppSpacing.m, AppSpacing.m, 0),
-                    child: Column(
-                      spacing: AppSpacing.s,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                          child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text('Assignee', style: theme.textTheme.titleLarge),
-                                const Divider(),
-                                Wrap(
-                                  spacing: AppSpacing.xs,
-                                  children:
-                                      TaskUserFilter.values
-                                          .map(
-                                            (filter) => FilterChip(
-                                              selected: state.userFilter == filter,
-                                              label: Text(filter.title),
-                                              onSelected: (value) {
-                                                bloc.updateUserFilter(filter, value: value);
-                                              },
-                                            ),
-                                          )
-                                          .toList(),
-                                ),
-                                if (state.userFilter == TaskUserFilter.others)
-                                  Wrap(
-                                    spacing: AppSpacing.xs,
-                                    children:
-                                        state.assignedUsers
-                                            .map(
-                                              (user) => FilterChip(
-                                                selected: state.userToFilterBy == user,
-                                                label: Text(user.lastName),
-                                                onSelected: (value) {
-                                                  bloc.updateUserToFilterBy(user);
-                                                },
-                                                avatar: state.userToFilterBy == user ? null : CircleAvatar(child: Text(user.firstName[0])),
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                                              ),
-                                            )
-                                            .toList(),
-                                  ),
-                                const Gap(AppSpacing.s),
-                                Text('Completion', style: theme.textTheme.titleLarge),
-                                const Divider(),
-                                Wrap(
-                                  spacing: AppSpacing.xs,
-                                  children:
-                                      TaskCompletionFilter.values
-                                          .map(
-                                            (filter) => FilterChip(
-                                              selected: state.completionFilter == filter,
-                                              label: Text(filter.title),
-                                              onSelected: (value) {
-                                                bloc.updateCompletionFilter(filter, value: value);
-                                              },
-                                            ),
-                                          )
-                                          .toList(),
-                                ),
-                                const Gap(AppSpacing.s),
-                                Text('Status', style: theme.textTheme.titleLarge),
-                                const Divider(),
-                                Wrap(
-                                  spacing: AppSpacing.xs,
-                                  children:
-                                      TaskStatusFilter.values
-                                          .map(
-                                            (filter) => FilterChip(
-                                              selected: state.statusFilter == filter,
-                                              label: Text(filter.title),
-                                              onSelected: (value) {
-                                                bloc.updateStatusFilter(filter, value: value);
-                                              },
-                                            ),
-                                          )
-                                          .toList(),
-                                ),
-                                const Gap(AppSpacing.s),
-                                Text('Priority', style: theme.textTheme.titleLarge),
-                                const Divider(),
-                                Wrap(
-                                  spacing: AppSpacing.xs,
-                                  children:
-                                      TaskPriorityFilter.values
-                                          .map(
-                                            (filter) => FilterChip(
-                                              selected: state.priorityFilter == filter,
-                                              label: Text(filter.title),
-                                              onSelected: (value) {
-                                                bloc.updatePriorityFilter(filter, value: value);
-                                              },
-                                            ),
-                                          )
-                                          .toList(),
-                                ),
-                                const Gap(AppSpacing.s),
-                                Text('Sort Date', style: theme.textTheme.titleLarge),
-                                const Divider(),
-                                Wrap(
-                                  spacing: AppSpacing.xs,
-                                  children:
-                                      TaskDateSort.values
-                                          .map(
-                                            (sort) => FilterChip(
-                                              selected: state.dateSort == sort,
-                                              label: Text(sort.title),
-                                              onSelected: (value) {
-                                                bloc.updateDateSort(sort, value: value);
-                                              },
-                                            ),
-                                          )
-                                          .toList(),
-                                ),
-                                const Gap(AppSpacing.s),
-                                Text('Sort Priority', style: theme.textTheme.titleLarge),
-                                const Divider(),
-                                Wrap(
-                                  spacing: AppSpacing.xs,
-                                  children:
-                                      TaskPrioritySort.values
-                                          .map(
-                                            (sort) => FilterChip(
-                                              selected: state.prioritySort == sort,
-                                              label: Text(sort.title),
-                                              onSelected: (value) {
-                                                bloc.updatePrioritySort(sort, value: value);
-                                              },
-                                            ),
-                                          )
-                                          .toList(),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        FilledButton(onPressed: bloc.resetFiltersAndSort, child: const Text('Reset')),
-                      ],
-                    ),
-                  ),
+                child: GroupDetailsFilters(
+                  userFilter: state.userFilter,
+                  completionFilter: state.completionFilter,
+                  statusFilter: state.statusFilter,
+                  priorityFilter: state.priorityFilter,
+                  dateSort: state.dateSort,
+                  prioritySort: state.prioritySort,
+                  assignedUsers: state.assignedUsers,
+                  userToFilterBy: state.userToFilterBy,
+                  updateUserFilter: bloc.updateUserFilter,
+                  updateUserToFilterBy: bloc.updateUserToFilterBy,
+                  updateCompletionFilter: bloc.updateCompletionFilter,
+                  updateStatusFilter: bloc.updateStatusFilter,
+                  updatePriorityFilter: bloc.updatePriorityFilter,
+                  updateDateSort: bloc.updateDateSort,
+                  updatePrioritySort: bloc.updatePrioritySort,
+                  resetFiltersAndSort: bloc.resetFiltersAndSort,
                 ),
               ),
         ),
@@ -203,34 +74,29 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                           title: Text(title),
                           bottom: state.isLoading ? const PreferredSize(preferredSize: Size(0, 10), child: LinearProgressIndicator()) : null,
                         ),
-                        SliverList.separated(
-                          itemCount: state.filteredTasks.length,
-                          itemBuilder: (context, position) {
-                            final task = state.filteredTasks[position];
-                            return TaskItem(
-                              task: task,
-                              canDelete:
-                                  task.owner.id == bloc.currentUser.id || task.assignedTo.any((assignee) => assignee.id == bloc.currentUser.id),
-                              onTap: () async {
-                                await context.pushNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.id});
-                                bloc.loadTasks(groupId: widget.id);
-                              },
-                              onComplete: () async {
-                                await bloc.toggleTaskStatus(task);
-                                return false;
-                              },
-                              onPending: () async {
-                                await bloc.toggleTaskStatus(task);
-                                return false;
-                              },
-                              onDelete: () async {
-                                bloc.setTaskToDelete(task);
-                                return false;
-                              },
-                            );
-                          },
-                          separatorBuilder: (context, position) => const Divider(),
-                        ),
+                        if (state.tasks.isEmpty)
+                          const SliverFillRemaining(child: Padding(padding: EdgeInsets.all(AppSpacing.s), child: TaskContentUnavailable()))
+                        else if (state.filteredTasks.isEmpty)
+                          const SliverFillRemaining(child: Padding(padding: EdgeInsets.all(AppSpacing.s), child: TaskFilteredContentUnavailable()))
+                        else
+                          SliverList.separated(
+                            itemCount: state.filteredTasks.length,
+                            itemBuilder: (context, position) {
+                              final task = state.filteredTasks[position];
+                              return TaskItem(
+                                task: task,
+                                canDelete: bloc.getTaskOwnership(task),
+                                onTap: () async {
+                                  await context.pushNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.id});
+                                  bloc.loadTasks(groupId: widget.id);
+                                },
+                                onComplete: bloc.toggleTaskStatus,
+                                onPending: bloc.toggleTaskStatus,
+                                onDelete: bloc.setTaskToDelete,
+                              );
+                            },
+                            separatorBuilder: (context, position) => const Divider(),
+                          ),
                         const SliverToBoxAdapter(child: Gap(AppSpacing.max)),
                       ],
                     ),

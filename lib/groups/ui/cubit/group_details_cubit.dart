@@ -149,7 +149,12 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     );
   }
 
-  void setTaskToDelete(TaskResponse? task) {
+  bool getTaskOwnership(TaskResponse task) {
+    final userId = currentUser.id;
+    return task.owner.id == userId || task.assignedTo.any((assignee) => assignee.id == userId);
+  }
+
+  Future<void> setTaskToDelete(TaskResponse? task) async {
     emit(state.copyWith(taskToDelete: task));
   }
 

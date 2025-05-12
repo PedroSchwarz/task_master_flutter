@@ -17,9 +17,9 @@ class TaskItem extends StatelessWidget {
   final TaskResponse task;
   final bool canDelete;
   final VoidCallback onTap;
-  final Future<bool> Function() onComplete;
-  final Future<bool> Function() onPending;
-  final Future<bool> Function() onDelete;
+  final Future<void> Function(TaskResponse) onComplete;
+  final Future<void> Function(TaskResponse) onPending;
+  final Future<void> Function(TaskResponse?) onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +57,15 @@ class TaskItem extends StatelessWidget {
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {
           if (task.completed) {
-            return onPending();
+            await onPending(task);
           } else {
-            return onComplete();
+            await onComplete(task);
           }
         } else {
-          return onDelete();
+          await onDelete(task);
         }
+
+        return false;
       },
       child: InkWell(
         onTap: onTap,
@@ -85,23 +87,44 @@ class TaskItem extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(task.title, style: theme.textTheme.titleLarge),
+                      Text(task.title, style: theme.textTheme.titleLarge?.copyWith(color: task.isOverdue ? Colors.red : null)),
                       Text(task.description ?? 'No description', style: theme.textTheme.bodyLarge, maxLines: 2, overflow: TextOverflow.ellipsis),
                       const Gap(AppSpacing.xs),
                       Row(
                         spacing: AppSpacing.xxs,
                         children: [
-                          const Icon(Icons.watch_later_outlined),
-                          Flexible(child: Text(task.formattedDueDate, style: theme.textTheme.labelLarge)),
+                          Icon(Icons.watch_later_outlined, color: task.isOverdue ? Colors.red : null),
+                          Flexible(
+                            child: Text(
+                              task.formattedDueDate,
+                              style: theme.textTheme.labelLarge?.copyWith(color: task.isOverdue ? Colors.red : null),
+                            ),
+                          ),
                         ],
                       ),
                       const Gap(AppSpacing.xs),
-                      Chip(
-                        label: Text(task.status.title, style: theme.textTheme.bodySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                        padding: const EdgeInsets.all(AppSpacing.xxxs),
-                        backgroundColor: task.status.color.withValues(alpha: 0.8),
-                        side: BorderSide(color: task.status.color, width: 3),
+                      Row(
+                        spacing: AppSpacing.xs,
+                        children: [
+                          if (task.isOverdue)
+                            Chip(
+                              label: Text('Overdue', style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
+                              padding: const EdgeInsets.all(AppSpacing.xxs),
+                              backgroundColor: Colors.red,
+                              side: const BorderSide(color: Colors.red, width: 3),
+                            ),
+                          Chip(
+                            label: Text(
+                              task.status.title,
+                              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                            ),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                            padding: const EdgeInsets.all(AppSpacing.xxs),
+                            backgroundColor: task.status.color.withValues(alpha: 0.8),
+                            side: BorderSide(color: task.status.color, width: 3),
+                          ),
+                        ],
                       ),
                     ],
                   ),

@@ -128,13 +128,28 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                     decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.green, width: 3)),
                                     child: const Icon(Icons.check_rounded, color: Colors.green),
                                   ),
-                                Flexible(child: Text(task.title, style: theme.textTheme.headlineLarge)),
+                                Flexible(
+                                  child: Text(task.title, style: theme.textTheme.headlineLarge?.copyWith(color: task.isOverdue ? Colors.red : null)),
+                                ),
                               ],
                             ),
                             const Gap(AppSpacing.xxs),
                             Row(
                               spacing: AppSpacing.xs,
                               children: [
+                                if (task.isOverdue)
+                                  Flexible(
+                                    child: Chip(
+                                      label: Text(
+                                        'Overdue',
+                                        style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                                      ),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
+                                      padding: const EdgeInsets.all(AppSpacing.xxs),
+                                      backgroundColor: Colors.red,
+                                      side: const BorderSide(color: Colors.red, width: 3),
+                                    ),
+                                  ),
                                 Flexible(
                                   child: Chip(
                                     label: Text(
@@ -163,7 +178,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                             ),
                             const Gap(AppSpacing.xxs),
                             const Divider(),
-                            const Gap(AppSpacing.xxs),
+                            const Gap(AppSpacing.xs),
                             Wrap(
                               spacing: AppSpacing.xs,
                               children:
@@ -171,8 +186,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       .map((assignee) => CircleAvatar(child: Text('${assignee.firstName[0]}${assignee.lastName[0]}')))
                                       .toList(),
                             ),
-                            const Gap(AppSpacing.xxs),
-                            Text('Due by: ${task.formattedDueDate}', style: theme.textTheme.bodyLarge),
+                            const Gap(AppSpacing.xs),
+                            Text(
+                              'Due by: ${task.formattedDueDate}',
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: task.isOverdue ? Colors.red : null,
+                                fontWeight: task.isOverdue ? FontWeight.bold : null,
+                              ),
+                            ),
                             const Gap(AppSpacing.s),
                             Text(task.description ?? 'No Description', style: theme.textTheme.titleLarge),
                           ],

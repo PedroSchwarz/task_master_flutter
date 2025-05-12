@@ -75,7 +75,7 @@ class Locators extends BaseServiceLocators {
         () => CreateGroupCubit(authRepository: getIt(), groupsRepository: getIt(), invitesRepository: getIt(), usersRepository: getIt()),
       )
       ..registerFactory(() => DashboardCubit(authRepository: getIt(), groupsRepository: getIt(), invitesRepository: getIt()))
-      ..registerFactory(() => InvitesCubit(invitesRepository: getIt()))
+      ..registerFactory(() => InvitesCubit(invitesRepository: getIt(), groupsRepository: getIt()))
       ..registerSingleton(TasksRemoteDataSource(getIt()))
       ..registerSingleton(TasksRepository(tasksRemoteDataSource: getIt()))
       ..registerSingleton(CommentsRemoteDataSource(getIt()))

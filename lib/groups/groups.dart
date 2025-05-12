@@ -7,5 +7,6 @@ export './ui/cubit/create_group_cubit.dart';
 export './ui/cubit/group_details_cubit.dart';
 export './ui/view/create_group_screen.dart';
 export './ui/view/group_content_unavailable.dart';
+export './ui/view/group_details_filters.dart';
 export './ui/view/group_details_screen.dart';
 export './ui/view/groups_list.dart';

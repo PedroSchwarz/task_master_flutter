@@ -17,11 +17,11 @@ abstract class InvitesRemoteDataSource {
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future<void> create(@Body() CreateInviteRequest request);
 
-  @PUT('/{inviteId}/accept/{groupId}')
+  @PUT('/{id}/accept')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
-  Future<void> accept(@Path('inviteId') String inviteId, @Path('groupId') String groupId);
+  Future<void> accept(@Path('id') String id);
 
-  @PUT('/{inviteId}/reject/{groupId}')
+  @PUT('/{id}/reject')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
-  Future<void> reject(@Path('inviteId') String inviteId, @Path('groupId') String groupId);
+  Future<void> reject(@Path('id') String id);
 }

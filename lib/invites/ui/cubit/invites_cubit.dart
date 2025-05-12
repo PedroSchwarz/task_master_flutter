@@ -1,17 +1,21 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
 
 part 'invites_cubit.freezed.dart';
 
 class InvitesCubit extends Cubit<InvitesState> {
-  InvitesCubit({required this.invitesRepository}) : super(const InvitesState(isLoading: false, invites: []));
+  InvitesCubit({required this.invitesRepository, required this.groupsRepository}) : super(const InvitesState(isLoading: false, invites: []));
 
   static final _log = Logger('InvitesCubit');
 
   @visibleForTesting
   final InvitesRepository invitesRepository;
+
+  @visibleForTesting
+  final GroupsRepository groupsRepository;
 
   Future<void> load() async {
     emit(state.copyWith(isLoading: true));
@@ -27,21 +31,24 @@ class InvitesCubit extends Cubit<InvitesState> {
 
   Future<void> acceptInvite(InviteResponse invite) async {
     try {
-      await invitesRepository.accept(inviteId: invite.id, groupId: invite.group.id);
+      await invitesRepository.accept(invite.id);
+      await groupsRepository.addMemberToGroup(invite.group.id);
+    } catch (e) {
+      _log.severe('Error accepting invite: $e', e);
+    } finally {
       emit(
         state.copyWith(invites: state.invites.map((item) => item.id == invite.id ? invite.copyWith(status: InviteStatus.accepted) : item).toList()),
       );
-    } catch (e) {
-      _log.severe('Error accepting invite: $e', e);
     }
   }
 
   Future<void> rejectInvite(InviteResponse invite) async {
     try {
-      await invitesRepository.reject(inviteId: invite.id, groupId: invite.group.id);
-      emit(state.copyWith(invites: state.invites.where((item) => item.id != invite.id).toList()));
+      await invitesRepository.reject(invite.id);
     } catch (e) {
       _log.severe('Error rejecting invite: $e', e);
+    } finally {
+      emit(state.copyWith(invites: state.invites.where((item) => item.id != invite.id).toList()));
     }
   }
 }

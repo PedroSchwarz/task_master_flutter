@@ -84,7 +84,7 @@ class _InvitesRemoteDataSource implements InvitesRemoteDataSource {
   }
 
   @override
-  Future<void> accept(String inviteId, String groupId) async {
+  Future<void> accept(String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': 'application/json'};
@@ -99,7 +99,7 @@ class _InvitesRemoteDataSource implements InvitesRemoteDataSource {
           )
           .compose(
             _dio.options,
-            '/${inviteId}/accept/${groupId}',
+            '/${id}/accept',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -109,7 +109,7 @@ class _InvitesRemoteDataSource implements InvitesRemoteDataSource {
   }
 
   @override
-  Future<void> reject(String inviteId, String groupId) async {
+  Future<void> reject(String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': 'application/json'};
@@ -124,7 +124,7 @@ class _InvitesRemoteDataSource implements InvitesRemoteDataSource {
           )
           .compose(
             _dio.options,
-            '/${inviteId}/reject/${groupId}',
+            '/${id}/reject',
             queryParameters: queryParameters,
             data: _data,
           )

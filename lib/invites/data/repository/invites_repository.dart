@@ -17,11 +17,11 @@ class InvitesRepository {
     return await invitesRemoteDataSource.create(CreateInviteRequest(to: userId, groupId: groupId));
   }
 
-  Future<void> accept({required String inviteId, required String groupId}) async {
-    return await invitesRemoteDataSource.accept(inviteId, groupId);
+  Future<void> accept(String id) async {
+    return await invitesRemoteDataSource.accept(id);
   }
 
-  Future<void> reject({required String inviteId, required String groupId}) async {
-    return await invitesRemoteDataSource.reject(inviteId, groupId);
+  Future<void> reject(String id) async {
+    return await invitesRemoteDataSource.reject(id);
   }
 }
