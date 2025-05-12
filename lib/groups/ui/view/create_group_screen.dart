@@ -94,7 +94,17 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             children: [
                               TextButton(
                                 onPressed: bloc.toggleInviteUsersSheet,
-                                child: const Row(spacing: AppSpacing.s, children: [Icon(Icons.person_add_outlined), Text('Invite people')]),
+                                child: Row(
+                                  spacing: AppSpacing.s,
+                                  children: [
+                                    const Icon(Icons.person_add_outlined),
+                                    BlocSelector<CreateGroupCubit, CreateGroupState, bool>(
+                                      bloc: bloc,
+                                      selector: (state) => state.isUpdating,
+                                      builder: (context, isUpdating) => Text(isUpdating ? 'Manage member' : 'Invite people'),
+                                    ),
+                                  ],
+                                ),
                               ),
                               Text('${state.selectedUsersIds.length} selected'),
                             ],
@@ -141,6 +151,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             (context) => InviteUsersSheet(
               users: state.users,
               selectedUsersIds: state.selectedUsersIds,
+              isUpdating: state.isUpdating,
               onPressed: (selectedUsersIds) {
                 bloc.updateSelectedUsersIds(selectedUsersIds);
                 context.pop();

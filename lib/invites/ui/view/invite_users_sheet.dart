@@ -4,10 +4,11 @@ import 'package:task_master/app/app.dart';
 import 'package:task_master/users/data/models/user_response.dart';
 
 class InviteUsersSheet extends StatefulWidget {
-  const InviteUsersSheet({required this.users, required this.selectedUsersIds, required this.onPressed, super.key});
+  const InviteUsersSheet({required this.users, required this.selectedUsersIds, required this.isUpdating, required this.onPressed, super.key});
 
   final List<UserResponse> users;
   final List<String> selectedUsersIds;
+  final bool isUpdating;
   final Function(List<String>) onPressed;
 
   @override
@@ -98,7 +99,7 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-              child: FilledButton(onPressed: () => widget.onPressed(_selectedIds), child: const Text('Invite')),
+              child: FilledButton(onPressed: () => widget.onPressed(_selectedIds), child: Text(widget.isUpdating ? 'Update' : 'Invite')),
             ),
           ],
         ),
