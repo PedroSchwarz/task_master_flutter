@@ -36,11 +36,15 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
       bloc: bloc,
       listenWhen: (previous, current) => previous.taskToDelete != current.taskToDelete,
       listener: _listenTaskToDelete,
-      child: Scaffold(
-        endDrawer: BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
-          bloc: bloc,
-          builder:
-              (context, state) => Drawer(
+      child: BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
+        bloc: bloc,
+        builder:
+            (context, state) => Scaffold(
+              appBar: AppBar(
+                title: Text(title),
+                bottom: state.isLoading ? const PreferredSize(preferredSize: Size(0, 10), child: LinearProgressIndicator()) : null,
+              ),
+              endDrawer: Drawer(
                 child: GroupDetailsFilters(
                   userFilter: state.userFilter,
                   completionFilter: state.completionFilter,
@@ -60,61 +64,51 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                   resetFiltersAndSort: bloc.resetFiltersAndSort,
                 ),
               ),
-        ),
-        body: Column(
-          children: [
-            BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
-              bloc: bloc,
-              builder:
-                  (context, state) => Expanded(
-                    child: CustomScrollView(
-                      slivers: [
-                        SliverAppBar(
-                          pinned: true,
-                          title: Text(title),
-                          bottom: state.isLoading ? const PreferredSize(preferredSize: Size(0, 10), child: LinearProgressIndicator()) : null,
-                        ),
-                        if (state.tasks.isEmpty)
-                          const SliverFillRemaining(child: Padding(padding: EdgeInsets.all(AppSpacing.s), child: TaskContentUnavailable()))
-                        else if (state.filteredTasks.isEmpty)
-                          const SliverFillRemaining(child: Padding(padding: EdgeInsets.all(AppSpacing.s), child: TaskFilteredContentUnavailable()))
-                        else
-                          SliverList.separated(
-                            itemCount: state.filteredTasks.length,
-                            itemBuilder: (context, position) {
-                              final task = state.filteredTasks[position];
-                              return TaskItem(
-                                task: task,
-                                canDelete: bloc.getTaskOwnership(task),
-                                onTap: () async {
-                                  await context.pushNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.id});
-                                  bloc.loadTasks(groupId: widget.id);
-                                },
-                                onComplete: bloc.toggleTaskStatus,
-                                onPending: bloc.toggleTaskStatus,
-                                onDelete: bloc.setTaskToDelete,
-                              );
+              body: RefreshIndicator(
+                onRefresh: () async {
+                  await bloc.load(groupId: widget.id);
+                },
+                child: CustomScrollView(
+                  slivers: [
+                    if (state.tasks.isEmpty)
+                      const SliverFillRemaining(child: Padding(padding: EdgeInsets.all(AppSpacing.s), child: TaskContentUnavailable()))
+                    else if (state.filteredTasks.isEmpty)
+                      const SliverFillRemaining(child: Padding(padding: EdgeInsets.all(AppSpacing.s), child: TaskFilteredContentUnavailable()))
+                    else
+                      SliverList.separated(
+                        itemCount: state.filteredTasks.length,
+                        itemBuilder: (context, position) {
+                          final task = state.filteredTasks[position];
+                          return TaskItem(
+                            task: task,
+                            canDelete: bloc.getTaskOwnership(task),
+                            onTap: () async {
+                              await context.pushNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.id});
+                              bloc.loadTasks(groupId: widget.id);
                             },
-                            separatorBuilder: (context, position) => const Divider(),
-                          ),
-                        const SliverToBoxAdapter(child: Gap(AppSpacing.max)),
-                      ],
-                    ),
-                  ),
+                            onComplete: bloc.toggleTaskStatus,
+                            onPending: bloc.toggleTaskStatus,
+                            onDelete: bloc.setTaskToDelete,
+                          );
+                        },
+                        separatorBuilder: (context, position) => const Divider(),
+                      ),
+                    const SliverToBoxAdapter(child: Gap(AppSpacing.max)),
+                  ],
+                ),
+              ),
+              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+              floatingActionButton: FloatingActionButton.extended(
+                onPressed: () async {
+                  if (context.mounted) {
+                    await context.pushNamed(CreateTaskScreen.routeName, pathParameters: {'id': widget.id});
+                    bloc.loadTasks(groupId: widget.id);
+                  }
+                },
+                label: const Text('Create task'),
+                icon: const Icon(Icons.add),
+              ),
             ),
-          ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () async {
-            if (context.mounted) {
-              await context.pushNamed(CreateTaskScreen.routeName, pathParameters: {'id': widget.id});
-              bloc.loadTasks(groupId: widget.id);
-            }
-          },
-          label: const Text('Create task'),
-          icon: const Icon(Icons.add),
-        ),
       ),
     );
   }

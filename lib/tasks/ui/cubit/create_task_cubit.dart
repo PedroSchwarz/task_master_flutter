@@ -20,7 +20,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
           title: '',
           priority: TaskPriority.medium,
           status: TaskStatus.todo,
-          date: DateTime.now(),
+          date: DateTime.now().add(const Duration(days: 1)),
           time: const TimeOfDay(hour: 8, minute: 0),
           assignedIds: {},
           shouldGoBack: false,
