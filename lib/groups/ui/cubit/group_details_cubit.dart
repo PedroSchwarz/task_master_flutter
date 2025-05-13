@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
@@ -15,10 +16,12 @@ part 'group_details_cubit.freezed.dart';
 class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   GroupDetailsCubit({required this.authRepository, required this.groupsRepository, required this.tasksRepository, required this.invitesRepository})
     : super(
-        const GroupDetailsState(
+        GroupDetailsState(
           isLoading: false,
           tasks: [],
           invites: [],
+          selectedDate: DateTime.now(),
+          listView: TaskListView.calendar,
           userFilter: TaskUserFilter.all,
           completionFilter: TaskCompletionFilter.all,
           statusFilter: TaskStatusFilter.all,
@@ -48,7 +51,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     emit(state.copyWith(isLoading: true));
 
     try {
-      await Future.wait([loadGroup(groupId: groupId), loadTasks(groupId: groupId)]);
+      await Future.wait([loadGroup(groupId: groupId), loadTasks(groupId: groupId), loadTasksListView()]);
       emit(state.copyWith(invites: [], currentUser: authRepository.currentUser.value));
     } catch (e) {
       _log.severe('Error loading cubit: $e', e);
@@ -72,6 +75,31 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
       emit(state.copyWith(tasks: tasks));
     } catch (e) {
       _log.severe('Error loading tasks: $e', e);
+    }
+  }
+
+  Future<void> loadTasksListView() async {
+    try {
+      final listView = await groupsRepository.loadTasksListView();
+      emit(state.copyWith(listView: listView));
+    } catch (e) {
+      _log.severe('Error loading tasks list view: $e', e);
+    }
+  }
+
+  void updateSelectedDate(DateTime value) {
+    emit(state.copyWith(selectedDate: value.toLocal()));
+  }
+
+  Future<void> toggleListView() async {
+    final listView = state.isCalendarView ? TaskListView.list : TaskListView.calendar;
+
+    try {
+      await groupsRepository.saveTasksListView(listView);
+    } catch (e) {
+      _log.severe('Error saving tasks list view: $e', e);
+    } finally {
+      emit(state.copyWith(listView: listView));
     }
   }
 
@@ -210,6 +238,8 @@ sealed class GroupDetailsState with _$GroupDetailsState {
     required bool isLoading,
     required List<TaskResponse> tasks,
     required List<InviteResponse> invites,
+    required DateTime selectedDate,
+    required TaskListView listView,
     required TaskUserFilter userFilter,
     required TaskCompletionFilter completionFilter,
     required TaskStatusFilter statusFilter,
@@ -226,8 +256,18 @@ sealed class GroupDetailsState with _$GroupDetailsState {
 
   Set<UserResponse> get assignedUsers => group?.members.where((member) => member.id != currentUser?.id).toSet() ?? {};
 
+  bool get isCalendarView => listView == TaskListView.calendar;
+
   List<TaskResponse> get filteredTasks =>
       tasks
+          .where((task) {
+            switch (listView) {
+              case TaskListView.calendar:
+                return DateUtils.isSameDay(task.dueDate.toLocal(), selectedDate.toLocal());
+              case TaskListView.list:
+                return true;
+            }
+          })
           .where((task) {
             switch (userFilter) {
               case TaskUserFilter.all:
@@ -305,6 +345,14 @@ sealed class GroupDetailsState with _$GroupDetailsState {
             }
           })
           .toList();
+}
+
+enum TaskListView {
+  calendar(title: 'Calendar'),
+  list(title: 'List');
+
+  const TaskListView({required this.title});
+  final String title;
 }
 
 enum TaskUserFilter {

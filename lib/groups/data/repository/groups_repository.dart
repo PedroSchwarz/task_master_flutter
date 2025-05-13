@@ -2,10 +2,13 @@ import 'package:flutter/foundation.dart';
 import 'package:task_master/groups/groups.dart';
 
 class GroupsRepository {
-  const GroupsRepository({required this.groupsRemoteDataSource});
+  const GroupsRepository({required this.groupsRemoteDataSource, required this.groupsLocalDataSource});
 
   @visibleForTesting
   final GroupsRemoteDataSource groupsRemoteDataSource;
+
+  @visibleForTesting
+  final GroupsLocalDataSource groupsLocalDataSource;
 
   Future<List<GroupResponse>> getGroups() async {
     return groupsRemoteDataSource.fetchAll();
@@ -13,6 +16,14 @@ class GroupsRepository {
 
   Future<GroupResponse> getGroupById(String id) async {
     return groupsRemoteDataSource.fetchById(id);
+  }
+
+  Future<void> saveTasksListView(TaskListView listView) async {
+    return groupsLocalDataSource.saveListView(listView);
+  }
+
+  Future<TaskListView> loadTasksListView() async {
+    return groupsLocalDataSource.loadListView();
   }
 
   Future<String> createGroup({required String name, required String description}) async {

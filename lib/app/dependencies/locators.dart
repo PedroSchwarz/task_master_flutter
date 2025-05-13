@@ -6,8 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/app/ui/navigation.dart';
 import 'package:task_master/auth/auth.dart';
-import 'package:task_master/comments/data/data_sources/comments_remote_data_source.dart';
-import 'package:task_master/comments/data/repository/comments_repository.dart';
+import 'package:task_master/comments/comments.dart';
 import 'package:task_master/dashboard/ui/cubit/dashboard_cubit.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
@@ -70,7 +69,8 @@ class Locators extends BaseServiceLocators {
       ..registerSingleton(InvitesRemoteDataSource(getIt()))
       ..registerSingleton(InvitesRepository(invitesRemoteDataSource: getIt()))
       ..registerSingleton(GroupsRemoteDataSource(getIt()))
-      ..registerSingleton(GroupsRepository(groupsRemoteDataSource: getIt()))
+      ..registerSingleton(GroupsLocalDataSource(localStorage: getIt()))
+      ..registerSingleton(GroupsRepository(groupsRemoteDataSource: getIt(), groupsLocalDataSource: getIt()))
       ..registerFactory(
         () => CreateGroupCubit(authRepository: getIt(), groupsRepository: getIt(), invitesRepository: getIt(), usersRepository: getIt()),
       )

@@ -6,6 +6,7 @@ import 'package:task_master/users/users.dart';
 
 class GroupDetailsFilters extends StatelessWidget {
   const GroupDetailsFilters({
+    required this.listView,
     required this.userFilter,
     required this.completionFilter,
     required this.statusFilter,
@@ -14,6 +15,7 @@ class GroupDetailsFilters extends StatelessWidget {
     required this.prioritySort,
     required this.assignedUsers,
     required this.userToFilterBy,
+    required this.toggleListView,
     required this.updateUserFilter,
     required this.updateUserToFilterBy,
     required this.updateCompletionFilter,
@@ -25,6 +27,7 @@ class GroupDetailsFilters extends StatelessWidget {
     super.key,
   });
 
+  final TaskListView listView;
   final TaskUserFilter userFilter;
   final TaskCompletionFilter completionFilter;
   final TaskStatusFilter statusFilter;
@@ -33,6 +36,7 @@ class GroupDetailsFilters extends StatelessWidget {
   final TaskPrioritySort prioritySort;
   final Set<UserResponse> assignedUsers;
   final UserResponse? userToFilterBy;
+  final VoidCallback toggleListView;
   final void Function(TaskUserFilter, {required bool value}) updateUserFilter;
   final ValueChanged<UserResponse> updateUserToFilterBy;
   final void Function(TaskCompletionFilter, {required bool value}) updateCompletionFilter;
@@ -58,6 +62,24 @@ class GroupDetailsFilters extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    Text('Tasks List View', style: theme.textTheme.titleLarge),
+                    const Divider(),
+                    Wrap(
+                      spacing: AppSpacing.xs,
+                      children:
+                          TaskListView.values
+                              .map(
+                                (view) => FilterChip(
+                                  selected: listView == view,
+                                  label: Text(view.title),
+                                  onSelected: (value) {
+                                    toggleListView();
+                                  },
+                                ),
+                              )
+                              .toList(),
+                    ),
+                    const Gap(AppSpacing.s),
                     Text('Assignee', style: theme.textTheme.titleLarge),
                     const Divider(),
                     Wrap(

@@ -1,3 +1,4 @@
+export './data/data_sources/groups_local_data_source.dart';
 export './data/data_sources/groups_remote_data_source.dart';
 export './data/models/create_group_request.dart';
 export './data/models/group_response.dart';

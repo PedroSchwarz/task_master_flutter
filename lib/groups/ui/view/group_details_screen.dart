@@ -1,3 +1,4 @@
+import 'package:calendar_pager/calendar_pager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -32,6 +33,8 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocListener<GroupDetailsCubit, GroupDetailsState>(
       bloc: bloc,
       listenWhen: (previous, current) => previous.taskToDelete != current.taskToDelete,
@@ -46,6 +49,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
               ),
               endDrawer: Drawer(
                 child: GroupDetailsFilters(
+                  listView: state.listView,
                   userFilter: state.userFilter,
                   completionFilter: state.completionFilter,
                   statusFilter: state.statusFilter,
@@ -54,6 +58,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                   prioritySort: state.prioritySort,
                   assignedUsers: state.assignedUsers,
                   userToFilterBy: state.userToFilterBy,
+                  toggleListView: bloc.toggleListView,
                   updateUserFilter: bloc.updateUserFilter,
                   updateUserToFilterBy: bloc.updateUserToFilterBy,
                   updateCompletionFilter: bloc.updateCompletionFilter,
@@ -70,6 +75,28 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                 },
                 child: CustomScrollView(
                   slivers: [
+                    if (state.isCalendarView)
+                      AppSliverHeaderWrapper.floating(
+                        maxSize: 112,
+                        padding: 0,
+                        child: Container(
+                          clipBehavior: Clip.antiAlias,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(AppSpacing.m), bottomRight: Radius.circular(AppSpacing.m)),
+                          ),
+                          child: CalendarPagerView(
+                            theme: CalendarPagerTheme.from(
+                              background: theme.scaffoldBackgroundColor,
+                              accent: AppTheme.darkTheme.colorScheme.primaryContainer,
+                              headerTitle: theme.textTheme.headlineLarge!,
+                              itemBorder: AppTheme.darkTheme.colorScheme.primaryContainer,
+                              onAccent: AppTheme.darkTheme.colorScheme.onPrimaryContainer,
+                            ),
+                            hasHeader: false,
+                            onDateSelected: bloc.updateSelectedDate,
+                          ),
+                        ),
+                      ),
                     if (state.tasks.isEmpty)
                       const SliverFillRemaining(child: Padding(padding: EdgeInsets.all(AppSpacing.s), child: TaskContentUnavailable()))
                     else if (state.filteredTasks.isEmpty)

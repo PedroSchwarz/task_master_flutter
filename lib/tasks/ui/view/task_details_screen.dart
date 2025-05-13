@@ -201,8 +201,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                       ),
                     ),
                     AppSliverHeaderWrapper.floating(
-                      padding: 0,
                       maxSize: 116,
+                      padding: 0,
                       child: Container(
                         padding: const EdgeInsets.all(AppSpacing.s),
                         decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
@@ -212,9 +212,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           children: [
                             const Text('Comments'),
                             Row(
+                              spacing: AppSpacing.s,
                               children: [
                                 Flexible(child: AppTextField(label: 'Comment', onChanged: bloc.updateComment)),
-                                IconButton.filled(onPressed: state.isButtonEnabled ? bloc.createComment : null, icon: const Icon(Icons.send)),
+                                IconButton.filled(
+                                  onPressed: state.isButtonEnabled ? bloc.createComment : null,
+                                  icon: const Icon(Icons.send),
+                                  padding: const EdgeInsets.all(AppSpacing.s),
+                                ),
                               ],
                             ),
                           ],
