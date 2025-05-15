@@ -27,6 +27,12 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   }
 
   @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -71,12 +77,16 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           PopupMenuItem(
                             onTap: () async {
                               if (context.mounted) {
-                                await context.pushNamed(
+                                final shouldRefresh = await context.pushNamed<bool>(
                                   CreateTaskScreen.routeName,
                                   pathParameters: {'id': task.group},
                                   queryParameters: {'taskId': task.id},
                                 );
-                                bloc.load(widget.id);
+
+                                if (shouldRefresh ?? false) {
+                                  bloc.load(widget.id);
+                                  bloc.updateTaskForMember();
+                                }
                               }
                             },
                             enabled: isOwner || isAssignee,

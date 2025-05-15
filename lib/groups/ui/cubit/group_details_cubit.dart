@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:task_master/app/app.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
@@ -14,22 +15,27 @@ import 'package:task_master/users/users.dart';
 part 'group_details_cubit.freezed.dart';
 
 class GroupDetailsCubit extends Cubit<GroupDetailsState> {
-  GroupDetailsCubit({required this.authRepository, required this.groupsRepository, required this.tasksRepository, required this.invitesRepository})
-    : super(
-        GroupDetailsState(
-          isLoading: false,
-          tasks: [],
-          invites: [],
-          selectedDate: DateTime.now(),
-          listView: TaskListView.calendar,
-          userFilter: TaskUserFilter.all,
-          completionFilter: TaskCompletionFilter.all,
-          statusFilter: TaskStatusFilter.all,
-          priorityFilter: TaskPriorityFilter.all,
-          dateSort: TaskDateSort.newest,
-          prioritySort: TaskPrioritySort.none,
-        ),
-      );
+  GroupDetailsCubit({
+    required this.authRepository,
+    required this.groupsRepository,
+    required this.tasksRepository,
+    required this.invitesRepository,
+    required this.tasksWebsocket,
+  }) : super(
+         GroupDetailsState(
+           isLoading: false,
+           tasks: [],
+           invites: [],
+           selectedDate: DateTime.now(),
+           listView: TaskListView.calendar,
+           userFilter: TaskUserFilter.all,
+           completionFilter: TaskCompletionFilter.all,
+           statusFilter: TaskStatusFilter.all,
+           priorityFilter: TaskPriorityFilter.all,
+           dateSort: TaskDateSort.newest,
+           prioritySort: TaskPrioritySort.none,
+         ),
+       );
 
   static final _log = Logger('GroupDetailsCubit');
 
@@ -45,10 +51,31 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   @visibleForTesting
   final InvitesRepository invitesRepository;
 
+  @visibleForTesting
+  final TasksWebsocket tasksWebsocket;
+
   UserData get currentUser => authRepository.currentUser.value!;
 
   Future<void> load({required String groupId}) async {
     emit(state.copyWith(isLoading: true));
+
+    tasksWebsocket.listen(
+      taskscallback: (members) async {
+        if (members.contains(currentUser.id)) {
+          loadTasks(groupId: groupId);
+        }
+      },
+      trigger: WebsocketTrigger.tasksUpdated,
+    );
+
+    tasksWebsocket.listen(
+      taskscallback: (members) async {
+        if (members.contains(currentUser.id)) {
+          loadTasks(groupId: groupId);
+        }
+      },
+      trigger: WebsocketTrigger.taskUpdated,
+    );
 
     try {
       await Future.wait([loadGroup(groupId: groupId), loadTasks(groupId: groupId), loadTasksListView()]);
@@ -189,6 +216,8 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   Future<void> deleteTask(TaskResponse task) async {
     try {
       await tasksRepository.delete(task.id);
+
+      updateTasksForMember();
     } catch (e) {
       _log.severe('Error deleting task: $e', e);
     } finally {
@@ -216,6 +245,8 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
           assignedTo: updatedTask.assignedTo.map((user) => user.id).toList(),
         ),
       );
+
+      updateTasksForMember();
     } catch (e) {
       _log.severe('Error updating task: $e', e);
     } finally {
@@ -227,8 +258,17 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     }
   }
 
-  void signOut() async {
-    await authRepository.signOut();
+  void updateTasksForMember() {
+    if (state.assignedUsersIds.isEmpty) {
+      return;
+    }
+
+    tasksWebsocket.updateTasks(members: state.assignedUsersIds);
+  }
+
+  Future<void> dispose() async {
+    await tasksWebsocket.close(WebsocketTrigger.tasksUpdated);
+    await tasksWebsocket.close(WebsocketTrigger.taskUpdated);
   }
 }
 
@@ -255,6 +295,8 @@ sealed class GroupDetailsState with _$GroupDetailsState {
   const GroupDetailsState._();
 
   Set<UserResponse> get assignedUsers => group?.members.where((member) => member.id != currentUser?.id).toSet() ?? {};
+
+  List<String> get assignedUsersIds => assignedUsers.map((user) => user.id).toList();
 
   bool get isCalendarView => listView == TaskListView.calendar;
 

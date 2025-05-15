@@ -289,7 +289,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
   Future<void> _listenNavigationFlow(BuildContext context, CreateTaskState state) async {
     if (state.shouldGoBack) {
-      context.pop();
+      context.pop(true);
     }
   }
 }

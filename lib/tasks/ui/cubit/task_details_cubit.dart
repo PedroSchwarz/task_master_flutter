@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
+import 'package:task_master/app/websocket/websocket_client.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/comments/comments.dart';
 import 'package:task_master/tasks/data/models/update_task_request.dart';
@@ -9,7 +10,7 @@ import 'package:task_master/tasks/tasks.dart';
 part 'task_details_cubit.freezed.dart';
 
 class TaskDetailsCubit extends Cubit<TaskDetailsState> {
-  TaskDetailsCubit({required this.authRepository, required this.tasksRepository, required this.commentsRepository})
+  TaskDetailsCubit({required this.authRepository, required this.tasksRepository, required this.commentsRepository, required this.tasksWebsocket})
     : super(const TaskDetailsState(isLoading: false, showDeleteDialog: false, shouldGoBack: false, comments: [], comment: ''));
 
   static final _log = Logger('TaskDetailsCubit');
@@ -23,10 +24,31 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
   @visibleForTesting
   final CommentsRepository commentsRepository;
 
+  @visibleForTesting
+  final TasksWebsocket tasksWebsocket;
+
   UserData get currentUser => authRepository.currentUser.value!;
 
   Future<void> load(String id) async {
     emit(state.copyWith(isLoading: true));
+
+    tasksWebsocket.listen(
+      taskscallback: (members) async {
+        if (members.contains(currentUser.id)) {
+          await loadTask(id);
+        }
+      },
+      trigger: WebsocketTrigger.tasksUpdated,
+    );
+
+    tasksWebsocket.listen(
+      taskscallback: (members) async {
+        if (members.contains(currentUser.id)) {
+          await loadTask(id);
+        }
+      },
+      trigger: WebsocketTrigger.taskUpdated,
+    );
 
     await Future.wait([loadTask(id), loadComments(id)]);
 
@@ -39,6 +61,7 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
       emit(state.copyWith(task: task));
     } catch (e) {
       _log.severe('Error loading task: $e', e);
+      emit(state.copyWith(shouldGoBack: true));
     }
   }
 
@@ -74,9 +97,11 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
         ),
       );
 
-      emit(state.copyWith(task: updatedTask));
+      updateTaskForMember();
     } catch (e) {
       _log.severe('Error completing/uncompleting task: $e', e);
+    } finally {
+      emit(state.copyWith(task: updatedTask.copyWith(updatedAt: DateTime.now())));
     }
   }
 
@@ -92,7 +117,10 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
       return;
     }
     try {
+      updateTaskForMember();
+
       await tasksRepository.delete(task.id);
+
       emit(state.copyWith(shouldGoBack: true));
     } catch (e) {
       _log.severe('Error deleting task: $e', e);
@@ -120,6 +148,18 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
       _log.severe('Error creating comment: $e', e);
     }
   }
+
+  void updateTaskForMember() {
+    final task = state.task;
+
+    if (task == null) {
+      return;
+    }
+
+    tasksWebsocket.updateTask(userId: currentUser.id, taskId: task.id);
+  }
+
+  Future<void> dispose() async {}
 }
 
 @freezed

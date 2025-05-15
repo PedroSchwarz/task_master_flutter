@@ -32,6 +32,12 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   }
 
   @override
+  void dispose() {
+    bloc.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -128,8 +134,12 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
               floatingActionButton: FloatingActionButton.extended(
                 onPressed: () async {
                   if (context.mounted) {
-                    await context.pushNamed(CreateTaskScreen.routeName, pathParameters: {'id': widget.id});
-                    bloc.loadTasks(groupId: widget.id);
+                    final result = await context.pushNamed<bool>(CreateTaskScreen.routeName, pathParameters: {'id': widget.id});
+
+                    if (result ?? false) {
+                      bloc.loadTasks(groupId: widget.id);
+                      bloc.updateTasksForMember();
+                    }
                   }
                 },
                 label: const Text('Create task'),

@@ -6,3 +6,4 @@ export './design_system/theme/app_spacing.dart';
 export './design_system/theme/app_theme.dart';
 export './storage/app_local_storage.dart';
 export './ui/app.dart';
+export './websocket/websocket_client.dart';

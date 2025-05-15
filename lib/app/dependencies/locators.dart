@@ -35,7 +35,8 @@ sealed class BaseServiceLocators {
 class Locators extends BaseServiceLocators {
   @override
   BuildConfigurations get buildConfigurations {
-    return const BuildConfigurations(baseUrl: 'http://10.0.2.2:3000/', environment: Environment.production);
+    return const BuildConfigurations(baseUrl: 'http://localhost:3000/', environment: Environment.production);
+    // return const BuildConfigurations(baseUrl: 'http://10.0.2.2:3000/', environment: Environment.production);
   }
 
   @override
@@ -70,6 +71,7 @@ class Locators extends BaseServiceLocators {
       ..registerSingleton(UserRepository(userLocalDataSource: getIt()))
       ..registerSingleton(createAuthenticatedDio(baseUrl: buildConfigurations.baseUrl, credentialsRepository: getIt()))
       ..registerSingleton(createDio(baseUrl: buildConfigurations.baseUrl), instanceName: BaseServiceLocators.noAuthDio)
+      ..registerSingleton(WebsocketClient(configurations: getIt()))
       ..registerSingleton(AuthRemoteDataSource(getIt(instanceName: BaseServiceLocators.noAuthDio)))
       ..registerSingleton(AuthRepository(authRemoteDataSource: getIt(), userRepository: getIt(), credentialsRepository: getIt()))
       ..registerSingleton(createRouter(authRepository: getIt()))
@@ -94,13 +96,22 @@ class Locators extends BaseServiceLocators {
       ..registerFactory(() => InvitesCubit(invitesRepository: getIt(), groupsRepository: getIt()))
       ..registerSingleton(TasksRemoteDataSource(getIt()))
       ..registerSingleton(TasksRepository(tasksRemoteDataSource: getIt()))
+      ..registerSingleton(TasksWebsocket(client: getIt()))
       ..registerSingleton(CommentsRemoteDataSource(getIt()))
       ..registerSingleton(CommentsRepository(commentsRemoteDataSource: getIt()))
       ..registerFactory(
-        () => GroupDetailsCubit(authRepository: getIt(), groupsRepository: getIt(), tasksRepository: getIt(), invitesRepository: getIt()),
+        () => GroupDetailsCubit(
+          authRepository: getIt(),
+          groupsRepository: getIt(),
+          tasksRepository: getIt(),
+          invitesRepository: getIt(),
+          tasksWebsocket: getIt(),
+        ),
       )
       ..registerFactory(() => CreateTaskCubit(groupsRepository: getIt(), tasksRepository: getIt()))
-      ..registerFactory(() => TaskDetailsCubit(authRepository: getIt(), tasksRepository: getIt(), commentsRepository: getIt()));
+      ..registerFactory(
+        () => TaskDetailsCubit(authRepository: getIt(), tasksRepository: getIt(), commentsRepository: getIt(), tasksWebsocket: getIt()),
+      );
   }
 
   Dio createDio({required String baseUrl}) {
