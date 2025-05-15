@@ -1,5 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,8 +11,10 @@ import 'package:task_master/app/ui/navigation.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/comments/comments.dart';
 import 'package:task_master/dashboard/ui/cubit/dashboard_cubit.dart';
+import 'package:task_master/firebase_options.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
+import 'package:task_master/notifications/data/repository/notifications_repository.dart';
 import 'package:task_master/splash/splash.dart';
 import 'package:task_master/tasks/tasks.dart';
 import 'package:task_master/users/users.dart';
@@ -30,11 +35,13 @@ sealed class BaseServiceLocators {
 class Locators extends BaseServiceLocators {
   @override
   BuildConfigurations get buildConfigurations {
-    return const BuildConfigurations(baseUrl: 'http://localhost:3000/', environment: Environment.production);
+    return const BuildConfigurations(baseUrl: 'http://10.0.2.2:3000/', environment: Environment.production);
   }
 
   @override
   Future<void> setup() async {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
     getIt.registerSingleton(
       const FlutterSecureStorage(
         iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock_this_device),
@@ -48,6 +55,12 @@ class Locators extends BaseServiceLocators {
     final appStorage = AppLocalStorage(secureStorage: getIt(), sharedPreferences: getIt());
     await appStorage.create();
 
+    final notificationsRepository = NotificationsRepository(
+      firebaseMessaging: FirebaseMessaging.instance,
+      localNotifications: FlutterLocalNotificationsPlugin(),
+    );
+    await notificationsRepository.initialize();
+
     getIt
       ..registerSingleton(appStorage)
       ..registerSingleton(buildConfigurations)
@@ -60,12 +73,13 @@ class Locators extends BaseServiceLocators {
       ..registerSingleton(AuthRemoteDataSource(getIt(instanceName: BaseServiceLocators.noAuthDio)))
       ..registerSingleton(AuthRepository(authRemoteDataSource: getIt(), userRepository: getIt(), credentialsRepository: getIt()))
       ..registerSingleton(createRouter(authRepository: getIt()))
+      ..registerSingleton(notificationsRepository)
       ..registerSingleton(SplashRepository(authRepository: getIt()))
       ..registerFactory(() => SplashCubit(splashRepository: getIt()))
       ..registerFactory(() => LoginCubit(authRepository: getIt()))
       ..registerFactory(() => RegisterCubit(authRepository: getIt()))
       ..registerSingleton(UsersRemoteDataSource(getIt()))
-      ..registerSingleton(UsersRepository(usersRemoteDataSource: getIt()))
+      ..registerSingleton(UsersRepository(authRepository: getIt(), usersRemoteDataSource: getIt(), notificationsRepository: getIt()))
       ..registerSingleton(InvitesRemoteDataSource(getIt()))
       ..registerSingleton(InvitesRepository(invitesRemoteDataSource: getIt()))
       ..registerSingleton(GroupsRemoteDataSource(getIt()))
@@ -74,7 +88,9 @@ class Locators extends BaseServiceLocators {
       ..registerFactory(
         () => CreateGroupCubit(authRepository: getIt(), groupsRepository: getIt(), invitesRepository: getIt(), usersRepository: getIt()),
       )
-      ..registerFactory(() => DashboardCubit(authRepository: getIt(), groupsRepository: getIt(), invitesRepository: getIt()))
+      ..registerFactory(
+        () => DashboardCubit(authRepository: getIt(), usersRepository: getIt(), groupsRepository: getIt(), invitesRepository: getIt()),
+      )
       ..registerFactory(() => InvitesCubit(invitesRepository: getIt(), groupsRepository: getIt()))
       ..registerSingleton(TasksRemoteDataSource(getIt()))
       ..registerSingleton(TasksRepository(tasksRemoteDataSource: getIt()))

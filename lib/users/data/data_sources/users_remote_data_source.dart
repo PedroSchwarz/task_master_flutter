@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:retrofit/retrofit.dart';
+import 'package:task_master/users/data/models/device_token_request.dart';
 import 'package:task_master/users/data/models/user_response.dart';
 
 part 'users_remote_data_source.g.dart';
@@ -11,4 +12,8 @@ abstract class UsersRemoteDataSource {
   @GET('/')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future<List<UserResponse>> fetchAll();
+
+  @POST('/device-token')
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<void> updateDeviceToken(@Body() DeviceTokenRequest request);
 }

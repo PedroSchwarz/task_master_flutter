@@ -4,17 +4,21 @@ import 'package:logging/logging.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
+import 'package:task_master/users/data/repository/users_repository.dart';
 
 part 'dashboard_cubit.freezed.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {
-  DashboardCubit({required this.authRepository, required this.groupsRepository, required this.invitesRepository})
+  DashboardCubit({required this.authRepository, required this.usersRepository, required this.groupsRepository, required this.invitesRepository})
     : super(const DashboardState(isLoading: false, groups: [], invites: []));
 
   static final _log = Logger('DashboardCubit');
 
   @visibleForTesting
   final AuthRepository authRepository;
+
+  @visibleForTesting
+  final UsersRepository usersRepository;
 
   @visibleForTesting
   final GroupsRepository groupsRepository;
@@ -32,6 +36,7 @@ class DashboardCubit extends Cubit<DashboardState> {
       emit(state.copyWith(groups: groups..sort((a, b) => b.createdAt.compareTo(a.createdAt)), invites: []));
       final invites = await invitesRepository.getInvites(status: InviteStatus.pending.name);
       emit(state.copyWith(invites: invites));
+      await usersRepository.updateDeviceToken();
     } catch (e) {
       _log.info('Error loading dashboard: $e', e);
     } finally {
@@ -40,6 +45,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   }
 
   void signOut() async {
+    await usersRepository.removeNotifications();
     await authRepository.signOut();
   }
 }
