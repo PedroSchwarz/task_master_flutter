@@ -10,8 +10,13 @@ import 'package:task_master/tasks/tasks.dart';
 part 'task_details_cubit.freezed.dart';
 
 class TaskDetailsCubit extends Cubit<TaskDetailsState> {
-  TaskDetailsCubit({required this.authRepository, required this.tasksRepository, required this.commentsRepository, required this.tasksWebsocket})
-    : super(const TaskDetailsState(isLoading: false, showDeleteDialog: false, shouldGoBack: false, comments: [], comment: ''));
+  TaskDetailsCubit({
+    required this.authRepository,
+    required this.tasksRepository,
+    required this.commentsRepository,
+    required this.tasksWebsocket,
+    required this.commentsWebsocket,
+  }) : super(const TaskDetailsState(isLoading: false, showDeleteDialog: false, shouldGoBack: false, comments: [], comment: ''));
 
   static final _log = Logger('TaskDetailsCubit');
 
@@ -26,6 +31,9 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
 
   @visibleForTesting
   final TasksWebsocket tasksWebsocket;
+
+  @visibleForTesting
+  final CommentsWebsocket commentsWebsocket;
 
   UserData get currentUser => authRepository.currentUser.value!;
 
@@ -48,6 +56,15 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
         }
       },
       trigger: WebsocketTrigger.taskUpdated,
+    );
+
+    commentsWebsocket.listen(
+      taskscallback: (taskId) async {
+        if (taskId == id) {
+          await loadComments(id);
+        }
+      },
+      trigger: WebsocketTrigger.commentsUpdated,
     );
 
     await Future.wait([loadTask(id), loadComments(id)]);
@@ -142,8 +159,7 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
 
     try {
       await commentsRepository.create(CreateCommentRequest(message: state.comment, task: task.id));
-      await loadComments(task.id);
-      emit(state.copyWith(comment: ''));
+      commentsWebsocket.updateComments(taskId: task.id);
     } catch (e) {
       _log.severe('Error creating comment: $e', e);
     }
@@ -159,7 +175,9 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
     tasksWebsocket.updateTask(userId: currentUser.id, taskId: task.id);
   }
 
-  Future<void> dispose() async {}
+  Future<void> dispose() async {
+    await commentsWebsocket.close(WebsocketTrigger.commentsUpdated);
+  }
 }
 
 @freezed

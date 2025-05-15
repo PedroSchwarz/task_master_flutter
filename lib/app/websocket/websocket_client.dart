@@ -14,7 +14,8 @@ class WebsocketClient {
 }
 
 enum WebsocketTopic {
-  tasks(context: 'tasks-events');
+  tasks(context: 'tasks-events'),
+  comments(context: 'comments-events');
 
   const WebsocketTopic({required this.context});
 
@@ -23,7 +24,8 @@ enum WebsocketTopic {
 
 enum WebsocketAction {
   tasksUpdated(event: 'tasks_updated'),
-  taskUpdated(event: 'task_updated');
+  taskUpdated(event: 'task_updated'),
+  commentsUpdated(event: 'comments_updated');
 
   const WebsocketAction({required this.event});
 
@@ -32,7 +34,8 @@ enum WebsocketAction {
 
 enum WebsocketTrigger {
   tasksUpdated(event: 'update_tasks'),
-  taskUpdated(event: 'update_task');
+  taskUpdated(event: 'update_task'),
+  commentsUpdated(event: 'update_comments');
 
   const WebsocketTrigger({required this.event});
 

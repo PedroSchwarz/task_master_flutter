@@ -99,6 +99,7 @@ class Locators extends BaseServiceLocators {
       ..registerSingleton(TasksWebsocket(client: getIt()))
       ..registerSingleton(CommentsRemoteDataSource(getIt()))
       ..registerSingleton(CommentsRepository(commentsRemoteDataSource: getIt()))
+      ..registerSingleton(CommentsWebsocket(client: getIt()))
       ..registerFactory(
         () => GroupDetailsCubit(
           authRepository: getIt(),
@@ -110,7 +111,13 @@ class Locators extends BaseServiceLocators {
       )
       ..registerFactory(() => CreateTaskCubit(groupsRepository: getIt(), tasksRepository: getIt()))
       ..registerFactory(
-        () => TaskDetailsCubit(authRepository: getIt(), tasksRepository: getIt(), commentsRepository: getIt(), tasksWebsocket: getIt()),
+        () => TaskDetailsCubit(
+          authRepository: getIt(),
+          tasksRepository: getIt(),
+          commentsRepository: getIt(),
+          tasksWebsocket: getIt(),
+          commentsWebsocket: getIt(),
+        ),
       );
   }
 
