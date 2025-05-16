@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:task_master/app/websocket/websocket_client.dart';
 
@@ -14,27 +16,33 @@ class TasksWebsocket {
   late final Socket _socket;
   bool _isConnected = false;
 
-  void listen({required UpdateTasksCallback taskscallback, required WebsocketTrigger trigger}) {
-    _connectIfNeeded();
+  @visibleForTesting
+  final tasksUpdatedController = ReplaySubject<List<String>>(maxSize: 1);
+  Stream<List<String>> get tasksUpdatedStream => tasksUpdatedController.stream;
 
-    switch (trigger) {
-      case WebsocketTrigger.tasksUpdated:
-        _socket.on(trigger.event, (members) {
-          if (members is List) {
-            final casted = members.cast<String>();
-            taskscallback(casted);
-          }
-        });
-      case WebsocketTrigger.taskUpdated:
-        _socket.on(trigger.event, (members) {
-          if (members is List) {
-            final casted = members.cast<String>();
-            taskscallback(casted);
-          }
-        });
-      default:
-        break;
-    }
+  @visibleForTesting
+  final taskUpdatedController = ReplaySubject<List<String>>(maxSize: 1);
+  Stream<List<String>> get taskUpdatedStream => taskUpdatedController.stream;
+
+  void listen() {
+    _connectIfNeeded();
+    _socket.on(WebsocketTrigger.tasksUpdated.event, (members) {
+      if (tasksUpdatedController.hasListener) {
+        if (members is List) {
+          final casted = members.cast<String>();
+          tasksUpdatedController.add(casted);
+        }
+      }
+    });
+
+    _socket.on(WebsocketTrigger.taskUpdated.event, (members) {
+      if (taskUpdatedController.hasListener) {
+        if (members is List) {
+          final casted = members.cast<String>();
+          taskUpdatedController.add(casted);
+        }
+      }
+    });
   }
 
   void _connectIfNeeded() {
@@ -52,10 +60,6 @@ class TasksWebsocket {
   void updateTask({required String userId, required String taskId}) {
     _connectIfNeeded();
     _socket.emit(WebsocketAction.taskUpdated.event, {'userId': userId, 'taskId': taskId});
-  }
-
-  Future<void> close(WebsocketTrigger trigger) async {
-    _socket.off(trigger.event);
   }
 
   void dispose() {

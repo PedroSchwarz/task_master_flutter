@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
-import 'package:task_master/app/app.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
@@ -37,17 +38,16 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   UserData get currentUser => authRepository.currentUser.value!;
 
+  StreamSubscription<String>? _groupsSubscription;
+
   Future<void> load() async {
     emit(state.copyWith(isLoading: true));
 
-    groupsWebsocket.listen(
-      groupsCallback: (groupId) async {
-        if (state.groups.any((group) => group.id == groupId)) {
-          await loadGroups();
-        }
-      },
-      trigger: WebsocketTrigger.groupsUpdated,
-    );
+    _groupsSubscription = groupsWebsocket.groupsUpdatedStream.listen((id) {
+      if (state.groups.any((group) => group.id == id)) {
+        loadGroups();
+      }
+    });
 
     await Future.wait([loadGroups(), loadInvites(), usersRepository.updateDeviceToken()]);
 
@@ -77,7 +77,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   }
 
   void signOut() async {
-    await groupsWebsocket.close(WebsocketTrigger.groupsUpdated);
+    await _groupsSubscription?.cancel();
     await usersRepository.removeNotifications();
     await authRepository.signOut();
   }

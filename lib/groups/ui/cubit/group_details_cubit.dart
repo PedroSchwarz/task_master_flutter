@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
-import 'package:task_master/app/app.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
@@ -61,35 +62,32 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
 
   UserData get currentUser => authRepository.currentUser.value!;
 
+  StreamSubscription<String>? _groupsSubscription;
+
+  StreamSubscription<List<String>>? _tasksSubscription;
+
+  StreamSubscription<List<String>>? _taskSubscription;
+
   Future<void> load({required String groupId}) async {
     emit(state.copyWith(isLoading: true));
 
-    groupsWebsocket.listen(
-      groupsCallback: (id) async {
-        if (groupId == id) {
-          await loadGroup(groupId: groupId);
-        }
-      },
-      trigger: WebsocketTrigger.groupsUpdated,
-    );
+    _groupsSubscription = groupsWebsocket.groupsUpdatedStream.listen((id) {
+      if (groupId == id) {
+        loadGroup(groupId: id);
+      }
+    });
 
-    tasksWebsocket.listen(
-      taskscallback: (members) async {
-        if (members.contains(currentUser.id)) {
-          await loadTasks(groupId: groupId);
-        }
-      },
-      trigger: WebsocketTrigger.tasksUpdated,
-    );
+    _tasksSubscription = tasksWebsocket.tasksUpdatedStream.listen((members) {
+      if (members.contains(currentUser.id)) {
+        loadTasks(groupId: groupId);
+      }
+    });
 
-    tasksWebsocket.listen(
-      taskscallback: (members) async {
-        if (members.contains(currentUser.id)) {
-          await loadTasks(groupId: groupId);
-        }
-      },
-      trigger: WebsocketTrigger.taskUpdated,
-    );
+    _taskSubscription = tasksWebsocket.taskUpdatedStream.listen((members) {
+      if (members.contains(currentUser.id)) {
+        loadTasks(groupId: groupId);
+      }
+    });
 
     try {
       await Future.wait([loadGroup(groupId: groupId), loadTasks(groupId: groupId), loadTasksListView()]);
@@ -282,8 +280,9 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   }
 
   Future<void> dispose() async {
-    await tasksWebsocket.close(WebsocketTrigger.tasksUpdated);
-    await tasksWebsocket.close(WebsocketTrigger.taskUpdated);
+    await _groupsSubscription?.cancel();
+    await _tasksSubscription?.cancel();
+    await _taskSubscription?.cancel();
   }
 }
 

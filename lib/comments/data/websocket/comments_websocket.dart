@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:task_master/app/websocket/websocket_client.dart';
 
@@ -14,17 +16,17 @@ class CommentsWebsocket {
   late final Socket _socket;
   bool _isConnected = false;
 
-  void listen({required UpdateCommentsCallback commentscallback, required WebsocketTrigger trigger}) {
-    _connectIfNeeded();
+  @visibleForTesting
+  final commentsUpdatedController = ReplaySubject<String>(maxSize: 1);
+  Stream<String> get commentsUpdatedStream => commentsUpdatedController.stream;
 
-    switch (trigger) {
-      case WebsocketTrigger.commentsUpdated:
-        _socket.on(trigger.event, (taskId) {
-          commentscallback(taskId);
-        });
-      default:
-        break;
-    }
+  void listen() {
+    _connectIfNeeded();
+    _socket.on(WebsocketTrigger.commentsUpdated.event, (taskId) {
+      if (commentsUpdatedController.hasListener) {
+        commentsUpdatedController.add(taskId);
+      }
+    });
   }
 
   void _connectIfNeeded() {
@@ -37,10 +39,6 @@ class CommentsWebsocket {
   void updateComments({required String taskId}) {
     _connectIfNeeded();
     _socket.emit(WebsocketAction.commentsUpdated.event, {'taskId': taskId});
-  }
-
-  Future<void> close(WebsocketTrigger trigger) async {
-    _socket.off(trigger.event);
   }
 
   void dispose() {

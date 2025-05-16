@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
-import 'package:task_master/app/websocket/websocket_client.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/comments/comments.dart';
 import 'package:task_master/tasks/data/models/update_task_request.dart';
@@ -37,35 +38,32 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
 
   UserData get currentUser => authRepository.currentUser.value!;
 
+  StreamSubscription<List<String>>? _tasksSubscription;
+
+  StreamSubscription<List<String>>? _taskSubscription;
+
+  StreamSubscription<String>? _commentsSubscription;
+
   Future<void> load(String id) async {
     emit(state.copyWith(isLoading: true));
 
-    tasksWebsocket.listen(
-      taskscallback: (members) async {
-        if (members.contains(currentUser.id)) {
-          await loadTask(id);
-        }
-      },
-      trigger: WebsocketTrigger.tasksUpdated,
-    );
+    _tasksSubscription = tasksWebsocket.tasksUpdatedStream.listen((members) {
+      if (members.contains(currentUser.id)) {
+        loadTask(id);
+      }
+    });
 
-    tasksWebsocket.listen(
-      taskscallback: (members) async {
-        if (members.contains(currentUser.id)) {
-          await loadTask(id);
-        }
-      },
-      trigger: WebsocketTrigger.taskUpdated,
-    );
+    _taskSubscription = tasksWebsocket.taskUpdatedStream.listen((members) {
+      if (members.contains(currentUser.id)) {
+        loadTask(id);
+      }
+    });
 
-    commentsWebsocket.listen(
-      commentscallback: (taskId) async {
-        if (taskId == id) {
-          await loadComments(id);
-        }
-      },
-      trigger: WebsocketTrigger.commentsUpdated,
-    );
+    _commentsSubscription = commentsWebsocket.commentsUpdatedStream.listen((taskId) {
+      if (taskId == id) {
+        loadComments(id);
+      }
+    });
 
     await Future.wait([loadTask(id), loadComments(id)]);
 
@@ -176,7 +174,9 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
   }
 
   Future<void> dispose() async {
-    await commentsWebsocket.close(WebsocketTrigger.commentsUpdated);
+    await _tasksSubscription?.cancel();
+    await _taskSubscription?.cancel();
+    await _commentsSubscription?.cancel();
   }
 }
 

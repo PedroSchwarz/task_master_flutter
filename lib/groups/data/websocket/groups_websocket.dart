@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:task_master/app/websocket/websocket_client.dart';
 
@@ -14,17 +16,17 @@ class GroupsWebsocket {
   late final Socket _socket;
   bool _isConnected = false;
 
-  void listen({required UpdateGroupsCallback groupsCallback, required WebsocketTrigger trigger}) {
-    _connectIfNeeded();
+  @visibleForTesting
+  final groupsUpdatedController = ReplaySubject<String>(maxSize: 1);
+  Stream<String> get groupsUpdatedStream => groupsUpdatedController.stream;
 
-    switch (trigger) {
-      case WebsocketTrigger.groupsUpdated:
-        _socket.on(trigger.event, (groupId) {
-          groupsCallback(groupId);
-        });
-      default:
-        break;
-    }
+  void listen() {
+    _connectIfNeeded();
+    _socket.on(WebsocketTrigger.groupsUpdated.event, (groupId) {
+      if (groupsUpdatedController.hasListener) {
+        groupsUpdatedController.add(groupId);
+      }
+    });
   }
 
   void _connectIfNeeded() {
@@ -37,10 +39,6 @@ class GroupsWebsocket {
   void updateGroups({required String groupId}) {
     _connectIfNeeded();
     _socket.emit(WebsocketAction.groupsUpdated.event, {'groupId': groupId});
-  }
-
-  Future<void> close(WebsocketTrigger trigger) async {
-    _socket.off(trigger.event);
   }
 
   void dispose() {
