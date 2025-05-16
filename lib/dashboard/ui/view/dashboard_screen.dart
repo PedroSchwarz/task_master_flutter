@@ -93,6 +93,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   pathParameters: {'id': group.id},
                                   queryParameters: {'name': group.name},
                                 ),
+                            onEdit: (group) async {
+                              if (context.mounted) {
+                                final result = await context.pushNamed<bool>(CreateGroupScreen.routeName, queryParameters: {'id': group.id});
+
+                                if (result ?? false) {
+                                  bloc.updateGroupsForUsers(groupId: group.id);
+                                }
+                              }
+                            },
                             onRefresh: bloc.load,
                           ),
                         ),
@@ -105,8 +114,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
         icon: const Icon(Icons.add),
         onPressed: () async {
           if (context.mounted) {
-            await context.pushNamed(CreateGroupScreen.routeName);
-            bloc.load();
+            final result = await context.pushNamed<bool>(CreateGroupScreen.routeName);
+
+            if (result ?? false) {
+              bloc.loadGroups();
+            }
           }
         },
       ),

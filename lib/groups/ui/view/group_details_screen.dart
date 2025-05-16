@@ -43,109 +43,118 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
     return BlocListener<GroupDetailsCubit, GroupDetailsState>(
       bloc: bloc,
-      listenWhen: (previous, current) => previous.taskToDelete != current.taskToDelete,
-      listener: _listenTaskToDelete,
-      child: BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
+      listenWhen: (previous, current) => previous.shouldGoBack != current.shouldGoBack,
+      listener: _listenNavigationFlow,
+      child: BlocListener<GroupDetailsCubit, GroupDetailsState>(
         bloc: bloc,
-        builder:
-            (context, state) => Scaffold(
-              appBar: AppBar(
-                title: Text(title),
-                bottom: state.isLoading ? const PreferredSize(preferredSize: Size(0, 10), child: LinearProgressIndicator()) : null,
-              ),
-              endDrawer: Drawer(
-                child: GroupDetailsFilters(
-                  listView: state.listView,
-                  userFilter: state.userFilter,
-                  completionFilter: state.completionFilter,
-                  statusFilter: state.statusFilter,
-                  priorityFilter: state.priorityFilter,
-                  dateSort: state.dateSort,
-                  prioritySort: state.prioritySort,
-                  assignedUsers: state.assignedUsers,
-                  userToFilterBy: state.userToFilterBy,
-                  toggleListView: bloc.toggleListView,
-                  updateUserFilter: bloc.updateUserFilter,
-                  updateUserToFilterBy: bloc.updateUserToFilterBy,
-                  updateCompletionFilter: bloc.updateCompletionFilter,
-                  updateStatusFilter: bloc.updateStatusFilter,
-                  updatePriorityFilter: bloc.updatePriorityFilter,
-                  updateDateSort: bloc.updateDateSort,
-                  updatePrioritySort: bloc.updatePrioritySort,
-                  resetFiltersAndSort: bloc.resetFiltersAndSort,
+        listenWhen: (previous, current) => previous.taskToDelete != current.taskToDelete,
+        listener: _listenTaskToDelete,
+        child: BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
+          bloc: bloc,
+          builder:
+              (context, state) => Scaffold(
+                appBar: AppBar(
+                  title: BlocSelector<GroupDetailsCubit, GroupDetailsState, String?>(
+                    bloc: bloc,
+                    selector: (state) => state.group?.name,
+                    builder: (context, name) => Text(name ?? title),
+                  ),
+                  bottom: state.isLoading ? const PreferredSize(preferredSize: Size(0, 10), child: LinearProgressIndicator()) : null,
                 ),
-              ),
-              body: RefreshIndicator(
-                onRefresh: () async {
-                  await bloc.load(groupId: widget.id);
-                },
-                child: CustomScrollView(
-                  slivers: [
-                    if (state.isCalendarView)
-                      AppSliverHeaderWrapper.floating(
-                        maxSize: 112,
-                        padding: 0,
-                        child: Container(
-                          clipBehavior: Clip.antiAlias,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(AppSpacing.m), bottomRight: Radius.circular(AppSpacing.m)),
-                          ),
-                          child: CalendarPagerView(
-                            theme: CalendarPagerTheme.from(
-                              background: theme.scaffoldBackgroundColor,
-                              accent: AppTheme.darkTheme.colorScheme.primaryContainer,
-                              headerTitle: theme.textTheme.headlineLarge!,
-                              itemBorder: AppTheme.darkTheme.colorScheme.primaryContainer,
-                              onAccent: AppTheme.darkTheme.colorScheme.onPrimaryContainer,
+                endDrawer: Drawer(
+                  child: GroupDetailsFilters(
+                    listView: state.listView,
+                    userFilter: state.userFilter,
+                    completionFilter: state.completionFilter,
+                    statusFilter: state.statusFilter,
+                    priorityFilter: state.priorityFilter,
+                    dateSort: state.dateSort,
+                    prioritySort: state.prioritySort,
+                    assignedUsers: state.assignedUsers,
+                    userToFilterBy: state.userToFilterBy,
+                    toggleListView: bloc.toggleListView,
+                    updateUserFilter: bloc.updateUserFilter,
+                    updateUserToFilterBy: bloc.updateUserToFilterBy,
+                    updateCompletionFilter: bloc.updateCompletionFilter,
+                    updateStatusFilter: bloc.updateStatusFilter,
+                    updatePriorityFilter: bloc.updatePriorityFilter,
+                    updateDateSort: bloc.updateDateSort,
+                    updatePrioritySort: bloc.updatePrioritySort,
+                    resetFiltersAndSort: bloc.resetFiltersAndSort,
+                  ),
+                ),
+                body: RefreshIndicator(
+                  onRefresh: () async {
+                    await bloc.load(groupId: widget.id);
+                  },
+                  child: CustomScrollView(
+                    slivers: [
+                      if (state.isCalendarView)
+                        AppSliverHeaderWrapper.floating(
+                          maxSize: 112,
+                          padding: 0,
+                          child: Container(
+                            clipBehavior: Clip.antiAlias,
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(AppSpacing.m), bottomRight: Radius.circular(AppSpacing.m)),
                             ),
-                            hasHeader: false,
-                            onDateSelected: bloc.updateSelectedDate,
+                            child: CalendarPagerView(
+                              theme: CalendarPagerTheme.from(
+                                background: theme.scaffoldBackgroundColor,
+                                accent: AppTheme.darkTheme.colorScheme.primaryContainer,
+                                headerTitle: theme.textTheme.headlineLarge!,
+                                itemBorder: AppTheme.darkTheme.colorScheme.primaryContainer,
+                                onAccent: AppTheme.darkTheme.colorScheme.onPrimaryContainer,
+                              ),
+                              hasHeader: false,
+                              onDateSelected: bloc.updateSelectedDate,
+                            ),
                           ),
                         ),
-                      ),
-                    if (state.tasks.isEmpty)
-                      const SliverFillRemaining(child: Padding(padding: EdgeInsets.all(AppSpacing.s), child: TaskContentUnavailable()))
-                    else if (state.filteredTasks.isEmpty)
-                      const SliverFillRemaining(child: Padding(padding: EdgeInsets.all(AppSpacing.s), child: TaskFilteredContentUnavailable()))
-                    else
-                      SliverList.separated(
-                        itemCount: state.filteredTasks.length,
-                        itemBuilder: (context, position) {
-                          final task = state.filteredTasks[position];
-                          return TaskItem(
-                            task: task,
-                            canDelete: bloc.getTaskOwnership(task),
-                            onTap: () async {
-                              await context.pushNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.id});
-                              bloc.loadTasks(groupId: widget.id);
-                            },
-                            onComplete: bloc.toggleTaskStatus,
-                            onPending: bloc.toggleTaskStatus,
-                            onDelete: bloc.setTaskToDelete,
-                          );
-                        },
-                        separatorBuilder: (context, position) => const Divider(),
-                      ),
-                    const SliverToBoxAdapter(child: Gap(AppSpacing.max)),
-                  ],
+                      if (state.tasks.isEmpty)
+                        const SliverFillRemaining(child: Padding(padding: EdgeInsets.all(AppSpacing.s), child: TaskContentUnavailable()))
+                      else if (state.filteredTasks.isEmpty)
+                        const SliverFillRemaining(child: Padding(padding: EdgeInsets.all(AppSpacing.s), child: TaskFilteredContentUnavailable()))
+                      else
+                        SliverList.separated(
+                          itemCount: state.filteredTasks.length,
+                          itemBuilder: (context, position) {
+                            final task = state.filteredTasks[position];
+                            return TaskItem(
+                              task: task,
+                              canDelete: bloc.getTaskOwnership(task),
+                              onTap: () async {
+                                await context.pushNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.id});
+                                bloc.loadTasks(groupId: widget.id);
+                              },
+                              onComplete: bloc.toggleTaskStatus,
+                              onPending: bloc.toggleTaskStatus,
+                              onDelete: bloc.setTaskToDelete,
+                            );
+                          },
+                          separatorBuilder: (context, position) => const Divider(),
+                        ),
+                      const SliverToBoxAdapter(child: Gap(AppSpacing.max)),
+                    ],
+                  ),
+                ),
+                floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                floatingActionButton: FloatingActionButton.extended(
+                  onPressed: () async {
+                    if (context.mounted) {
+                      final result = await context.pushNamed<bool>(CreateTaskScreen.routeName, pathParameters: {'id': widget.id});
+
+                      if (result ?? false) {
+                        bloc.loadTasks(groupId: widget.id);
+                        bloc.updateTasksForMember();
+                      }
+                    }
+                  },
+                  label: const Text('Create task'),
+                  icon: const Icon(Icons.add),
                 ),
               ),
-              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-              floatingActionButton: FloatingActionButton.extended(
-                onPressed: () async {
-                  if (context.mounted) {
-                    final result = await context.pushNamed<bool>(CreateTaskScreen.routeName, pathParameters: {'id': widget.id});
-
-                    if (result ?? false) {
-                      bloc.loadTasks(groupId: widget.id);
-                      bloc.updateTasksForMember();
-                    }
-                  }
-                },
-                label: const Text('Create task'),
-                icon: const Icon(Icons.add),
-              ),
-            ),
+        ),
       ),
     );
   }
@@ -169,6 +178,12 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
         },
       );
     } else {
+      context.pop();
+    }
+  }
+
+  void _listenNavigationFlow(BuildContext context, GroupDetailsState state) {
+    if (state.shouldGoBack) {
       context.pop();
     }
   }

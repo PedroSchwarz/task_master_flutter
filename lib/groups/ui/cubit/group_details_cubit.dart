@@ -20,6 +20,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     required this.groupsRepository,
     required this.tasksRepository,
     required this.invitesRepository,
+    required this.groupsWebsocket,
     required this.tasksWebsocket,
   }) : super(
          GroupDetailsState(
@@ -34,6 +35,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
            priorityFilter: TaskPriorityFilter.all,
            dateSort: TaskDateSort.newest,
            prioritySort: TaskPrioritySort.none,
+           shouldGoBack: false,
          ),
        );
 
@@ -52,6 +54,9 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   final InvitesRepository invitesRepository;
 
   @visibleForTesting
+  final GroupsWebsocket groupsWebsocket;
+
+  @visibleForTesting
   final TasksWebsocket tasksWebsocket;
 
   UserData get currentUser => authRepository.currentUser.value!;
@@ -59,10 +64,19 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   Future<void> load({required String groupId}) async {
     emit(state.copyWith(isLoading: true));
 
+    groupsWebsocket.listen(
+      groupsCallback: (id) async {
+        if (groupId == id) {
+          await loadGroup(groupId: groupId);
+        }
+      },
+      trigger: WebsocketTrigger.groupsUpdated,
+    );
+
     tasksWebsocket.listen(
       taskscallback: (members) async {
         if (members.contains(currentUser.id)) {
-          loadTasks(groupId: groupId);
+          await loadTasks(groupId: groupId);
         }
       },
       trigger: WebsocketTrigger.tasksUpdated,
@@ -71,7 +85,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     tasksWebsocket.listen(
       taskscallback: (members) async {
         if (members.contains(currentUser.id)) {
-          loadTasks(groupId: groupId);
+          await loadTasks(groupId: groupId);
         }
       },
       trigger: WebsocketTrigger.taskUpdated,
@@ -93,6 +107,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
       emit(state.copyWith(group: group));
     } catch (e) {
       _log.severe('Error loading group: $e', e);
+      emit(state.copyWith(shouldGoBack: true));
     }
   }
 
@@ -286,6 +301,7 @@ sealed class GroupDetailsState with _$GroupDetailsState {
     required TaskPriorityFilter priorityFilter,
     required TaskDateSort dateSort,
     required TaskPrioritySort prioritySort,
+    required bool shouldGoBack,
     GroupResponse? group,
     UserData? currentUser,
     UserResponse? userToFilterBy,

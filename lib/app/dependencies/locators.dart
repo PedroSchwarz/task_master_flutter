@@ -86,12 +86,19 @@ class Locators extends BaseServiceLocators {
       ..registerSingleton(InvitesRepository(invitesRemoteDataSource: getIt()))
       ..registerSingleton(GroupsRemoteDataSource(getIt()))
       ..registerSingleton(GroupsLocalDataSource(localStorage: getIt()))
+      ..registerSingleton(GroupsWebsocket(client: getIt()))
       ..registerSingleton(GroupsRepository(groupsRemoteDataSource: getIt(), groupsLocalDataSource: getIt()))
       ..registerFactory(
         () => CreateGroupCubit(authRepository: getIt(), groupsRepository: getIt(), invitesRepository: getIt(), usersRepository: getIt()),
       )
       ..registerFactory(
-        () => DashboardCubit(authRepository: getIt(), usersRepository: getIt(), groupsRepository: getIt(), invitesRepository: getIt()),
+        () => DashboardCubit(
+          authRepository: getIt(),
+          usersRepository: getIt(),
+          groupsRepository: getIt(),
+          invitesRepository: getIt(),
+          groupsWebsocket: getIt(),
+        ),
       )
       ..registerFactory(() => InvitesCubit(invitesRepository: getIt(), groupsRepository: getIt()))
       ..registerSingleton(TasksRemoteDataSource(getIt()))
@@ -106,6 +113,7 @@ class Locators extends BaseServiceLocators {
           groupsRepository: getIt(),
           tasksRepository: getIt(),
           invitesRepository: getIt(),
+          groupsWebsocket: getIt(),
           tasksWebsocket: getIt(),
         ),
       )

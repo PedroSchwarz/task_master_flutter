@@ -14,13 +14,13 @@ class CommentsWebsocket {
   late final Socket _socket;
   bool _isConnected = false;
 
-  void listen({required UpdateCommentsCallback taskscallback, required WebsocketTrigger trigger}) {
+  void listen({required UpdateCommentsCallback commentscallback, required WebsocketTrigger trigger}) {
     _connectIfNeeded();
 
     switch (trigger) {
       case WebsocketTrigger.commentsUpdated:
         _socket.on(trigger.event, (taskId) {
-          taskscallback(taskId);
+          commentscallback(taskId);
         });
       default:
         break;

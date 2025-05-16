@@ -9,6 +9,7 @@ class UserRepository {
   @visibleForTesting
   final UserLocalDataSource userLocalDataSource;
 
+  @visibleForTesting
   final userController = BehaviorSubject<UserData?>.seeded(null);
   ValueStream<UserData?> get currentUser => userController.stream;
 

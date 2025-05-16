@@ -59,7 +59,7 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
     );
 
     commentsWebsocket.listen(
-      taskscallback: (taskId) async {
+      commentscallback: (taskId) async {
         if (taskId == id) {
           await loadComments(id);
         }

@@ -192,7 +192,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   Future<void> _listenNavigationFlow(BuildContext context, CreateGroupState state) async {
     if (state.shouldGoBack) {
-      context.pop();
+      context.pop(true);
     }
   }
 }
