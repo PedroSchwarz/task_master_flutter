@@ -3,8 +3,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:task_master/app/websocket/websocket_client.dart';
 
-typedef UpdateTasksCallback = Future<void> Function(List<String>);
-
 class TasksWebsocket {
   TasksWebsocket._({required Socket socket}) : _socket = socket;
 

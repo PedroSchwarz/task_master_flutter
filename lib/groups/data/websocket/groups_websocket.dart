@@ -3,8 +3,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:task_master/app/websocket/websocket_client.dart';
 
-typedef UpdateGroupsCallback = Future<void> Function(String);
-
 class GroupsWebsocket {
   GroupsWebsocket._({required Socket socket}) : _socket = socket;
 
