@@ -77,14 +77,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           PopupMenuItem(
                             onTap: () async {
                               if (context.mounted) {
-                                final shouldRefresh = await context.pushNamed<bool>(
+                                final result = await context.pushNamed<bool>(
                                   CreateTaskScreen.routeName,
                                   pathParameters: {'id': task.group},
                                   queryParameters: {'taskId': task.id},
                                 );
 
-                                if (shouldRefresh ?? false) {
-                                  bloc.load(widget.id);
+                                if (result ?? false) {
                                   bloc.updateTaskForMember();
                                 }
                               }
@@ -283,7 +282,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
 
   void _listenNavigationFlow(BuildContext context, TaskDetailsState state) {
     if (state.shouldGoBack) {
-      context.pop();
+      context.pop(true);
     }
   }
 

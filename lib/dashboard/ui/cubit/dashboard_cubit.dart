@@ -40,6 +40,8 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   StreamSubscription<String>? _groupsSubscription;
 
+  Timer? _invitesFetchTimer;
+
   Future<void> load() async {
     emit(state.copyWith(isLoading: true));
 
@@ -64,12 +66,16 @@ class DashboardCubit extends Cubit<DashboardState> {
   }
 
   Future<void> loadInvites() async {
-    try {
-      final invites = await invitesRepository.getInvites(status: InviteStatus.pending.name);
-      emit(state.copyWith(invites: invites));
-    } catch (e) {
-      _log.info('Error loading invites: $e', e);
-    }
+    _invitesFetchTimer?.cancel();
+
+    _invitesFetchTimer = Timer.periodic(const Duration(minutes: 2), (_) async {
+      try {
+        final invites = await invitesRepository.getInvites(status: InviteStatus.pending.name);
+        emit(state.copyWith(invites: invites));
+      } catch (e) {
+        _log.info('Error loading invites: $e', e);
+      }
+    });
   }
 
   void updateGroupsForUsers({required String groupId}) {
@@ -77,6 +83,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   }
 
   void signOut() async {
+    _invitesFetchTimer?.cancel();
     await _groupsSubscription?.cancel();
     await usersRepository.removeNotifications();
     await authRepository.signOut();

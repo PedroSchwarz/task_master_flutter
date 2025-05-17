@@ -36,7 +36,6 @@ class Locators extends BaseServiceLocators {
   @override
   BuildConfigurations get buildConfigurations {
     return const BuildConfigurations(baseUrl: 'http://localhost:3000/', environment: Environment.production);
-    // return const BuildConfigurations(baseUrl: 'http://10.0.2.2:3000/', environment: Environment.production);
   }
 
   @override
@@ -100,7 +99,7 @@ class Locators extends BaseServiceLocators {
           groupsWebsocket: getIt(),
         ),
       )
-      ..registerFactory(() => InvitesCubit(invitesRepository: getIt(), groupsRepository: getIt()))
+      ..registerFactory(() => InvitesCubit(invitesRepository: getIt(), groupsRepository: getIt(), groupsWebsocket: getIt()))
       ..registerSingleton(TasksRemoteDataSource(getIt()))
       ..registerSingleton(TasksRepository(tasksRemoteDataSource: getIt()))
       ..registerSingleton(TasksWebsocket(client: getIt())..listen())

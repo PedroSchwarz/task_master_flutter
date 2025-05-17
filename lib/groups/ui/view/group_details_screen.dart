@@ -124,8 +124,13 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                               task: task,
                               canDelete: bloc.getTaskOwnership(task),
                               onTap: () async {
-                                await context.pushNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.id});
-                                bloc.loadTasks(groupId: widget.id);
+                                if (context.mounted) {
+                                  final result = await context.pushNamed<bool>(TaskDetailsScreen.routeName, pathParameters: {'id': task.id});
+
+                                  if (result ?? false) {
+                                    bloc.updateTasksForMember(taskId: task.id);
+                                  }
+                                }
                               },
                               onComplete: bloc.toggleTaskStatus,
                               onPending: bloc.toggleTaskStatus,
@@ -145,8 +150,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                       final result = await context.pushNamed<bool>(CreateTaskScreen.routeName, pathParameters: {'id': widget.id});
 
                       if (result ?? false) {
-                        bloc.loadTasks(groupId: widget.id);
-                        bloc.updateTasksForMember();
+                        bloc.updateGroupForMember(groupId: widget.id);
                       }
                     }
                   },

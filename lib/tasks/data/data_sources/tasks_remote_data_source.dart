@@ -20,7 +20,7 @@ abstract class TasksRemoteDataSource {
 
   @POST('/')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
-  Future<void> create(@Body() CreateTaskRequest request);
+  Future<String> create(@Body() CreateTaskRequest request);
 
   @PUT('/{id}')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})

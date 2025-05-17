@@ -64,9 +64,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
 
   StreamSubscription<String>? _groupsSubscription;
 
-  StreamSubscription<List<String>>? _tasksSubscription;
-
-  StreamSubscription<List<String>>? _taskSubscription;
+  StreamSubscription<String>? _tasksSubscription;
 
   Future<void> load({required String groupId}) async {
     emit(state.copyWith(isLoading: true));
@@ -74,17 +72,12 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     _groupsSubscription = groupsWebsocket.groupsUpdatedStream.listen((id) {
       if (groupId == id) {
         loadGroup(groupId: id);
+        loadTasks(groupId: id);
       }
     });
 
-    _tasksSubscription = tasksWebsocket.tasksUpdatedStream.listen((members) {
-      if (members.contains(currentUser.id)) {
-        loadTasks(groupId: groupId);
-      }
-    });
-
-    _taskSubscription = tasksWebsocket.taskUpdatedStream.listen((members) {
-      if (members.contains(currentUser.id)) {
+    _tasksSubscription = tasksWebsocket.tasksUpdatedStream.listen((taskId) {
+      if (state.tasks.any((task) => task.id == taskId)) {
         loadTasks(groupId: groupId);
       }
     });
@@ -227,18 +220,14 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   }
 
   Future<void> deleteTask(TaskResponse task) async {
+    emit(state.copyWith(taskToDelete: null));
+
     try {
       await tasksRepository.delete(task.id);
 
-      updateTasksForMember();
+      updateTasksForMember(taskId: task.id);
     } catch (e) {
       _log.severe('Error deleting task: $e', e);
-    } finally {
-      final tasks = state.tasks;
-      final updatedTasks = List<TaskResponse>.from(tasks);
-      final index = tasks.indexWhere((item) => item.id == task.id);
-      updatedTasks.removeAt(index);
-      emit(state.copyWith(tasks: updatedTasks, taskToDelete: null));
     }
   }
 
@@ -259,30 +248,23 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
         ),
       );
 
-      updateTasksForMember();
+      updateTasksForMember(taskId: task.id);
     } catch (e) {
       _log.severe('Error updating task: $e', e);
-    } finally {
-      final tasks = state.tasks;
-      final index = tasks.indexWhere((item) => item.id == task.id);
-      final updatedTasks = List<TaskResponse>.from(tasks);
-      updatedTasks[index] = updatedTask;
-      emit(state.copyWith(tasks: updatedTasks));
     }
   }
 
-  void updateTasksForMember() {
-    if (state.assignedUsersIds.isEmpty) {
-      return;
-    }
+  void updateTasksForMember({required String taskId}) {
+    tasksWebsocket.updateTasks(taskId: taskId);
+  }
 
-    tasksWebsocket.updateTasks(members: state.assignedUsersIds);
+  void updateGroupForMember({required String groupId}) {
+    groupsWebsocket.updateGroups(groupId: groupId);
   }
 
   Future<void> dispose() async {
     await _groupsSubscription?.cancel();
     await _tasksSubscription?.cancel();
-    await _taskSubscription?.cancel();
   }
 }
 

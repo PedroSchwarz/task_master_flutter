@@ -38,23 +38,15 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
 
   UserData get currentUser => authRepository.currentUser.value!;
 
-  StreamSubscription<List<String>>? _tasksSubscription;
-
-  StreamSubscription<List<String>>? _taskSubscription;
+  StreamSubscription<String>? _tasksSubscription;
 
   StreamSubscription<String>? _commentsSubscription;
 
   Future<void> load(String id) async {
     emit(state.copyWith(isLoading: true));
 
-    _tasksSubscription = tasksWebsocket.tasksUpdatedStream.listen((members) {
-      if (members.contains(currentUser.id)) {
-        loadTask(id);
-      }
-    });
-
-    _taskSubscription = tasksWebsocket.taskUpdatedStream.listen((members) {
-      if (members.contains(currentUser.id)) {
+    _tasksSubscription = tasksWebsocket.tasksUpdatedStream.listen((taskId) {
+      if (taskId == id) {
         loadTask(id);
       }
     });
@@ -115,8 +107,6 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
       updateTaskForMember();
     } catch (e) {
       _log.severe('Error completing/uncompleting task: $e', e);
-    } finally {
-      emit(state.copyWith(task: updatedTask.copyWith(updatedAt: DateTime.now())));
     }
   }
 
@@ -125,22 +115,19 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
   }
 
   Future<void> deleteTask() async {
-    emit(state.copyWith(showDeleteDialog: false, isLoading: true));
+    emit(state.copyWith(showDeleteDialog: false));
+
     final task = state.task;
 
     if (task == null) {
       return;
     }
     try {
-      updateTaskForMember();
-
       await tasksRepository.delete(task.id);
 
       emit(state.copyWith(shouldGoBack: true));
     } catch (e) {
       _log.severe('Error deleting task: $e', e);
-    } finally {
-      emit(state.copyWith(isLoading: false));
     }
   }
 
@@ -170,12 +157,11 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
       return;
     }
 
-    tasksWebsocket.updateTask(userId: currentUser.id, taskId: task.id);
+    tasksWebsocket.updateTasks(taskId: task.id);
   }
 
   Future<void> dispose() async {
     await _tasksSubscription?.cancel();
-    await _taskSubscription?.cancel();
     await _commentsSubscription?.cancel();
   }
 }

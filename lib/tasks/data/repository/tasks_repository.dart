@@ -16,7 +16,7 @@ class TasksRepository {
     return tasksRemoteDataSource.fetchById(id);
   }
 
-  Future<void> create(CreateTaskRequest request) async {
+  Future<String> create(CreateTaskRequest request) async {
     return tasksRemoteDataSource.create(request);
   }
 

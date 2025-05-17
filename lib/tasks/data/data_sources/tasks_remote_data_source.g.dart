@@ -91,13 +91,13 @@ class _TasksRemoteDataSource implements TasksRemoteDataSource {
   }
 
   @override
-  Future<void> create(CreateTaskRequest request) async {
+  Future<String> create(CreateTaskRequest request) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': 'application/json'};
     _headers.removeWhere((k, v) => v == null);
     final _data = request;
-    final _options = _setStreamType<void>(
+    final _options = _setStreamType<String>(
       Options(
             method: 'POST',
             headers: _headers,
@@ -112,7 +112,15 @@ class _TasksRemoteDataSource implements TasksRemoteDataSource {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    await _dio.fetch<void>(_options);
+    final _result = await _dio.fetch<String>(_options);
+    late String _value;
+    try {
+      _value = _result.data!;
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
   }
 
   @override

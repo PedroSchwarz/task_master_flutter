@@ -42,8 +42,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   count: invitesCount,
                   child: IconButton(
                     onPressed: () async {
-                      await context.pushNamed(InvitesScreen.routeName);
-                      bloc.load();
+                      if (context.mounted) {
+                        await context.pushNamed(InvitesScreen.routeName);
+                        await Future.wait([bloc.loadGroups(), bloc.loadInvites()]);
+                      }
                     },
                     icon: const Icon(Icons.mail_outline),
                   ),

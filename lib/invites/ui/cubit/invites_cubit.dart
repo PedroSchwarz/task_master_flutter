@@ -7,7 +7,8 @@ import 'package:task_master/invites/invites.dart';
 part 'invites_cubit.freezed.dart';
 
 class InvitesCubit extends Cubit<InvitesState> {
-  InvitesCubit({required this.invitesRepository, required this.groupsRepository}) : super(const InvitesState(isLoading: false, invites: []));
+  InvitesCubit({required this.invitesRepository, required this.groupsRepository, required this.groupsWebsocket})
+    : super(const InvitesState(isLoading: false, invites: []));
 
   static final _log = Logger('InvitesCubit');
 
@@ -16,6 +17,9 @@ class InvitesCubit extends Cubit<InvitesState> {
 
   @visibleForTesting
   final GroupsRepository groupsRepository;
+
+  @visibleForTesting
+  final GroupsWebsocket groupsWebsocket;
 
   Future<void> load() async {
     emit(state.copyWith(isLoading: true));
@@ -33,6 +37,7 @@ class InvitesCubit extends Cubit<InvitesState> {
     try {
       await invitesRepository.accept(invite.id);
       await groupsRepository.addMemberToGroup(invite.group.id);
+      groupsWebsocket.updateGroups(groupId: invite.group.id);
     } catch (e) {
       _log.severe('Error accepting invite: $e', e);
     } finally {

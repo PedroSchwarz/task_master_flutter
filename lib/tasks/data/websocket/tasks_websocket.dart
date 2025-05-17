@@ -17,30 +17,14 @@ class TasksWebsocket {
   bool _isConnected = false;
 
   @visibleForTesting
-  final tasksUpdatedController = ReplaySubject<List<String>>(maxSize: 1);
-  Stream<List<String>> get tasksUpdatedStream => tasksUpdatedController.stream;
-
-  @visibleForTesting
-  final taskUpdatedController = ReplaySubject<List<String>>(maxSize: 1);
-  Stream<List<String>> get taskUpdatedStream => taskUpdatedController.stream;
+  final tasksUpdatedController = ReplaySubject<String>(maxSize: 1);
+  Stream<String> get tasksUpdatedStream => tasksUpdatedController.stream;
 
   void listen() {
     _connectIfNeeded();
-    _socket.on(WebsocketTrigger.tasksUpdated.event, (members) {
+    _socket.on(WebsocketTrigger.tasksUpdated.event, (taskId) {
       if (tasksUpdatedController.hasListener) {
-        if (members is List) {
-          final casted = members.cast<String>();
-          tasksUpdatedController.add(casted);
-        }
-      }
-    });
-
-    _socket.on(WebsocketTrigger.taskUpdated.event, (members) {
-      if (taskUpdatedController.hasListener) {
-        if (members is List) {
-          final casted = members.cast<String>();
-          taskUpdatedController.add(casted);
-        }
+        tasksUpdatedController.add(taskId);
       }
     });
   }
@@ -52,14 +36,9 @@ class TasksWebsocket {
     }
   }
 
-  void updateTasks({required List<String> members}) {
+  void updateTasks({required String taskId}) {
     _connectIfNeeded();
-    _socket.emit(WebsocketAction.tasksUpdated.event, {'members': members});
-  }
-
-  void updateTask({required String userId, required String taskId}) {
-    _connectIfNeeded();
-    _socket.emit(WebsocketAction.taskUpdated.event, {'userId': userId, 'taskId': taskId});
+    _socket.emit(WebsocketAction.tasksUpdated.event, {'taskId': taskId});
   }
 
   void dispose() {
