@@ -276,7 +276,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     ),
                   ),
                   AppSliverHeaderWrapper.pinned(
-                    maxSize: 124,
+                    maxSize: 128,
                     padding: 0,
                     child: Container(
                       padding: const EdgeInsets.all(AppSpacing.s),
