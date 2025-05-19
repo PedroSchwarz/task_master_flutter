@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/auth/auth.dart';
-import 'package:task_master/dashboard/ui/view/dashboard_screen.dart';
+import 'package:task_master/dashboard/ui/view/screens/dashboard_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -35,15 +35,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
             title: const Text('Register'),
             centerTitle: false,
             bottom: PreferredSize(
-              preferredSize: const Size(0, 10),
+              preferredSize: const Size(0, AppSpacing.s),
               child: BlocSelector<RegisterCubit, RegisterState, bool>(
                 bloc: bloc,
-                selector: (state) => state.isLoading,
-                builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
+                selector: (state) => state.isSubmitting,
+                builder: (context, isSubmitting) => isSubmitting ? const LinearProgressIndicator() : const SizedBox.shrink(),
               ),
             ),
           ),
           body: SafeArea(
+            top: false,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
               child: Column(
@@ -99,17 +100,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     children: [
                       BlocSelector<RegisterCubit, RegisterState, bool>(
                         bloc: bloc,
-                        selector: (state) => state.isButtonEnabled,
-                        builder: (context, isEnabled) => FilledButton(onPressed: isEnabled ? bloc.register : null, child: const Text('Register')),
+                        selector: (state) => state.canSubmit,
+                        builder: (context, canSubmit) {
+                          return FilledButton(onPressed: canSubmit ? bloc.register : null, child: const Text('Register'));
+                        },
                       ),
                       BlocSelector<RegisterCubit, RegisterState, bool>(
                         bloc: bloc,
-                        selector: (state) => state.isLoading,
-                        builder:
-                            (context, isLoading) => TextButton(
-                              onPressed: isLoading ? null : context.pop,
-                              child: const Text('Access Account', textAlign: TextAlign.start),
-                            ),
+                        selector: (state) => state.isSubmitting,
+                        builder: (context, isSubmitting) {
+                          return TextButton(
+                            onPressed: isSubmitting ? null : context.pop,
+                            child: const Text('Access Account', textAlign: TextAlign.start),
+                          );
+                        },
                       ),
                     ],
                   ),
