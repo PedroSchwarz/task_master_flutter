@@ -35,7 +35,7 @@ sealed class BaseServiceLocators {
 class Locators extends BaseServiceLocators {
   @override
   BuildConfigurations get buildConfigurations {
-    return const BuildConfigurations(baseUrl: 'http://localhost:3000/', environment: Environment.production);
+    return const BuildConfigurations(baseUrl: 'https://task-master-api-beej.onrender.com/', environment: Environment.production);
   }
 
   @override
