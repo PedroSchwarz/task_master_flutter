@@ -28,6 +28,8 @@ class _AppSkeletonState extends State<AppSkeleton> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    final Brightness brightness = MediaQuery.platformBrightnessOf(context);
+
     if (!widget.isLoading) return widget.child;
 
     return Stack(
@@ -40,7 +42,7 @@ class _AppSkeletonState extends State<AppSkeleton> with SingleTickerProviderStat
               animation: _controller,
               builder: (context, _) {
                 return CustomPaint(
-                  painter: _ShimmerPainter(animationValue: _controller.value),
+                  painter: _ShimmerPainter(animationValue: _controller.value, brightness: brightness),
                   child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.transparent)),
                 );
               },
@@ -53,14 +55,15 @@ class _AppSkeletonState extends State<AppSkeleton> with SingleTickerProviderStat
 }
 
 class _ShimmerPainter extends CustomPainter {
-  const _ShimmerPainter({required this.animationValue});
+  const _ShimmerPainter({required this.animationValue, required this.brightness});
 
   final double animationValue;
+  final Brightness brightness;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final baseColor = Colors.grey.shade300;
-    final highlightColor = Colors.grey.shade100;
+    final baseColor = brightness == Brightness.light ? Colors.grey.shade300 : Colors.grey.shade800;
+    final highlightColor = brightness == Brightness.light ? Colors.grey.shade100 : Colors.grey.shade700;
 
     final shimmerWidth = size.width * 0.5;
     final shimmerPosition = animationValue * (size.width + shimmerWidth) - shimmerWidth;

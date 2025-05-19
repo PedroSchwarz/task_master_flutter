@@ -113,10 +113,10 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                           child: CalendarPagerView(
                             theme: CalendarPagerTheme.from(
                               background: theme.scaffoldBackgroundColor,
-                              accent: AppTheme.darkTheme.colorScheme.primaryContainer,
+                              accent: theme.colorScheme.primary,
                               headerTitle: theme.textTheme.headlineLarge!,
-                              itemBorder: AppTheme.darkTheme.colorScheme.primaryContainer,
-                              onAccent: AppTheme.darkTheme.colorScheme.onPrimaryContainer,
+                              itemBorder: theme.colorScheme.primary,
+                              onAccent: theme.colorScheme.onPrimary,
                               hasShadow: false,
                             ),
                             hasHeader: false,

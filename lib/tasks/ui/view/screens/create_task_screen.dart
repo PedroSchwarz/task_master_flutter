@@ -174,7 +174,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                         label: const Text('Priority'),
                                         initialSelection: state.priority,
                                         inputDecorationTheme: InputDecorationTheme(
-                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
                                           isCollapsed: true,
                                           contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
                                         ),
@@ -212,7 +212,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                         label: const Text('Status'),
                                         initialSelection: state.status,
                                         inputDecorationTheme: InputDecorationTheme(
-                                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
+                                          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
                                           isCollapsed: true,
                                           contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
                                         ),
@@ -238,7 +238,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               ),
                             ],
                           ),
-                          Text('Due Date and Time', style: theme.textTheme.titleSmall),
+                          Text('Due Date and Time', style: theme.textTheme.titleMedium),
                           Row(
                             spacing: AppSpacing.s,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -296,13 +296,15 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               ),
                             ],
                           ),
+                          const Divider(),
+                          Text('Assigne to', style: theme.textTheme.titleMedium),
                           Expanded(
                             child: BlocBuilder<CreateTaskCubit, CreateTaskState>(
                               bloc: bloc,
                               builder: (context, state) {
                                 return GridView.builder(
                                   physics: const ClampingScrollPhysics(),
-                                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+                                  padding: const EdgeInsets.only(top: 0, bottom: AppSpacing.s),
                                   itemCount: state.assignableUsers.length,
                                   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                                     maxCrossAxisExtent: 40,

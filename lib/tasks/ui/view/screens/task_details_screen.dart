@@ -99,40 +99,60 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           final isOwner = task.owner.id == currentUserId;
                           final isAssignee = task.assignedTo.any((assignee) => assignee.id == currentUserId);
 
-                          return PopupMenuButton(
-                            itemBuilder: (context) {
-                              return [
-                                PopupMenuItem(
-                                  onTap: bloc.toggleComplete,
-                                  child: Row(
-                                    spacing: AppSpacing.xxs,
-                                    children: [Icon(task.completed ? Icons.close : Icons.check), Text(task.completed ? 'Not Complete' : 'Complete')],
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  onTap: () async {
-                                    if (context.mounted) {
-                                      final result = await context.pushNamed<bool>(
-                                        CreateTaskScreen.routeName,
-                                        pathParameters: {'id': task.group},
-                                        queryParameters: {'taskId': task.id},
-                                      );
+                          return IconButton(
+                            onPressed: isOwner || isAssignee ? bloc.toggleDeleteDialog : null,
+                            icon: const Icon(Icons.delete_outline, size: 24),
+                          );
+                        },
+                      ),
+                      BlocSelector<TaskDetailsCubit, TaskDetailsState, TaskResponse?>(
+                        bloc: bloc,
+                        selector: (state) => state.task,
+                        builder: (context, task) {
+                          if (task == null) return const SizedBox.shrink();
 
-                                      if (result ?? false) {
-                                        bloc.updateTaskForMember();
+                          final currentUserId = bloc.currentUser.id;
+                          final isOwner = task.owner.id == currentUserId;
+                          final isAssignee = task.assignedTo.any((assignee) => assignee.id == currentUserId);
+
+                          return IconButton(
+                            onPressed:
+                                isOwner || isAssignee
+                                    ? () async {
+                                      if (context.mounted) {
+                                        final result = await context.pushNamed<bool>(
+                                          CreateTaskScreen.routeName,
+                                          pathParameters: {'id': task.group},
+                                          queryParameters: {'taskId': task.id},
+                                        );
+
+                                        if (result ?? false) {
+                                          bloc.updateTaskForMember();
+                                        }
                                       }
                                     }
-                                  },
-                                  enabled: isOwner || isAssignee,
-                                  child: const Row(spacing: AppSpacing.xs, children: [Icon(Icons.edit_outlined, size: 20), Text('Edit')]),
-                                ),
-                                PopupMenuItem(
-                                  onTap: bloc.toggleDeleteDialog,
-                                  enabled: isOwner || isAssignee,
-                                  child: const Row(spacing: AppSpacing.xs, children: [Icon(Icons.delete_outline, size: 20), Text('Delete')]),
-                                ),
-                              ];
-                            },
+                                    : null,
+                            icon: const Icon(Icons.edit_outlined, size: 24),
+                          );
+                        },
+                      ),
+                      BlocSelector<TaskDetailsCubit, TaskDetailsState, TaskResponse?>(
+                        bloc: bloc,
+                        selector: (state) => state.task,
+                        builder: (context, task) {
+                          if (task == null) return const SizedBox.shrink();
+
+                          return IconButton.filledTonal(
+                            onPressed: bloc.toggleComplete,
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStatePropertyAll(
+                                task.completed ? Colors.red.withValues(alpha: 0.7) : Colors.green.withValues(alpha: 0.7),
+                              ),
+                              side: WidgetStatePropertyAll(
+                                BorderSide(color: task.completed ? Colors.red.withValues(alpha: 1) : Colors.green.withValues(alpha: 1), width: 2),
+                              ),
+                            ),
+                            icon: Icon(task.completed ? Icons.close : Icons.check, size: 24, color: Colors.white),
                           );
                         },
                       ),
