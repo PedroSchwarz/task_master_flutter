@@ -4,8 +4,8 @@ import 'package:task_master/app/design_system/theme/app_spacing.dart';
 import 'package:task_master/groups/ui/cubit/group_details_cubit.dart';
 import 'package:task_master/users/users.dart';
 
-class GroupDetailsFilters extends StatelessWidget {
-  const GroupDetailsFilters({
+class GroupDetailsFiltersDrawer extends StatelessWidget {
+  const GroupDetailsFiltersDrawer({
     required this.listView,
     required this.userFilter,
     required this.completionFilter,

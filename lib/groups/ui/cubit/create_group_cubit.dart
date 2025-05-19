@@ -19,6 +19,7 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
           description: '',
           showInviteUsersSheet: false,
           isLoading: false,
+          isSubmitting: false,
           showDeleteDialog: false,
           shouldGoBack: false,
         ),
@@ -41,24 +42,33 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
   UserData get currentUser => authRepository.currentUser.value!;
 
   Future<void> load(String? id) async {
-    emit(state.copyWith(isLoading: true));
+    await Future.wait([loadUsers(), if (id != null) loadGroup(id)]);
+  }
 
+  Future<void> loadUsers() async {
     try {
       final users = await usersRepository.getUsers();
       emit(state.copyWith(users: users));
-      if (id != null) {
-        final group = await groupsRepository.getGroupById(id);
-        emit(
-          state.copyWith(
-            group: group,
-            name: group.name,
-            description: group.description,
-            selectedUsersIds: group.members.where((member) => member.id != currentUser.id).map((member) => member.id).toList(),
-          ),
-        );
-      }
     } catch (e) {
       _log.severe('Error loading users: $e', e);
+    }
+  }
+
+  Future<void> loadGroup(String id) async {
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      final group = await groupsRepository.getGroupById(id);
+      emit(
+        state.copyWith(
+          group: group,
+          name: group.name,
+          description: group.description,
+          selectedUsersIds: group.members.where((member) => member.id != currentUser.id).map((member) => member.id).toList(),
+        ),
+      );
+    } catch (e) {
+      _log.severe('Error loading group: $e', e);
     } finally {
       emit(state.copyWith(isLoading: false));
     }
@@ -81,7 +91,7 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
   }
 
   Future<void> saveGroup() async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(isSubmitting: true));
 
     if (state.isUpdating) {
       await updateGroup();
@@ -89,7 +99,7 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
       await createGroup();
     }
 
-    emit(state.copyWith(isLoading: false));
+    emit(state.copyWith(isSubmitting: false));
   }
 
   Future<void> createGroup() async {
@@ -108,7 +118,7 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
     final group = state.group;
 
     if (group == null) {
-      emit(state.copyWith(isLoading: false));
+      emit(state.copyWith(isSubmitting: false));
       return;
     }
 
@@ -145,14 +155,15 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
       return;
     }
 
-    emit(state.copyWith(showDeleteDialog: false));
+    emit(state.copyWith(showDeleteDialog: false, isSubmitting: true));
 
     try {
       await groupsRepository.deleteGroup(group.id);
+      emit(state.copyWith(shouldGoBack: true));
     } catch (e) {
       _log.severe('Error deleting group: $e', e);
     } finally {
-      emit(state.copyWith(shouldGoBack: true));
+      emit(state.copyWith(isSubmitting: false));
     }
   }
 }
@@ -166,6 +177,7 @@ sealed class CreateGroupState with _$CreateGroupState {
     required String description,
     required bool showInviteUsersSheet,
     required bool isLoading,
+    required bool isSubmitting,
     required bool showDeleteDialog,
     required bool shouldGoBack,
     GroupResponse? group,
@@ -177,5 +189,5 @@ sealed class CreateGroupState with _$CreateGroupState {
 
   bool get isFormValid => name.isNotEmpty;
 
-  bool get isButtonEnabled => isFormValid && !isLoading;
+  bool get canSubmit => isFormValid && !isLoading && !isSubmitting;
 }

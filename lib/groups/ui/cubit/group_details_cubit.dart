@@ -36,6 +36,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
            priorityFilter: TaskPriorityFilter.all,
            dateSort: TaskDateSort.newest,
            prioritySort: TaskPrioritySort.none,
+           isRefreshing: false,
            shouldGoBack: false,
          ),
        );
@@ -67,29 +68,28 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   StreamSubscription<String>? _tasksSubscription;
 
   Future<void> load({required String groupId}) async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(isLoading: true, currentUser: authRepository.currentUser.value));
 
     _groupsSubscription = groupsWebsocket.groupsUpdatedStream.listen((id) {
       if (groupId == id) {
-        loadGroup(groupId: id);
-        loadTasks(groupId: id);
+        refresh(groupId: groupId);
       }
     });
 
     _tasksSubscription = tasksWebsocket.tasksUpdatedStream.listen((taskId) {
       if (state.tasks.any((task) => task.id == taskId)) {
-        loadTasks(groupId: groupId);
+        refresh(groupId: groupId);
       }
     });
 
-    try {
-      await Future.wait([loadGroup(groupId: groupId), loadTasks(groupId: groupId), loadTasksListView()]);
-      emit(state.copyWith(invites: [], currentUser: authRepository.currentUser.value));
-    } catch (e) {
-      _log.severe('Error loading cubit: $e', e);
-    } finally {
-      emit(state.copyWith(isLoading: false));
-    }
+    await Future.wait([loadGroup(groupId: groupId), loadTasks(groupId: groupId), loadTasksListView()]);
+    emit(state.copyWith(isLoading: false));
+  }
+
+  Future<void> refresh({required String groupId}) async {
+    emit(state.copyWith(isRefreshing: true));
+    await Future.wait([loadGroup(groupId: groupId), loadTasks(groupId: groupId)]);
+    emit(state.copyWith(isRefreshing: false));
   }
 
   Future<void> loadGroup({required String groupId}) async {
@@ -121,7 +121,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   }
 
   void updateSelectedDate(DateTime value) {
-    emit(state.copyWith(selectedDate: value.toLocal()));
+    emit(state.copyWith(selectedDate: value));
   }
 
   Future<void> toggleListView() async {
@@ -210,11 +210,6 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     );
   }
 
-  bool getTaskOwnership(TaskResponse task) {
-    final userId = currentUser.id;
-    return task.owner.id == userId || task.assignedTo.any((assignee) => assignee.id == userId);
-  }
-
   Future<void> setTaskToDelete(TaskResponse? task) async {
     emit(state.copyWith(taskToDelete: task));
   }
@@ -282,6 +277,7 @@ sealed class GroupDetailsState with _$GroupDetailsState {
     required TaskPriorityFilter priorityFilter,
     required TaskDateSort dateSort,
     required TaskPrioritySort prioritySort,
+    required bool isRefreshing,
     required bool shouldGoBack,
     GroupResponse? group,
     UserData? currentUser,
@@ -302,7 +298,7 @@ sealed class GroupDetailsState with _$GroupDetailsState {
           .where((task) {
             switch (listView) {
               case TaskListView.calendar:
-                return DateUtils.isSameDay(task.dueDate.toLocal(), selectedDate.toLocal());
+                return DateUtils.isSameDay(task.dueDate, selectedDate);
               case TaskListView.list:
                 return true;
             }
