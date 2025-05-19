@@ -82,8 +82,8 @@ as String,
 /// @nodoc
 @JsonSerializable()
 
-class _UserResponse implements UserResponse {
-  const _UserResponse({@JsonKey(name: '_id') required this.id, required this.firstName, required this.lastName, required this.email});
+class _UserResponse extends UserResponse {
+  const _UserResponse({@JsonKey(name: '_id') required this.id, required this.firstName, required this.lastName, required this.email}): super._();
   factory _UserResponse.fromJson(Map<String, dynamic> json) => _$UserResponseFromJson(json);
 
 @override@JsonKey(name: '_id') final  String id;

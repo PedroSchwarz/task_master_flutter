@@ -45,7 +45,7 @@ class TaskItem extends StatelessWidget {
       secondaryBackground: Container(
         padding: const EdgeInsets.all(AppSpacing.m),
         alignment: Alignment.centerRight,
-        decoration: BoxDecoration(color: task.completed ? Colors.purple : Colors.green),
+        decoration: BoxDecoration(color: task.completed ? Colors.orange : Colors.green),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -57,12 +57,12 @@ class TaskItem extends StatelessWidget {
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {
           if (task.completed) {
-            await onPending(task);
+            onPending(task);
           } else {
-            await onComplete(task);
+            onComplete(task);
           }
         } else {
-          await onDelete(task);
+          onDelete(task);
         }
 
         return false;
@@ -137,12 +137,7 @@ class TaskItem extends StatelessWidget {
 
                         return Transform.translate(
                           offset: Offset(index * 10, 0),
-                          child: CircleAvatar(
-                            child: Text(
-                              '${assignee.firstName.substring(0, 1)}${assignee.lastName.substring(0, 1)}',
-                              style: theme.textTheme.titleMedium,
-                            ),
-                          ),
+                          child: CircleAvatar(child: Text(assignee.initials, style: theme.textTheme.titleMedium)),
                         );
                       }).toList(),
                 ),

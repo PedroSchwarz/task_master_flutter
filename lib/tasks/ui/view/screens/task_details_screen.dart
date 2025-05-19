@@ -103,7 +103,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                 ),
               ],
               bottom: PreferredSize(
-                preferredSize: const Size(0, 10),
+                preferredSize: const Size(0, AppSpacing.s),
                 child: BlocSelector<TaskDetailsCubit, TaskDetailsState, bool>(
                   bloc: bloc,
                   selector: (state) => state.isLoading,
