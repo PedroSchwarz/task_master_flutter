@@ -103,7 +103,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                   builder: (context, state) {
                     if (state.isCalendarView) {
                       return AppSliverHeaderWrapper.floating(
-                        maxSize: 112,
+                        maxSize: CalendarPagerViewConstants.collapsedHeight,
                         padding: 0,
                         child: Container(
                           clipBehavior: Clip.antiAlias,
@@ -117,6 +117,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                               headerTitle: theme.textTheme.headlineLarge!,
                               itemBorder: AppTheme.darkTheme.colorScheme.primaryContainer,
                               onAccent: AppTheme.darkTheme.colorScheme.onPrimaryContainer,
+                              hasShadow: false,
                             ),
                             hasHeader: false,
                             onDateSelected: bloc.updateSelectedDate,

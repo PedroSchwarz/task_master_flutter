@@ -27,13 +27,13 @@ abstract class TaskResponse with _$TaskResponse {
 
   factory TaskResponse.fromJson(Map<String, dynamic> json) => _$TaskResponseFromJson(json);
 
-  bool get isOverdue => !completed && dueDate.isBefore(DateTime.now());
+  bool get isOverdue => !completed && dueDate.toLocal().isBefore(DateTime.now());
 
   String get formattedDueDate {
     final localDate = dueDate;
     final formatter = DateFormat('EE, MMMM d hh:mm a');
 
-    return formatter.format(localDate);
+    return formatter.format(localDate.toLocal());
   }
 
   String get formattedCreatedAt {

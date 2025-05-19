@@ -298,7 +298,7 @@ sealed class GroupDetailsState with _$GroupDetailsState {
           .where((task) {
             switch (listView) {
               case TaskListView.calendar:
-                return DateUtils.isSameDay(task.dueDate, selectedDate);
+                return DateUtils.isSameDay(task.dueDate.toLocal(), selectedDate);
               case TaskListView.list:
                 return true;
             }
