@@ -23,7 +23,7 @@ class InviteItem extends StatelessWidget {
               )
               : null,
       title: Text(invite.group.name),
-      subtitle: Text('Invited by: ${invite.from.firstName} ${invite.from.lastName}'),
+      subtitle: Text('Invited by: ${invite.from.completeName}'),
       trailing:
           invite.status == InviteStatus.pending
               ? Row(

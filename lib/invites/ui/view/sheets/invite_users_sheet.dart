@@ -76,21 +76,11 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
                         value: isSelected,
                         title: Text(user.firstName),
                         subtitle: Text('${user.lastName} - ${user.email}'),
-                        secondary: CircleAvatar(child: Text('${user.firstName.substring(0, 1)}${user.lastName.substring(0, 1)}')),
+                        secondary: CircleAvatar(child: Text(user.initials)),
                         checkboxShape: const CircleBorder(),
                         checkboxScaleFactor: 1.2,
                         selected: isSelected,
-                        onChanged: (value) {
-                          if (value == true) {
-                            setState(() {
-                              _selectedIds = [..._selectedIds, user.id];
-                            });
-                          } else {
-                            setState(() {
-                              _selectedIds = _selectedIds.where((id) => id != user.id).toList();
-                            });
-                          }
-                        },
+                        onChanged: (value) => toggleInvite(user.id, value: value),
                       );
                     },
                   ),
@@ -105,5 +95,17 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
         ),
       ),
     );
+  }
+
+  void toggleInvite(String userId, {required bool? value}) {
+    if (value == true) {
+      setState(() {
+        _selectedIds = [..._selectedIds, userId];
+      });
+    } else {
+      setState(() {
+        _selectedIds = _selectedIds.where((id) => id != userId).toList();
+      });
+    }
   }
 }

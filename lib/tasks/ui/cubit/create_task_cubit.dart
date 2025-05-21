@@ -23,6 +23,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
           date: DateTime.now().add(const Duration(days: 1)),
           time: const TimeOfDay(hour: 8, minute: 0),
           assignedIds: {},
+          isSubmitting: false,
           shouldGoBack: false,
         ),
       );
@@ -36,11 +37,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
   final TasksRepository tasksRepository;
 
   Future<void> load({required String groupId, String? taskId}) async {
-    emit(state.copyWith(isLoading: true));
-
     await Future.wait([loadGroup(groupId), if (taskId != null) loadTask(taskId)]);
-
-    emit(state.copyWith(isLoading: false));
   }
 
   Future<void> loadGroup(String id) async {
@@ -53,6 +50,8 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
   }
 
   Future<void> loadTask(String id) async {
+    emit(state.copyWith(isLoading: true));
+
     try {
       final task = await tasksRepository.getById(id);
       emit(
@@ -69,6 +68,8 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
       );
     } catch (e) {
       _log.severe('Error loading task: $e', e);
+    } finally {
+      emit(state.copyWith(isLoading: false));
     }
   }
 
@@ -122,7 +123,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
   }
 
   Future<void> saveTask() async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(isSubmitting: true));
 
     if (state.isUpdating) {
       await updateTask();
@@ -130,7 +131,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
       await createTask();
     }
 
-    emit(state.copyWith(isLoading: false));
+    emit(state.copyWith(isSubmitting: false));
   }
 
   Future<void> createTask() async {
@@ -148,7 +149,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
           description: state.description,
           priority: state.priority,
           status: state.status,
-          dueDate: DateTime(state.date.year, state.date.month, state.date.day, state.time.hour, state.time.minute).toLocal(),
+          dueDate: DateTime(state.date.year, state.date.month, state.date.day, state.time.hour, state.time.minute).toUtc(),
           group: group.id,
           assignedTo: state.assignedIds.toList(),
         ),
@@ -176,7 +177,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
           description: state.description,
           priority: state.priority,
           status: state.status,
-          dueDate: DateTime(state.date.year, state.date.month, state.date.day, state.time.hour, state.time.minute).toLocal(),
+          dueDate: DateTime(state.date.year, state.date.month, state.date.day, state.time.hour, state.time.minute).toUtc(),
           assignedTo: state.assignedIds.toList(),
           completed: task.completed,
         ),
@@ -199,6 +200,7 @@ sealed class CreateTaskState with _$CreateTaskState {
     required DateTime date,
     required TimeOfDay time,
     required Set<String> assignedIds,
+    required bool isSubmitting,
     required bool shouldGoBack,
     String? description,
     GroupResponse? group,
@@ -209,7 +211,7 @@ sealed class CreateTaskState with _$CreateTaskState {
 
   String get formattedDate {
     final formatter = DateFormat('dd/MM/yyyy');
-    return formatter.format(date.toLocal());
+    return formatter.format(date);
   }
 
   String get formattedTime {
@@ -223,5 +225,5 @@ sealed class CreateTaskState with _$CreateTaskState {
 
   bool get isFormValid => title.isNotEmpty;
 
-  bool get isButtonEnabled => isFormValid && !isLoading;
+  bool get canSubmit => isFormValid && !isLoading && !isSubmitting;
 }

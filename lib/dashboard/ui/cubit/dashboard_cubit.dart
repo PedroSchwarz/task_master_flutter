@@ -17,7 +17,7 @@ class DashboardCubit extends Cubit<DashboardState> {
     required this.groupsRepository,
     required this.invitesRepository,
     required this.groupsWebsocket,
-  }) : super(const DashboardState(isLoading: false, groups: [], invites: []));
+  }) : super(const DashboardState(isLoading: false, groups: [], invites: [], isRefreshing: false));
 
   static final _log = Logger('DashboardCubit');
 
@@ -47,13 +47,19 @@ class DashboardCubit extends Cubit<DashboardState> {
 
     _groupsSubscription = groupsWebsocket.groupsUpdatedStream.listen((id) {
       if (state.groups.any((group) => group.id == id)) {
-        loadGroups();
+        refresh();
       }
     });
 
     await Future.wait([loadGroups(), loadInvites(), usersRepository.updateDeviceToken()]);
 
     emit(state.copyWith(isLoading: false));
+  }
+
+  Future<void> refresh() async {
+    emit(state.copyWith(isRefreshing: true));
+    await Future.wait([loadGroups(), loadInvites()]);
+    emit(state.copyWith(isRefreshing: false));
   }
 
   Future<void> loadGroups() async {
@@ -92,6 +98,10 @@ class DashboardCubit extends Cubit<DashboardState> {
 
 @freezed
 sealed class DashboardState with _$DashboardState {
-  const factory DashboardState({required bool isLoading, required List<GroupResponse> groups, required List<InviteResponse> invites}) =
-      _DashboardState;
+  const factory DashboardState({
+    required bool isLoading,
+    required List<GroupResponse> groups,
+    required List<InviteResponse> invites,
+    required bool isRefreshing,
+  }) = _DashboardState;
 }

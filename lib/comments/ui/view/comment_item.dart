@@ -24,7 +24,7 @@ class _CommentItemState extends State<CommentItem> {
           show = !show;
         });
       },
-      leading: CircleAvatar(child: Text('${widget.comment.owner.firstName[0]}${widget.comment.owner.lastName[0]}')),
+      leading: CircleAvatar(child: Text(widget.comment.owner.initials)),
       title: Text(widget.comment.formattedCreatedAt),
       children: [ListTile(title: Text(widget.comment.message))],
     );

@@ -82,8 +82,8 @@ as String,
 /// @nodoc
 @JsonSerializable()
 
-class _UserData implements UserData {
-  const _UserData({required this.id, required this.firstName, required this.lastName, required this.email});
+class _UserData extends UserData {
+  const _UserData({required this.id, required this.firstName, required this.lastName, required this.email}): super._();
   factory _UserData.fromJson(Map<String, dynamic> json) => _$UserDataFromJson(json);
 
 @override final  String id;

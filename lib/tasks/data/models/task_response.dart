@@ -27,26 +27,26 @@ abstract class TaskResponse with _$TaskResponse {
 
   factory TaskResponse.fromJson(Map<String, dynamic> json) => _$TaskResponseFromJson(json);
 
-  bool get isOverdue => !completed && dueDate.toLocal().isBefore(DateTime.now().toLocal());
+  bool get isOverdue => !completed && dueDate.toLocal().isBefore(DateTime.now());
 
   String get formattedDueDate {
-    final localDate = dueDate.toLocal();
+    final localDate = dueDate;
     final formatter = DateFormat('EE, MMMM d hh:mm a');
 
-    return formatter.format(localDate);
+    return formatter.format(localDate.toLocal());
   }
 
   String get formattedCreatedAt {
-    final localDate = createdAt.toLocal();
+    final localDate = createdAt;
     final formatter = DateFormat('EE, MMMM d hh:mm a');
 
-    return formatter.format(localDate);
+    return formatter.format(localDate.toLocal());
   }
 
   String get formattedUpdatedAt {
-    final localDate = updatedAt.toLocal();
+    final localDate = updatedAt;
     final formatter = DateFormat('EE, MMMM d hh:mm a');
 
-    return formatter.format(localDate);
+    return formatter.format(localDate.toLocal());
   }
 }

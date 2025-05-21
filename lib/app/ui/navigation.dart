@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/auth/auth.dart';
-import 'package:task_master/dashboard/ui/view/dashboard_screen.dart';
+import 'package:task_master/dashboard/dashboard.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
 import 'package:task_master/splash/ui/view/splash_screen.dart';

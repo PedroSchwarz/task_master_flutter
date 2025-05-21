@@ -14,7 +14,7 @@ class RegisterCubit extends Cubit<RegisterState> {
           password: '',
           confirmPassword: '',
           hidePassword: true,
-          isLoading: false,
+          isSubmitting: false,
           isAuthenticated: false,
         ),
       );
@@ -73,7 +73,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   }
 
   Future<void> register() async {
-    emit(state.copyWith(isLoading: true, errorMessage: null));
+    emit(state.copyWith(isSubmitting: true, errorMessage: null));
 
     final result = await authRepository.register(firstName: state.firstName, lastName: state.lastName, email: state.email, password: state.password);
 
@@ -86,7 +86,7 @@ class RegisterCubit extends Cubit<RegisterState> {
         emit(state.copyWith(errorMessage: 'Unable to register.'));
     }
 
-    emit(state.copyWith(isLoading: false));
+    emit(state.copyWith(isSubmitting: false));
   }
 }
 
@@ -99,7 +99,7 @@ sealed class RegisterState with _$RegisterState {
     required String password,
     required String confirmPassword,
     required bool hidePassword,
-    required bool isLoading,
+    required bool isSubmitting,
     required bool isAuthenticated,
     String? emailError,
     String? passwordError,
@@ -119,5 +119,5 @@ sealed class RegisterState with _$RegisterState {
       passwordError == null &&
       confirmPasswordError == null;
 
-  bool get isButtonEnabled => isFormValid && !isLoading;
+  bool get canSubmit => isFormValid && !isSubmitting;
 }

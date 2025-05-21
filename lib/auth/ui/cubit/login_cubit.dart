@@ -6,7 +6,7 @@ part 'login_cubit.freezed.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit({required this.authRepository})
-    : super(const LoginState(email: 'pedro@hotmail.com', password: 'Penacional1!', hidePassword: true, isLoading: false, isAuthenticated: false));
+    : super(const LoginState(email: '', password: '', hidePassword: true, isSubmitting: false, isAuthenticated: false));
 
   @visibleForTesting
   final AuthRepository authRepository;
@@ -24,7 +24,7 @@ class LoginCubit extends Cubit<LoginState> {
   }
 
   void login() async {
-    emit(state.copyWith(isLoading: true, errorMessage: null));
+    emit(state.copyWith(isSubmitting: true, errorMessage: null));
     final result = await authRepository.login(state.email, state.password);
 
     switch (result) {
@@ -36,7 +36,7 @@ class LoginCubit extends Cubit<LoginState> {
         emit(state.copyWith(errorMessage: 'Unable to login.'));
     }
 
-    emit(state.copyWith(isLoading: false));
+    emit(state.copyWith(isSubmitting: false));
   }
 }
 
@@ -46,7 +46,7 @@ sealed class LoginState with _$LoginState {
     required String email,
     required String password,
     required bool hidePassword,
-    required bool isLoading,
+    required bool isSubmitting,
     required bool isAuthenticated,
     String? errorMessage,
   }) = _LoginState;
@@ -55,5 +55,5 @@ sealed class LoginState with _$LoginState {
 
   bool get isFormValid => email.isNotEmpty && password.isNotEmpty;
 
-  bool get isButtonEnabled => isFormValid && !isLoading;
+  bool get canSubmit => isFormValid && !isSubmitting;
 }

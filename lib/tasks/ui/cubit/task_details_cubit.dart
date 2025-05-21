@@ -17,7 +17,17 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
     required this.commentsRepository,
     required this.tasksWebsocket,
     required this.commentsWebsocket,
-  }) : super(const TaskDetailsState(isLoading: false, showDeleteDialog: false, shouldGoBack: false, comments: [], comment: ''));
+  }) : super(
+         const TaskDetailsState(
+           isLoading: false,
+           showDeleteDialog: false,
+           shouldGoBack: false,
+           comments: [],
+           comment: '',
+           isRefreshing: false,
+           isLoadingComments: false,
+         ),
+       );
 
   static final _log = Logger('TaskDetailsCubit');
 
@@ -47,7 +57,7 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
 
     _tasksSubscription = tasksWebsocket.tasksUpdatedStream.listen((taskId) {
       if (taskId == id) {
-        loadTask(id);
+        refresh(id);
       }
     });
 
@@ -62,6 +72,12 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
     emit(state.copyWith(isLoading: false));
   }
 
+  Future<void> refresh(String id) async {
+    emit(state.copyWith(isRefreshing: true));
+    await loadTask(id);
+    emit(state.copyWith(isRefreshing: false));
+  }
+
   Future<void> loadTask(String id) async {
     try {
       final task = await tasksRepository.getById(id);
@@ -73,11 +89,14 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
   }
 
   Future<void> loadComments(String id) async {
+    emit(state.copyWith(isLoadingComments: true));
     try {
       final comments = await commentsRepository.getAll(id);
       emit(state.copyWith(comments: comments));
     } catch (e) {
       _log.severe('Error loading comments: $e', e);
+    } finally {
+      emit(state.copyWith(isLoadingComments: false));
     }
   }
 
@@ -115,7 +134,7 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
   }
 
   Future<void> deleteTask() async {
-    emit(state.copyWith(showDeleteDialog: false));
+    emit(state.copyWith(showDeleteDialog: false, isRefreshing: true));
 
     final task = state.task;
 
@@ -128,6 +147,8 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
       emit(state.copyWith(shouldGoBack: true));
     } catch (e) {
       _log.severe('Error deleting task: $e', e);
+    } finally {
+      emit(state.copyWith(isRefreshing: false));
     }
   }
 
@@ -174,10 +195,12 @@ sealed class TaskDetailsState with _$TaskDetailsState {
     required bool shouldGoBack,
     required List<CommentResponse> comments,
     required String comment,
+    required bool isRefreshing,
+    required bool isLoadingComments,
     TaskResponse? task,
   }) = _TaskDetailsState;
 
   const TaskDetailsState._();
 
-  bool get isButtonEnabled => comment.isNotEmpty;
+  bool get canSubmit => comment.isNotEmpty;
 }
