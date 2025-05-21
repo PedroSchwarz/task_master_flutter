@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:task_master/app/app.dart';
 
 class AppSkeleton extends StatefulWidget {
-  const AppSkeleton({required this.isLoading, required this.child, super.key});
+  const AppSkeleton({required this.isLoading, required this.child, this.radius, super.key});
 
   final bool isLoading;
   final Widget child;
+  final double? radius;
 
   @override
   State<AppSkeleton> createState() => _AppSkeletonState();
@@ -37,7 +39,7 @@ class _AppSkeletonState extends State<AppSkeleton> with SingleTickerProviderStat
         widget.child,
         Positioned.fill(
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(widget.radius ?? AppSpacing.xs),
             child: AnimatedBuilder(
               animation: _controller,
               builder: (context, _) {
