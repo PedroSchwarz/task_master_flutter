@@ -6,6 +6,7 @@ import 'package:task_master/dashboard/ui/cubit/dashboard_cubit.dart';
 import 'package:task_master/dashboard/ui/view/drawer/dashboard_drawer.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
+import 'package:task_master/progress/progress.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -86,22 +87,50 @@ class _DashboardScreenState extends State<DashboardScreen> {
               return GroupContentUnavailable(onRefresh: bloc.refresh);
             }
 
-            return GroupsList(
-              groups: state.groups,
-              currentUser: bloc.currentUser,
-              onSelected: (group) {
-                context.goNamed(GroupDetailsScreen.routeName, pathParameters: {'id': group.id}, queryParameters: {'name': group.name});
-              },
-              onEdit: (group) async {
-                if (context.mounted) {
-                  final result = await context.pushNamed<bool>(CreateGroupScreen.routeName, queryParameters: {'id': group.id});
+            return Column(
+              children: [
+                BlocSelector<DashboardCubit, DashboardState, List<WeeklyTaskProgression?>>(
+                  bloc: bloc,
+                  selector: (state) => state.progression,
+                  builder: (context, progression) {
+                    return ProgressionCarousel(
+                      height: 132,
+                      progression: progression,
+                      onCompletionPressed: () {
+                        context.pushNamed(ProgressionScreen.routeName);
+                      },
+                      onOverduePressed: () {
+                        context.pushNamed(ProgressionScreen.routeName);
+                      },
+                      onPriorityPressed: () {
+                        context.pushNamed(ProgressionScreen.routeName);
+                      },
+                      onStatusPressed: () {
+                        context.pushNamed(ProgressionScreen.routeName);
+                      },
+                    );
+                  },
+                ),
+                Expanded(
+                  child: GroupsList(
+                    groups: state.groups,
+                    currentUser: bloc.currentUser,
+                    onSelected: (group) {
+                      context.goNamed(GroupDetailsScreen.routeName, pathParameters: {'id': group.id}, queryParameters: {'name': group.name});
+                    },
+                    onEdit: (group) async {
+                      if (context.mounted) {
+                        final result = await context.pushNamed<bool>(CreateGroupScreen.routeName, queryParameters: {'id': group.id});
 
-                  if (result ?? false) {
-                    bloc.updateGroupsForUsers(groupId: group.id);
-                  }
-                }
-              },
-              onRefresh: bloc.refresh,
+                        if (result ?? false) {
+                          bloc.updateGroupsForUsers(groupId: group.id);
+                        }
+                      }
+                    },
+                    onRefresh: bloc.refresh,
+                  ),
+                ),
+              ],
             );
           },
         ),

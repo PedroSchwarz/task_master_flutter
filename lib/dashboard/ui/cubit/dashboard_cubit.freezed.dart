@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$DashboardState {
 
- bool get isLoading; List<GroupResponse> get groups; List<InviteResponse> get invites; bool get isRefreshing;
+ bool get isLoading; List<GroupResponse> get groups; List<InviteResponse> get invites; List<WeeklyTaskProgression?> get progression; bool get isRefreshing;
 /// Create a copy of DashboardState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $DashboardStateCopyWith<DashboardState> get copyWith => _$DashboardStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.groups, groups)&&const DeepCollectionEquality().equals(other.invites, invites)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.groups, groups)&&const DeepCollectionEquality().equals(other.invites, invites)&&const DeepCollectionEquality().equals(other.progression, progression)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(groups),const DeepCollectionEquality().hash(invites),isRefreshing);
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(groups),const DeepCollectionEquality().hash(invites),const DeepCollectionEquality().hash(progression),isRefreshing);
 
 @override
 String toString() {
-  return 'DashboardState(isLoading: $isLoading, groups: $groups, invites: $invites, isRefreshing: $isRefreshing)';
+  return 'DashboardState(isLoading: $isLoading, groups: $groups, invites: $invites, progression: $progression, isRefreshing: $isRefreshing)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $DashboardStateCopyWith<$Res>  {
   factory $DashboardStateCopyWith(DashboardState value, $Res Function(DashboardState) _then) = _$DashboardStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, List<GroupResponse> groups, List<InviteResponse> invites, bool isRefreshing
+ bool isLoading, List<GroupResponse> groups, List<InviteResponse> invites, List<WeeklyTaskProgression?> progression, bool isRefreshing
 });
 
 
@@ -63,12 +63,13 @@ class _$DashboardStateCopyWithImpl<$Res>
 
 /// Create a copy of DashboardState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? groups = null,Object? invites = null,Object? isRefreshing = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? groups = null,Object? invites = null,Object? progression = null,Object? isRefreshing = null,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,groups: null == groups ? _self.groups : groups // ignore: cast_nullable_to_non_nullable
 as List<GroupResponse>,invites: null == invites ? _self.invites : invites // ignore: cast_nullable_to_non_nullable
-as List<InviteResponse>,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
+as List<InviteResponse>,progression: null == progression ? _self.progression : progression // ignore: cast_nullable_to_non_nullable
+as List<WeeklyTaskProgression?>,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -80,7 +81,7 @@ as bool,
 
 
 class _DashboardState implements DashboardState {
-  const _DashboardState({required this.isLoading, required final  List<GroupResponse> groups, required final  List<InviteResponse> invites, required this.isRefreshing}): _groups = groups,_invites = invites;
+  const _DashboardState({required this.isLoading, required final  List<GroupResponse> groups, required final  List<InviteResponse> invites, required final  List<WeeklyTaskProgression?> progression, required this.isRefreshing}): _groups = groups,_invites = invites,_progression = progression;
   
 
 @override final  bool isLoading;
@@ -98,6 +99,13 @@ class _DashboardState implements DashboardState {
   return EqualUnmodifiableListView(_invites);
 }
 
+ final  List<WeeklyTaskProgression?> _progression;
+@override List<WeeklyTaskProgression?> get progression {
+  if (_progression is EqualUnmodifiableListView) return _progression;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_progression);
+}
+
 @override final  bool isRefreshing;
 
 /// Create a copy of DashboardState
@@ -110,16 +118,16 @@ _$DashboardStateCopyWith<_DashboardState> get copyWith => __$DashboardStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._groups, _groups)&&const DeepCollectionEquality().equals(other._invites, _invites)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._groups, _groups)&&const DeepCollectionEquality().equals(other._invites, _invites)&&const DeepCollectionEquality().equals(other._progression, _progression)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_groups),const DeepCollectionEquality().hash(_invites),isRefreshing);
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_groups),const DeepCollectionEquality().hash(_invites),const DeepCollectionEquality().hash(_progression),isRefreshing);
 
 @override
 String toString() {
-  return 'DashboardState(isLoading: $isLoading, groups: $groups, invites: $invites, isRefreshing: $isRefreshing)';
+  return 'DashboardState(isLoading: $isLoading, groups: $groups, invites: $invites, progression: $progression, isRefreshing: $isRefreshing)';
 }
 
 
@@ -130,7 +138,7 @@ abstract mixin class _$DashboardStateCopyWith<$Res> implements $DashboardStateCo
   factory _$DashboardStateCopyWith(_DashboardState value, $Res Function(_DashboardState) _then) = __$DashboardStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, List<GroupResponse> groups, List<InviteResponse> invites, bool isRefreshing
+ bool isLoading, List<GroupResponse> groups, List<InviteResponse> invites, List<WeeklyTaskProgression?> progression, bool isRefreshing
 });
 
 
@@ -147,12 +155,13 @@ class __$DashboardStateCopyWithImpl<$Res>
 
 /// Create a copy of DashboardState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? groups = null,Object? invites = null,Object? isRefreshing = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? groups = null,Object? invites = null,Object? progression = null,Object? isRefreshing = null,}) {
   return _then(_DashboardState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,groups: null == groups ? _self._groups : groups // ignore: cast_nullable_to_non_nullable
 as List<GroupResponse>,invites: null == invites ? _self._invites : invites // ignore: cast_nullable_to_non_nullable
-as List<InviteResponse>,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
+as List<InviteResponse>,progression: null == progression ? _self._progression : progression // ignore: cast_nullable_to_non_nullable
+as List<WeeklyTaskProgression?>,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
