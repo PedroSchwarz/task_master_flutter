@@ -35,6 +35,8 @@ dependencies:
   flutter_local_notifications: ^19.2.0
   socket_io_client: ^3.1.2
   fl_chart: ^1.0.0
+  flutter_svg: ^2.1.0
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
@@ -47,9 +49,9 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/logo.svg
+    - assets/icons/logo.png
   
   # fonts:
   #   - family: Schyler

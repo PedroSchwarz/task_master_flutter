@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDQGIvpABIeSJ3ahvJX0SHyYLov1I5VFi4',
-    appId: '1:80917018331:android:428fcde49d325efc707efe',
+    appId: '1:80917018331:android:9fcc2b4e60459869707efe',
     messagingSenderId: '80917018331',
     projectId: 'task-manager-304b6',
     storageBucket: 'task-manager-304b6.firebasestorage.app',

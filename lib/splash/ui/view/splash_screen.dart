@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/auth/auth.dart';
@@ -16,13 +15,25 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
   final bloc = getIt<SplashCubit>();
+  late final AnimationController _animationController;
+  late final Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
     bloc.load();
+
+    _animationController = AnimationController(vsync: this);
+    _animation = CurvedAnimation(parent: Tween(begin: 0.6, end: 1.0).animate(_animationController), curve: Curves.decelerate);
+    _animationController.repeat(period: const Duration(seconds: 2), reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -30,11 +41,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return BlocListener<SplashCubit, SplashState>(
       bloc: bloc,
       listener: _listenNavigationFlow,
-      child: const Scaffold(
-        body: Center(
-          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [Text('Loading...'), Gap(AppSpacing.s), CircularProgressIndicator()]),
-        ),
-      ),
+      child: Scaffold(body: Center(child: ScaleTransition(scale: _animation, child: const AppLogo()))),
     );
   }
 

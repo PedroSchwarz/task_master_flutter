@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:80917018331:android:428fcde49d325efc707efe",
+        "mobilesdk_app_id": "1:80917018331:android:9fcc2b4e60459869707efe",
         "android_client_info": {
-          "package_name": "com.example.task_master"
+          "package_name": "com.example.pedroschwarz.task_master"
         }
       },
       "oauth_client": [],
