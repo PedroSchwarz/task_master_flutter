@@ -94,14 +94,13 @@ class DashboardCubit extends Cubit<DashboardState> {
   Future<void> loadInvites() async {
     _invitesFetchTimer?.cancel();
 
-    _invitesFetchTimer = Timer.periodic(const Duration(minutes: 2), (_) async {
-      try {
-        final invites = await invitesRepository.getInvites(status: InviteStatus.pending.name);
-        emit(state.copyWith(invites: invites));
-      } catch (e) {
-        _log.info('Error loading invites: $e', e);
-      }
-    });
+    try {
+      final invites = await invitesRepository.getInvites(status: InviteStatus.pending.name);
+      emit(state.copyWith(invites: invites));
+      _invitesFetchTimer = Timer(const Duration(minutes: 2), loadInvites);
+    } catch (e) {
+      _log.info('Error loading invites: $e', e);
+    }
   }
 
   Future<void> loadProgressions() async {

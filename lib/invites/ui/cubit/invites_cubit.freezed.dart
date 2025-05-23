@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$InvitesState {
 
- bool get isLoading; List<InviteResponse> get invites;
+ bool get isLoading; List<InviteResponse> get invites; bool get isRefreshing;
 /// Create a copy of InvitesState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $InvitesStateCopyWith<InvitesState> get copyWith => _$InvitesStateCopyWithImpl<I
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InvitesState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.invites, invites));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InvitesState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.invites, invites)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(invites));
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(invites),isRefreshing);
 
 @override
 String toString() {
-  return 'InvitesState(isLoading: $isLoading, invites: $invites)';
+  return 'InvitesState(isLoading: $isLoading, invites: $invites, isRefreshing: $isRefreshing)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $InvitesStateCopyWith<$Res>  {
   factory $InvitesStateCopyWith(InvitesState value, $Res Function(InvitesState) _then) = _$InvitesStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, List<InviteResponse> invites
+ bool isLoading, List<InviteResponse> invites, bool isRefreshing
 });
 
 
@@ -63,11 +63,12 @@ class _$InvitesStateCopyWithImpl<$Res>
 
 /// Create a copy of InvitesState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? invites = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? invites = null,Object? isRefreshing = null,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,invites: null == invites ? _self.invites : invites // ignore: cast_nullable_to_non_nullable
-as List<InviteResponse>,
+as List<InviteResponse>,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -78,7 +79,7 @@ as List<InviteResponse>,
 
 
 class _InvitesState implements InvitesState {
-  const _InvitesState({required this.isLoading, required final  List<InviteResponse> invites}): _invites = invites;
+  const _InvitesState({required this.isLoading, required final  List<InviteResponse> invites, required this.isRefreshing}): _invites = invites;
   
 
 @override final  bool isLoading;
@@ -89,6 +90,7 @@ class _InvitesState implements InvitesState {
   return EqualUnmodifiableListView(_invites);
 }
 
+@override final  bool isRefreshing;
 
 /// Create a copy of InvitesState
 /// with the given fields replaced by the non-null parameter values.
@@ -100,16 +102,16 @@ _$InvitesStateCopyWith<_InvitesState> get copyWith => __$InvitesStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InvitesState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._invites, _invites));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InvitesState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._invites, _invites)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_invites));
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_invites),isRefreshing);
 
 @override
 String toString() {
-  return 'InvitesState(isLoading: $isLoading, invites: $invites)';
+  return 'InvitesState(isLoading: $isLoading, invites: $invites, isRefreshing: $isRefreshing)';
 }
 
 
@@ -120,7 +122,7 @@ abstract mixin class _$InvitesStateCopyWith<$Res> implements $InvitesStateCopyWi
   factory _$InvitesStateCopyWith(_InvitesState value, $Res Function(_InvitesState) _then) = __$InvitesStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, List<InviteResponse> invites
+ bool isLoading, List<InviteResponse> invites, bool isRefreshing
 });
 
 
@@ -137,11 +139,12 @@ class __$InvitesStateCopyWithImpl<$Res>
 
 /// Create a copy of InvitesState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? invites = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? invites = null,Object? isRefreshing = null,}) {
   return _then(_InvitesState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,invites: null == invites ? _self._invites : invites // ignore: cast_nullable_to_non_nullable
-as List<InviteResponse>,
+as List<InviteResponse>,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

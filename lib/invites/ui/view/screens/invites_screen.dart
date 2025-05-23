@@ -34,7 +34,7 @@ class _InvitesScreenState extends State<InvitesScreen> {
                   preferredSize: const Size(0, AppSpacing.s),
                   child: BlocSelector<InvitesCubit, InvitesState, bool>(
                     bloc: bloc,
-                    selector: (state) => state.isLoading,
+                    selector: (state) => state.isLoading || state.isRefreshing,
                     builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
                   ),
                 ),
