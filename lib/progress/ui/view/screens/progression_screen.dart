@@ -1,0 +1,317 @@
+import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
+import 'package:task_master/app/app.dart';
+import 'package:task_master/progress/progress.dart';
+import 'package:task_master/progress/ui/view/components/progression_item_chart.dart';
+import 'package:task_master/tasks/data/models/task_values.dart';
+
+class ProgressionScreen extends StatefulWidget {
+  const ProgressionScreen({super.key});
+
+  static final String routeName = 'progression';
+
+  @override
+  State<ProgressionScreen> createState() => _ProgressionScreenState();
+}
+
+class _ProgressionScreenState extends State<ProgressionScreen> {
+  final bloc = getIt<ProgressionCubit>();
+
+  Set<int> leftLabels = {};
+
+  @override
+  void initState() {
+    super.initState();
+    bloc.load();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar.medium(
+            title: Row(
+              spacing: AppSpacing.xs,
+              children: [
+                const Text('Progression'),
+                Tooltip(
+                  message: 'Information regarding assigned tasks',
+                  textStyle: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onPrimary),
+                  child: Icon(Icons.info_outline_rounded, color: theme.colorScheme.primary, size: 32),
+                ),
+              ],
+            ),
+            bottom: PreferredSize(
+              preferredSize: const Size(0, AppSpacing.s),
+              child: BlocSelector<ProgressionCubit, ProgressionState, bool>(
+                bloc: bloc,
+                selector: (state) => state.isLoading || state.isRefreshing,
+                builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
+              ),
+            ),
+          ),
+          AppSliverHeaderWrapper.floating(
+            padding: 0,
+            child: BlocSelector<ProgressionCubit, ProgressionState, ProgressionPeriod>(
+              bloc: bloc,
+              selector: (state) => state.period,
+              builder: (context, selectedPeriod) {
+                return ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+                  itemCount: ProgressionPeriod.values.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, position) {
+                    final period = ProgressionPeriod.values[position];
+
+                    return FilterChip(
+                      selected: selectedPeriod == period,
+                      label: switch (period) {
+                        ProgressionPeriod.oneMonth => const Text('1 Month'),
+                        ProgressionPeriod.threeMonths => const Text('3 Month'),
+                        ProgressionPeriod.sixMonths => const Text('6 Month'),
+                        ProgressionPeriod.oneYear => const Text('1 Year'),
+                      },
+                      onSelected: (_) => bloc.updatePeriod(period),
+                    );
+                  },
+                  separatorBuilder: (context, index) => const Gap(AppSpacing.s),
+                );
+              },
+            ),
+          ),
+          BlocBuilder<ProgressionCubit, ProgressionState>(
+            bloc: bloc,
+            builder: (context, state) {
+              if (state.isLoading) {
+                return const SliverPadding(
+                  padding: EdgeInsets.all(AppSpacing.s),
+                  sliver: SliverToBoxAdapter(child: AppSkeleton(isLoading: true, child: SizedBox(height: 300, width: double.infinity))),
+                );
+              }
+              late final List<BarChartGroupData> bars = _generateBars(state.progression);
+
+              return SliverPadding(
+                padding: const EdgeInsets.all(AppSpacing.s),
+                sliver: SliverToBoxAdapter(
+                  child: SafeArea(
+                    top: false,
+                    child: Column(
+                      spacing: AppSpacing.s,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        SizedBox(
+                          height: 300,
+                          child: BarChart(
+                            BarChartData(
+                              groupsSpace: AppSpacing.s,
+                              alignment: BarChartAlignment.spaceAround,
+                              maxY: state.maxTotal + 1,
+                              barTouchData: BarTouchData(
+                                touchTooltipData: BarTouchTooltipData(
+                                  getTooltipColor: ((_) => Colors.black54),
+                                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                                    return BarTooltipItem(rod.toY.toString(), theme.textTheme.titleMedium!.copyWith(color: Colors.white));
+                                  },
+                                ),
+                              ),
+                              titlesData: FlTitlesData(
+                                show: true,
+                                rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                                bottomTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    showTitles: true,
+                                    reservedSize: 35,
+                                    getTitlesWidget: (value, meta) => bottomTitles(progression: state.progression[value.toInt()], meta: meta),
+                                  ),
+                                ),
+                                leftTitles: AxisTitles(
+                                  sideTitles: SideTitles(
+                                    minIncluded: false,
+                                    showTitles: true,
+                                    interval: 1,
+                                    getTitlesWidget: (value, meta) => leftTitles(state.maxTotal + 1, value, meta),
+                                  ),
+                                ),
+                              ),
+                              borderData: FlBorderData(show: false),
+                              barGroups: bars,
+                              backgroundColor: theme.colorScheme.primaryContainer,
+                              gridData: const FlGridData(show: false),
+                            ),
+                          ),
+                        ),
+                        const Wrap(
+                          spacing: AppSpacing.m,
+                          runSpacing: AppSpacing.s,
+                          children: [
+                            Row(
+                              spacing: AppSpacing.xs,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: Colors.green), Text('Completed')],
+                            ),
+                            Row(
+                              spacing: AppSpacing.xs,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: Colors.red), Text('Overdue')],
+                            ),
+                            Row(
+                              spacing: AppSpacing.xs,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: Colors.blue), Text('Total')],
+                            ),
+                          ],
+                        ),
+                        const Divider(),
+                        Text('Priorities Overview', style: theme.textTheme.titleLarge),
+                        Wrap(
+                          spacing: AppSpacing.m,
+                          runSpacing: AppSpacing.s,
+                          alignment: WrapAlignment.start,
+                          children:
+                              state.progression.map((progression) {
+                                return Column(
+                                  children: [
+                                    if (progression == null)
+                                      const CircleAvatar(radius: 36, child: Icon(Icons.close))
+                                    else
+                                      ProgressionItemChart(
+                                        width: 70,
+                                        height: 70,
+                                        items: TaskPriority.values,
+                                        builder: (priority) {
+                                          return PieChartSectionData(
+                                            color: priority.color,
+                                            value: progression.tasks.where((item) => item.priority == priority).length.toDouble(),
+                                            radius: 30,
+                                            titlePositionPercentageOffset: 0.55,
+                                            title: '',
+                                          );
+                                        },
+                                      ),
+                                    if (progression == null)
+                                      const SizedBox.shrink()
+                                    else
+                                      Text('${progression.startDate.day}-${progression.endDate.day} / ${progression.endDate.month}'),
+                                  ],
+                                );
+                              }).toList(),
+                        ),
+                        Wrap(
+                          spacing: AppSpacing.m,
+                          runSpacing: AppSpacing.s,
+                          children:
+                              TaskPriority.values.map((priority) {
+                                return Row(
+                                  spacing: AppSpacing.xs,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: priority.color), Text(priority.title)],
+                                );
+                              }).toList(),
+                        ),
+                        const Divider(),
+                        Text('Status Overview', style: theme.textTheme.titleLarge),
+                        Wrap(
+                          spacing: AppSpacing.m,
+                          runSpacing: AppSpacing.s,
+                          alignment: WrapAlignment.start,
+                          children:
+                              state.progression.map((progression) {
+                                return Column(
+                                  children: [
+                                    if (progression == null)
+                                      const CircleAvatar(radius: 36, child: Icon(Icons.close))
+                                    else
+                                      ProgressionItemChart(
+                                        width: 70,
+                                        height: 70,
+                                        items: TaskStatus.values,
+                                        builder: (status) {
+                                          return PieChartSectionData(
+                                            color: status.color,
+                                            value: progression.tasks.where((item) => item.status == status).length.toDouble(),
+                                            radius: 30,
+                                            titlePositionPercentageOffset: 0.55,
+                                            title: '',
+                                          );
+                                        },
+                                      ),
+                                    if (progression == null)
+                                      const SizedBox.shrink()
+                                    else
+                                      Text('${progression.startDate.day}-${progression.endDate.day} / ${progression.endDate.month}'),
+                                  ],
+                                );
+                              }).toList(),
+                        ),
+                        Wrap(
+                          spacing: AppSpacing.m,
+                          runSpacing: AppSpacing.s,
+                          children:
+                              TaskStatus.values.map((status) {
+                                return Row(
+                                  spacing: AppSpacing.xs,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: status.color), Text(status.title)],
+                                );
+                              }).toList(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget leftTitles(double max, double value, TitleMeta meta) {
+    if (value > max) {
+      return const SizedBox.shrink();
+    }
+
+    final Widget text = Text('${value.toInt()}');
+
+    return SideTitleWidget(meta: meta, space: AppSpacing.s, child: text);
+  }
+
+  Widget bottomTitles({required WeeklyTaskProgression? progression, required TitleMeta meta}) {
+    if (progression == null) {
+      return const SizedBox.shrink();
+    }
+
+    final Widget text = Text('${progression.startDate.day}-${progression.endDate.day} / ${progression.startDate.month}');
+
+    return SideTitleWidget(meta: meta, space: AppSpacing.xs, child: text);
+  }
+
+  List<BarChartGroupData> _generateBars(List<WeeklyTaskProgression?> progressions) {
+    return progressions.asMap().entries.map((entry) {
+      final index = entry.key;
+      final data = entry.value;
+
+      return BarChartGroupData(
+        barsSpace: AppSpacing.xxs,
+        x: index,
+        barRods:
+            data == null
+                ? []
+                : [
+                  BarChartRodData(toY: data.completed.toDouble(), color: Colors.green, width: AppSpacing.xs),
+                  BarChartRodData(toY: data.overdue.toDouble(), color: Colors.red, width: AppSpacing.xs),
+                  BarChartRodData(toY: data.total.toDouble(), color: Colors.blue, width: AppSpacing.xs),
+                ],
+      );
+    }).toList();
+  }
+}
+
+enum ProgressionInfo { complete, total, overdue }
