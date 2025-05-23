@@ -93,6 +93,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   bloc: bloc,
                   selector: (state) => state.progression,
                   builder: (context, progression) {
+                    if (progression.every((item) => item == null)) {
+                      return const SizedBox.shrink();
+                    }
+
                     return ProgressionCarousel(
                       height: 132,
                       progression: progression,

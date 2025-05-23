@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/auth/ui/cubit/login_cubit.dart';
@@ -46,62 +47,78 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           body: SafeArea(
             top: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
-              child: Column(
-                spacing: AppSpacing.s,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Spacer(),
-                  Column(spacing: AppSpacing.s, children: [const AppLogo(), Text('Task Master', style: Theme.of(context).textTheme.headlineLarge)]),
-                  const Spacer(),
-                  AppTextField(
-                    label: 'Email',
-                    onChanged: bloc.updateEmail,
-                    keyboardType: TextInputType.emailAddress,
-                    textCapitalization: TextCapitalization.none,
-                  ),
-                  BlocSelector<LoginCubit, LoginState, bool>(
-                    bloc: bloc,
-                    selector: (state) => state.hidePassword,
-                    builder:
-                        (context, hidePassword) => AppTextField(
-                          label: 'Password',
-                          onChanged: bloc.updatePassword,
-                          obscureText: hidePassword,
-                          suffixIcon: TogglePasswordButton(onPressed: bloc.togglePasswordVisibility, value: hidePassword),
-                        ),
-                  ),
-                  BlocSelector<LoginCubit, LoginState, String?>(
-                    bloc: bloc,
-                    selector: (state) => state.errorMessage,
-                    builder: (context, errorMessage) => errorMessage != null ? Text(errorMessage) : const SizedBox.shrink(),
-                  ),
-                  const Spacer(),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      BlocSelector<LoginCubit, LoginState, bool>(
-                        bloc: bloc,
-                        selector: (state) => state.canSubmit,
-                        builder: (context, canSubmit) {
-                          return FilledButton(onPressed: canSubmit ? bloc.login : null, child: const Text('Login'));
-                        },
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        spacing: AppSpacing.s,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const Gap(AppSpacing.s),
+                          Column(
+                            spacing: AppSpacing.s,
+                            children: [const AppLogo(), Text('Task Master', style: Theme.of(context).textTheme.headlineLarge)],
+                          ),
+                          Column(
+                            spacing: AppSpacing.s,
+                            children: [
+                              AppTextField(
+                                label: 'Email',
+                                onChanged: bloc.updateEmail,
+                                keyboardType: TextInputType.emailAddress,
+                                textCapitalization: TextCapitalization.none,
+                              ),
+                              BlocSelector<LoginCubit, LoginState, bool>(
+                                bloc: bloc,
+                                selector: (state) => state.hidePassword,
+                                builder:
+                                    (context, hidePassword) => AppTextField(
+                                      label: 'Password',
+                                      onChanged: bloc.updatePassword,
+                                      obscureText: hidePassword,
+                                      suffixIcon: TogglePasswordButton(onPressed: bloc.togglePasswordVisibility, value: hidePassword),
+                                    ),
+                              ),
+                              BlocSelector<LoginCubit, LoginState, String?>(
+                                bloc: bloc,
+                                selector: (state) => state.errorMessage,
+                                builder: (context, errorMessage) => errorMessage != null ? Text(errorMessage) : const SizedBox.shrink(),
+                              ),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              BlocSelector<LoginCubit, LoginState, bool>(
+                                bloc: bloc,
+                                selector: (state) => state.canSubmit,
+                                builder: (context, canSubmit) {
+                                  return FilledButton(onPressed: canSubmit ? bloc.login : null, child: const Text('Login'));
+                                },
+                              ),
+                              BlocSelector<LoginCubit, LoginState, bool>(
+                                bloc: bloc,
+                                selector: (state) => state.isSubmitting,
+                                builder: (context, isSubmitting) {
+                                  return TextButton(
+                                    onPressed: isSubmitting ? null : () => context.pushNamed(RegisterScreen.routeName),
+                                    child: const Text('Create a New Account', textAlign: TextAlign.start),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      BlocSelector<LoginCubit, LoginState, bool>(
-                        bloc: bloc,
-                        selector: (state) => state.isSubmitting,
-                        builder: (context, isSubmitting) {
-                          return TextButton(
-                            onPressed: isSubmitting ? null : () => context.pushNamed(RegisterScreen.routeName),
-                            child: const Text('Create a New Account', textAlign: TextAlign.start),
-                          );
-                        },
-                      ),
-                    ],
+                    ),
                   ),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ),

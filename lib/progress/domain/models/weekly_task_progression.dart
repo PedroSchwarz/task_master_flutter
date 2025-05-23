@@ -20,9 +20,9 @@ abstract class WeeklyTaskProgression with _$WeeklyTaskProgression {
 
   List<String> get taskIds => tasks.map((task) => task.id).toList();
 
-  double get completionPercentage => completed / total;
+  double get completionPercentage => total == 0 ? 0 : completed / total;
 
-  double get overduePercentage => overdue / total;
+  double get overduePercentage => total == 0 ? 0 : overdue / total;
 
   Color get completionColor {
     if (completionPercentage >= 0.0 && completionPercentage < 0.25) {

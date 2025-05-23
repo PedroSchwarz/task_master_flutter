@@ -14,7 +14,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final localNotifications = FlutterLocalNotificationsPlugin();
   if (message.notification != null) {
     await localNotifications.show(
-      message.hashCode,
+      message.messageId?.hashCode ?? DateTime.now().millisecondsSinceEpoch,
       message.notification!.title,
       message.notification!.body,
       const NotificationDetails(
@@ -107,7 +107,7 @@ class NotificationsRepository {
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
     if (message.notification != null) {
       await localNotifications.show(
-        message.hashCode,
+        message.messageId?.hashCode ?? DateTime.now().millisecondsSinceEpoch,
         message.notification!.title,
         message.notification!.body,
         const NotificationDetails(

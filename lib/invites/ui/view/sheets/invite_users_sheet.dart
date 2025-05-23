@@ -32,6 +32,8 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(leading: IconButton(onPressed: context.pop, icon: const Icon(Icons.close)), automaticallyImplyLeading: false),
       body: SafeArea(
@@ -43,27 +45,32 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
               child: CustomScrollView(
                 slivers: [
                   AppSliverHeaderWrapper.floating(
-                    child: AppTextField(
-                      label: 'Search user',
-                      onChanged: (value) {
-                        if (value.isEmpty) {
-                          setState(() {
-                            _users = widget.users;
-                          });
-                        } else {
-                          setState(() {
-                            _users =
-                                widget.users
-                                    .where(
-                                      (element) =>
-                                          element.firstName.toLowerCase().contains(value.toLowerCase()) ||
-                                          element.lastName.toLowerCase().contains(value.toLowerCase()) ||
-                                          element.email.toLowerCase().contains(value.toLowerCase()),
-                                    )
-                                    .toList();
-                          });
-                        }
-                      },
+                    padding: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(AppSpacing.s),
+                      color: theme.scaffoldBackgroundColor,
+                      child: AppTextField(
+                        label: 'Search user',
+                        onChanged: (value) {
+                          if (value.isEmpty) {
+                            setState(() {
+                              _users = widget.users;
+                            });
+                          } else {
+                            setState(() {
+                              _users =
+                                  widget.users
+                                      .where(
+                                        (element) =>
+                                            element.firstName.toLowerCase().contains(value.toLowerCase()) ||
+                                            element.lastName.toLowerCase().contains(value.toLowerCase()) ||
+                                            element.email.toLowerCase().contains(value.toLowerCase()),
+                                      )
+                                      .toList();
+                            });
+                          }
+                        },
+                      ),
                     ),
                   ),
                   SliverList.builder(
