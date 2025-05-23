@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -100,7 +101,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           final isAssignee = task.assignedTo.any((assignee) => assignee.id == currentUserId);
 
                           return IconButton(
-                            onPressed: isOwner || isAssignee ? bloc.toggleDeleteDialog : null,
+                            onPressed:
+                                isOwner || isAssignee
+                                    ? () {
+                                      HapticFeedback.heavyImpact();
+                                      bloc.toggleDeleteDialog();
+                                    }
+                                    : null,
                             icon: const Icon(Icons.delete_outline, size: 24),
                           );
                         },
@@ -143,7 +150,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           if (task == null) return const SizedBox.shrink();
 
                           return IconButton.filledTonal(
-                            onPressed: bloc.toggleComplete,
+                            onPressed: () {
+                              HapticFeedback.heavyImpact();
+                              bloc.toggleComplete();
+                            },
                             style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
                                 task.completed ? Colors.orange.withValues(alpha: 0.7) : Colors.green.withValues(alpha: 0.7),

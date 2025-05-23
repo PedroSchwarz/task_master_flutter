@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/invites/data/models/invite_response.dart';
 
@@ -31,13 +32,19 @@ class InviteItem extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton.outlined(
-                    onPressed: () => onAccepted(invite),
+                    onPressed: () {
+                      HapticFeedback.heavyImpact();
+                      onAccepted(invite);
+                    },
                     icon: const Icon(Icons.check),
                     color: Colors.green,
                     style: IconButton.styleFrom(side: const BorderSide(color: Colors.green)),
                   ),
                   IconButton.outlined(
-                    onPressed: () => onRejected(invite),
+                    onPressed: () {
+                      HapticFeedback.heavyImpact();
+                      onRejected(invite);
+                    },
                     color: Colors.red,
                     icon: const Icon(Icons.close),
                     style: IconButton.styleFrom(side: const BorderSide(color: Colors.red)),

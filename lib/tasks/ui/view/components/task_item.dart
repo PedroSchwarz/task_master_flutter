@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:task_master/app/design_system/theme/app_spacing.dart';
 import 'package:task_master/tasks/data/models/task_response.dart';
@@ -55,6 +56,7 @@ class TaskItem extends StatelessWidget {
         ),
       ),
       confirmDismiss: (direction) async {
+        HapticFeedback.heavyImpact();
         if (direction == DismissDirection.endToStart) {
           if (task.completed) {
             onPending(task);
