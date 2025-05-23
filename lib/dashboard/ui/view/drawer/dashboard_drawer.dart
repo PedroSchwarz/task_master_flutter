@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_master/app/design_system/theme/app_spacing.dart';
+import 'package:gap/gap.dart';
+import 'package:task_master/app/app.dart';
 
 class DashboardDrawer extends StatelessWidget {
   const DashboardDrawer({required this.initials, required this.title, required this.subtitle, required this.onSignOut, super.key});
@@ -20,6 +21,8 @@ class DashboardDrawer extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              const AppLogo(size: AppSpacing.xm),
+              const Gap(AppSpacing.s),
               Row(
                 spacing: AppSpacing.s,
                 children: [

@@ -146,10 +146,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                             onPressed: bloc.toggleComplete,
                             style: ButtonStyle(
                               backgroundColor: WidgetStatePropertyAll(
-                                task.completed ? Colors.red.withValues(alpha: 0.7) : Colors.green.withValues(alpha: 0.7),
+                                task.completed ? Colors.orange.withValues(alpha: 0.7) : Colors.green.withValues(alpha: 0.7),
                               ),
                               side: WidgetStatePropertyAll(
-                                BorderSide(color: task.completed ? Colors.red.withValues(alpha: 1) : Colors.green.withValues(alpha: 1), width: 2),
+                                BorderSide(color: task.completed ? Colors.orange.withValues(alpha: 1) : Colors.green.withValues(alpha: 1), width: 2),
                               ),
                             ),
                             icon: Icon(task.completed ? Icons.close : Icons.check, size: 24, color: Colors.white),

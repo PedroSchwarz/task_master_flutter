@@ -53,6 +53,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const Spacer(),
+                  Column(spacing: AppSpacing.s, children: [const AppLogo(), Text('Task Master', style: Theme.of(context).textTheme.headlineLarge)]),
+                  const Spacer(),
                   AppTextField(
                     label: 'Email',
                     onChanged: bloc.updateEmail,
