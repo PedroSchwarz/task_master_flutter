@@ -11,6 +11,7 @@ abstract class AuthResponse with _$AuthResponse {
     required String firstName,
     required String lastName,
     required String email,
+    required DateTime createdAt,
   }) = _AuthResponse;
 
   factory AuthResponse.fromJson(Map<String, dynamic> json) => _$AuthResponseFromJson(json);

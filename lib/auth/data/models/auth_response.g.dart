@@ -13,6 +13,7 @@ _AuthResponse _$AuthResponseFromJson(Map<String, dynamic> json) =>
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       email: json['email'] as String,
+      createdAt: DateTime.parse(json['createdAt'] as String),
     );
 
 Map<String, dynamic> _$AuthResponseToJson(_AuthResponse instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$AuthResponseToJson(_AuthResponse instance) =>
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'email': instance.email,
+      'createdAt': instance.createdAt.toIso8601String(),
     };

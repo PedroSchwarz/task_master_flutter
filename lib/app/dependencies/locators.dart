@@ -10,11 +10,12 @@ import 'package:task_master/app/app.dart';
 import 'package:task_master/app/ui/navigation.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/comments/comments.dart';
-import 'package:task_master/dashboard/ui/cubit/dashboard_cubit.dart';
+import 'package:task_master/dashboard/dashboard.dart';
 import 'package:task_master/firebase_options.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
-import 'package:task_master/notifications/data/repository/notifications_repository.dart';
+import 'package:task_master/notifications/notifications.dart';
+import 'package:task_master/progress/progress.dart';
 import 'package:task_master/splash/splash.dart';
 import 'package:task_master/tasks/tasks.dart';
 import 'package:task_master/users/users.dart';
@@ -90,15 +91,6 @@ class Locators extends BaseServiceLocators {
       ..registerFactory(
         () => CreateGroupCubit(authRepository: getIt(), groupsRepository: getIt(), invitesRepository: getIt(), usersRepository: getIt()),
       )
-      ..registerFactory(
-        () => DashboardCubit(
-          authRepository: getIt(),
-          usersRepository: getIt(),
-          groupsRepository: getIt(),
-          invitesRepository: getIt(),
-          groupsWebsocket: getIt(),
-        ),
-      )
       ..registerFactory(() => InvitesCubit(invitesRepository: getIt(), groupsRepository: getIt(), groupsWebsocket: getIt()))
       ..registerSingleton(TasksRemoteDataSource(getIt()))
       ..registerSingleton(TasksRepository(tasksRemoteDataSource: getIt()))
@@ -125,7 +117,21 @@ class Locators extends BaseServiceLocators {
           tasksWebsocket: getIt(),
           commentsWebsocket: getIt(),
         ),
-      );
+      )
+      ..registerSingleton(GetUsersCurrentWeekUseCase(authRepository: getIt()))
+      ..registerSingleton(GetTasksProgressionForWeeksUseCase(authRepository: getIt(), tasksRepository: getIt(), getUsersCurrentWeekUseCase: getIt()))
+      ..registerFactory(
+        () => DashboardCubit(
+          authRepository: getIt(),
+          usersRepository: getIt(),
+          groupsRepository: getIt(),
+          invitesRepository: getIt(),
+          getTasksProgressionForWeeksUseCase: getIt(),
+          groupsWebsocket: getIt(),
+          tasksWebsocket: getIt(),
+        ),
+      )
+      ..registerFactory(() => ProgressionCubit(getTasksProgressionForWeeksUseCase: getIt()));
   }
 
   Dio createDio({required String baseUrl}) {

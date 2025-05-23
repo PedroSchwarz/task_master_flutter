@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AuthResponse {
 
- String get id;@JsonKey(name: 'access_token') String get accessToken; String get firstName; String get lastName; String get email;
+ String get id;@JsonKey(name: 'access_token') String get accessToken; String get firstName; String get lastName; String get email; DateTime get createdAt;
 /// Create a copy of AuthResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $AuthResponseCopyWith<AuthResponse> get copyWith => _$AuthResponseCopyWithImpl<A
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.email, email) || other.email == email)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,accessToken,firstName,lastName,email);
+int get hashCode => Object.hash(runtimeType,id,accessToken,firstName,lastName,email,createdAt);
 
 @override
 String toString() {
-  return 'AuthResponse(id: $id, accessToken: $accessToken, firstName: $firstName, lastName: $lastName, email: $email)';
+  return 'AuthResponse(id: $id, accessToken: $accessToken, firstName: $firstName, lastName: $lastName, email: $email, createdAt: $createdAt)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $AuthResponseCopyWith<$Res>  {
   factory $AuthResponseCopyWith(AuthResponse value, $Res Function(AuthResponse) _then) = _$AuthResponseCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'access_token') String accessToken, String firstName, String lastName, String email
+ String id,@JsonKey(name: 'access_token') String accessToken, String firstName, String lastName, String email, DateTime createdAt
 });
 
 
@@ -66,14 +66,15 @@ class _$AuthResponseCopyWithImpl<$Res>
 
 /// Create a copy of AuthResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? accessToken = null,Object? firstName = null,Object? lastName = null,Object? email = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? accessToken = null,Object? firstName = null,Object? lastName = null,Object? email = null,Object? createdAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
@@ -84,7 +85,7 @@ as String,
 @JsonSerializable()
 
 class _AuthResponse implements AuthResponse {
-  const _AuthResponse({required this.id, @JsonKey(name: 'access_token') required this.accessToken, required this.firstName, required this.lastName, required this.email});
+  const _AuthResponse({required this.id, @JsonKey(name: 'access_token') required this.accessToken, required this.firstName, required this.lastName, required this.email, required this.createdAt});
   factory _AuthResponse.fromJson(Map<String, dynamic> json) => _$AuthResponseFromJson(json);
 
 @override final  String id;
@@ -92,6 +93,7 @@ class _AuthResponse implements AuthResponse {
 @override final  String firstName;
 @override final  String lastName;
 @override final  String email;
+@override final  DateTime createdAt;
 
 /// Create a copy of AuthResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -106,16 +108,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.email, email) || other.email == email)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,accessToken,firstName,lastName,email);
+int get hashCode => Object.hash(runtimeType,id,accessToken,firstName,lastName,email,createdAt);
 
 @override
 String toString() {
-  return 'AuthResponse(id: $id, accessToken: $accessToken, firstName: $firstName, lastName: $lastName, email: $email)';
+  return 'AuthResponse(id: $id, accessToken: $accessToken, firstName: $firstName, lastName: $lastName, email: $email, createdAt: $createdAt)';
 }
 
 
@@ -126,7 +128,7 @@ abstract mixin class _$AuthResponseCopyWith<$Res> implements $AuthResponseCopyWi
   factory _$AuthResponseCopyWith(_AuthResponse value, $Res Function(_AuthResponse) _then) = __$AuthResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'access_token') String accessToken, String firstName, String lastName, String email
+ String id,@JsonKey(name: 'access_token') String accessToken, String firstName, String lastName, String email, DateTime createdAt
 });
 
 
@@ -143,14 +145,15 @@ class __$AuthResponseCopyWithImpl<$Res>
 
 /// Create a copy of AuthResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? accessToken = null,Object? firstName = null,Object? lastName = null,Object? email = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? accessToken = null,Object? firstName = null,Object? lastName = null,Object? email = null,Object? createdAt = null,}) {
   return _then(_AuthResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
 as String,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
 as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String,
+as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
