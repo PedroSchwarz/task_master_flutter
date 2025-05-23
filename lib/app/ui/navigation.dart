@@ -6,6 +6,7 @@ import 'package:task_master/auth/auth.dart';
 import 'package:task_master/dashboard/dashboard.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
+import 'package:task_master/progress/progress.dart';
 import 'package:task_master/splash/ui/view/splash_screen.dart';
 import 'package:task_master/tasks/tasks.dart';
 
@@ -58,6 +59,7 @@ GoRouter createRouter({required AuthRepository authRepository}) {
             name: TaskDetailsScreen.routeName,
             builder: (context, state) => TaskDetailsScreen(id: state.pathParameters['id'] ?? ''),
           ),
+          GoRoute(path: '/${ProgressionScreen.routeName}', name: ProgressionScreen.routeName, builder: (context, state) => const ProgressionScreen()),
         ],
       ),
     ],

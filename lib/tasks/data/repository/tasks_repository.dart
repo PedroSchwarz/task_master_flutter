@@ -12,6 +12,14 @@ class TasksRepository {
     return tasksRemoteDataSource.fetchAll(groupId);
   }
 
+  Future<List<SimplifiedTaskResponse>> getAllAssigned() async {
+    return tasksRemoteDataSource.fetchAllAssigned();
+  }
+
+  Future<List<SimplifiedTaskResponse>> getAllOwned() async {
+    return tasksRemoteDataSource.fetchAllOwned();
+  }
+
   Future<TaskResponse> getById(String id) async {
     return tasksRemoteDataSource.fetchById(id);
   }

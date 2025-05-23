@@ -33,7 +33,9 @@ class AuthRepository {
 
       await credentialsRepository.updateCredentials(CredentialsData(accessToken: response.accessToken));
 
-      await userRepository.updateUser(UserData(id: response.id, firstName: response.firstName, lastName: response.lastName, email: response.email));
+      await userRepository.updateUser(
+        UserData(id: response.id, firstName: response.firstName, lastName: response.lastName, email: response.email, createdAt: response.createdAt),
+      );
 
       return LoginResult.success;
     } on DioException catch (e) {
@@ -56,7 +58,9 @@ class AuthRepository {
 
       await credentialsRepository.updateCredentials(CredentialsData(accessToken: response.accessToken));
 
-      await userRepository.updateUser(UserData(id: response.id, firstName: response.firstName, lastName: response.lastName, email: response.email));
+      await userRepository.updateUser(
+        UserData(id: response.id, firstName: response.firstName, lastName: response.lastName, email: response.email, createdAt: response.createdAt),
+      );
 
       return RegisterResult.success;
     } on DioException catch (e) {

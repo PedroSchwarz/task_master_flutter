@@ -30,7 +30,7 @@ class TaskItem extends StatelessWidget {
       direction: canDelete ? DismissDirection.horizontal : DismissDirection.endToStart,
       dismissThresholds: const {DismissDirection.endToStart: 0.5, DismissDirection.startToEnd: 0.6},
       background: Container(
-        padding: const EdgeInsets.all(AppSpacing.m),
+        padding: task.completed ? const EdgeInsets.symmetric(vertical: AppSpacing.s, horizontal: AppSpacing.m) : const EdgeInsets.all(AppSpacing.m),
         alignment: Alignment.centerLeft,
         decoration: const BoxDecoration(color: Colors.red),
         child: Column(
@@ -38,19 +38,19 @@ class TaskItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.delete_outline, color: Colors.white, size: 32),
-            Text('Delete', style: theme.textTheme.titleMedium?.copyWith(color: Colors.white)),
+            if (!task.completed) Text('Delete', style: theme.textTheme.titleMedium?.copyWith(color: Colors.white)),
           ],
         ),
       ),
       secondaryBackground: Container(
-        padding: const EdgeInsets.all(AppSpacing.m),
+        padding: task.completed ? const EdgeInsets.symmetric(vertical: AppSpacing.s, horizontal: AppSpacing.m) : const EdgeInsets.all(AppSpacing.m),
         alignment: Alignment.centerRight,
         decoration: BoxDecoration(color: task.completed ? Colors.orange : Colors.green),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(task.completed ? Icons.close : Icons.check, color: Colors.white, size: 32),
-            Text(task.completed ? 'Pending' : 'Complete', style: theme.textTheme.titleMedium?.copyWith(color: Colors.white)),
+            if (!task.completed) Text('Complete', style: theme.textTheme.titleMedium?.copyWith(color: Colors.white)),
           ],
         ),
       ),
@@ -84,48 +84,52 @@ class TaskItem extends StatelessWidget {
                     child: const Icon(Icons.check_rounded, color: Colors.green),
                   ),
                 Flexible(
+                  fit: FlexFit.tight,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(task.title, style: theme.textTheme.titleLarge?.copyWith(color: task.isOverdue ? Colors.red : null)),
                       Text(task.description ?? 'No description', style: theme.textTheme.bodyLarge, maxLines: 2, overflow: TextOverflow.ellipsis),
-                      const Gap(AppSpacing.xs),
-                      Row(
-                        spacing: AppSpacing.xxs,
-                        children: [
-                          Icon(Icons.watch_later_outlined, color: task.isOverdue ? Colors.red : null),
-                          Flexible(
-                            child: Text(
-                              task.formattedDueDate,
-                              style: theme.textTheme.labelLarge?.copyWith(color: task.isOverdue ? Colors.red : null),
+
+                      if (!task.completed) ...[
+                        const Gap(AppSpacing.xs),
+                        Row(
+                          spacing: AppSpacing.xxs,
+                          children: [
+                            if (task.isOverdue) const Icon(Icons.watch_later_outlined, color: Colors.red),
+                            Flexible(
+                              child: Text(
+                                task.formattedDueDate,
+                                style: theme.textTheme.labelLarge?.copyWith(color: task.isOverdue ? Colors.red : null),
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const Gap(AppSpacing.xs),
-                      Row(
-                        spacing: AppSpacing.xs,
-                        children: [
-                          if (task.isOverdue)
+                          ],
+                        ),
+                        const Gap(AppSpacing.xs),
+                        Row(
+                          spacing: AppSpacing.xs,
+                          children: [
+                            if (task.isOverdue)
+                              Chip(
+                                label: Text('Overdue', style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
+                                padding: const EdgeInsets.all(AppSpacing.xxs),
+                                backgroundColor: Colors.red,
+                                side: BorderSide.none,
+                              ),
                             Chip(
-                              label: Text('Overdue', style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-                              padding: const EdgeInsets.all(AppSpacing.xxs),
-                              backgroundColor: Colors.red,
-                              side: const BorderSide(color: Colors.red, width: 3),
+                              label: Text(
+                                task.status.title,
+                                style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                              ),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                              padding: const EdgeInsets.all(AppSpacing.xs),
+                              backgroundColor: task.status.color.withValues(alpha: 0.8),
+                              side: BorderSide.none,
                             ),
-                          Chip(
-                            label: Text(
-                              task.status.title,
-                              style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-                            ),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                            padding: const EdgeInsets.all(AppSpacing.xxs),
-                            backgroundColor: task.status.color.withValues(alpha: 0.8),
-                            side: BorderSide(color: task.status.color, width: 3),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),
