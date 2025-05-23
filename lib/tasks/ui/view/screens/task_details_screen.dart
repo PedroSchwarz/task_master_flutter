@@ -196,9 +196,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                           style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                                         ),
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-                                        padding: const EdgeInsets.all(AppSpacing.xxs),
+                                        padding: const EdgeInsets.all(AppSpacing.xs),
                                         backgroundColor: Colors.red,
-                                        side: const BorderSide(color: Colors.red, width: 3),
+                                        side: BorderSide.none,
                                       ),
                                     ),
                                   Flexible(
@@ -208,9 +208,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         style: theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                                       ),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                                      padding: const EdgeInsets.all(AppSpacing.xxs),
-                                      backgroundColor: task.priority.color.withValues(alpha: 0.8),
-                                      side: BorderSide(color: task.priority.color, width: 3),
+                                      padding: const EdgeInsets.all(AppSpacing.xs),
+                                      backgroundColor: task.priority.color,
+                                      side: BorderSide.none,
                                     ),
                                   ),
                                   Flexible(
@@ -220,9 +220,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         style: theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                                       ),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                                      padding: const EdgeInsets.all(AppSpacing.xxs),
-                                      backgroundColor: task.status.color.withValues(alpha: 0.8),
-                                      side: BorderSide(color: task.status.color, width: 3),
+                                      padding: const EdgeInsets.all(AppSpacing.xs),
+                                      backgroundColor: task.status.color,
+                                      side: BorderSide.none,
                                     ),
                                   ),
                                 ],
@@ -265,12 +265,18 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 return const AppSkeleton(isLoading: true, child: SizedBox(height: 20, width: double.infinity));
                               }
 
-                              return Text(
-                                'Due by: ${task.formattedDueDate}',
-                                style: theme.textTheme.bodyLarge?.copyWith(
-                                  color: task.isOverdue ? Colors.red : null,
-                                  fontWeight: task.isOverdue ? FontWeight.bold : null,
-                                ),
+                              return Row(
+                                spacing: AppSpacing.xs,
+                                children: [
+                                  if (task.isOverdue) const Icon(Icons.watch_later_outlined, color: Colors.red),
+                                  Text(
+                                    'Due by: ${task.formattedDueDate}',
+                                    style: theme.textTheme.bodyLarge?.copyWith(
+                                      color: task.isOverdue ? Colors.red : null,
+                                      fontWeight: task.isOverdue ? FontWeight.bold : null,
+                                    ),
+                                  ),
+                                ],
                               );
                             },
                           ),
