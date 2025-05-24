@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:task_master/auth/data/repository/auth_repository.dart';
@@ -108,6 +109,44 @@ sealed class RegisterState with _$RegisterState {
   }) = _RegisterState;
 
   const RegisterState._();
+
+  double get passwordStrength {
+    double value = 0.0;
+    if (password.length < 8) {
+      return value;
+    } else if (password.length >= 8) {
+      value += 0.5;
+
+      if (password.contains(RegExp(r'[A-Z]'))) {
+        value += 0.15;
+      }
+
+      if (password.contains(RegExp(r'[a-z]'))) {
+        value += 0.15;
+      }
+
+      if (password.contains(RegExp(r'[0-9]'))) {
+        value += 0.1;
+      }
+
+      if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+        value += 0.1;
+      }
+
+      return value;
+    }
+    return value;
+  }
+
+  Color get passwordStrengthColor {
+    if (passwordStrength <= 0.5) {
+      return Colors.red;
+    } else if (passwordStrength <= 0.8) {
+      return Colors.orange;
+    } else {
+      return Colors.green;
+    }
+  }
 
   bool get isFormValid =>
       firstName.isNotEmpty &&

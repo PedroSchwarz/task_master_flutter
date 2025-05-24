@@ -177,7 +177,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                               state.progression.map((progression) {
                                 return Column(
                                   children: [
-                                    if (progression == null)
+                                    if (progression == null || progression.tasks.isEmpty)
                                       const CircleAvatar(radius: 36, child: Icon(Icons.close))
                                     else
                                       ProgressionItemChart(
@@ -224,7 +224,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                               state.progression.map((progression) {
                                 return Column(
                                   children: [
-                                    if (progression == null)
+                                    if (progression == null || progression.tasks.isEmpty)
                                       const CircleAvatar(radius: 36, child: Icon(Icons.close))
                                     else
                                       ProgressionItemChart(

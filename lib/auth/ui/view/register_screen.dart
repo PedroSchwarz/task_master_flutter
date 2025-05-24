@@ -89,6 +89,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                           error: state.passwordError,
                                           suffixIcon: TogglePasswordButton(onPressed: bloc.togglePasswordVisibility, value: state.hidePassword),
                                         ),
+                                        LinearProgressIndicator(value: state.passwordStrength, color: state.passwordStrengthColor),
                                         AppTextField(
                                           label: 'Confirm Password',
                                           onChanged: bloc.updateConfirmPassword,

@@ -42,8 +42,8 @@ class ProgressionItem extends StatelessWidget {
                     return Column(
                       spacing: AppSpacing.xxs,
                       children: [
-                        Text('Week ${(progression?.week ?? 0)}'),
-                        if (progression == null) const CircleAvatar(child: Icon(Icons.close)) else builder(progression),
+                        Text('${(progression?.startDate.day ?? 0)}-${(progression?.endDate.day ?? 0)} / ${(progression?.endDate.month ?? 0)}'),
+                        if (progression == null || progression.tasks.isEmpty) const CircleAvatar(child: Icon(Icons.close)) else builder(progression),
                       ],
                     );
                   }).toList(),
