@@ -97,19 +97,14 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                     ),
                   ),
                 ),
-                BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
-                  bloc: bloc,
-                  buildWhen: (previous, current) => previous.isCalendarView != current.isCalendarView,
-                  builder: (context, state) {
-                    if (state.isCalendarView) {
-                      return AppSliverHeaderWrapper.floating(
-                        maxSize: CalendarPagerViewConstants.collapsedHeight,
-                        padding: 0,
-                        child: Container(
-                          clipBehavior: Clip.antiAlias,
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(AppSpacing.m), bottomRight: Radius.circular(AppSpacing.m)),
-                          ),
+                SliverToBoxAdapter(
+                  child: BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
+                    bloc: bloc,
+                    buildWhen: (previous, current) => previous.isCalendarView != current.isCalendarView,
+                    builder: (context, state) {
+                      if (state.isCalendarView) {
+                        return SizedBox(
+                          height: CalendarPagerViewConstants.collapsedHeight,
                           child: CalendarPagerView(
                             theme: CalendarPagerTheme.from(
                               background: theme.scaffoldBackgroundColor,
@@ -122,12 +117,12 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                             hasHeader: false,
                             onDateSelected: bloc.updateSelectedDate,
                           ),
-                        ),
-                      );
-                    } else {
-                      return const SliverToBoxAdapter(child: SizedBox.shrink());
-                    }
-                  },
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    },
+                  ),
                 ),
               ];
             },

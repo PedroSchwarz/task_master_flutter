@@ -30,7 +30,7 @@ class DashboardDrawer extends StatelessWidget {
                   Flexible(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text(title, style: theme.textTheme.headlineSmall), Text(subtitle, style: theme.textTheme.bodyLarge)],
+                      children: [Text(title, style: theme.textTheme.headlineSmall), Text(subtitle, style: theme.textTheme.labelSmall)],
                     ),
                   ),
                 ],

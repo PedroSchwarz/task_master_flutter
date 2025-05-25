@@ -71,6 +71,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
               ),
+              SliverToBoxAdapter(
+                child: BlocBuilder<DashboardCubit, DashboardState>(
+                  bloc: bloc,
+                  buildWhen:
+                      (previous, current) =>
+                          previous.progression != current.progression || //
+                          previous.isLoading != current.isLoading,
+                  builder: (context, state) {
+                    if (state.isLoading) {
+                      return const Padding(padding: EdgeInsets.only(top: 16), child: AppSkeleton(isLoading: true, child: SizedBox(height: 136)));
+                    }
+
+                    return ProgressionCarousel(
+                      height: 136,
+                      progression: state.progression,
+                      onCompletionPressed: () {
+                        context.pushNamed(ProgressionScreen.routeName);
+                      },
+                      onOverduePressed: () {
+                        context.pushNamed(ProgressionScreen.routeName);
+                      },
+                      onPriorityPressed: () {
+                        context.pushNamed(ProgressionScreen.routeName);
+                      },
+                      onStatusPressed: () {
+                        context.pushNamed(ProgressionScreen.routeName);
+                      },
+                    );
+                  },
+                ),
+              ),
             ],
         body: BlocBuilder<DashboardCubit, DashboardState>(
           bloc: bloc,
@@ -87,54 +118,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
               return GroupContentUnavailable(onRefresh: bloc.refresh);
             }
 
-            return Column(
-              children: [
-                BlocSelector<DashboardCubit, DashboardState, List<WeeklyTaskProgression?>>(
-                  bloc: bloc,
-                  selector: (state) => state.progression,
-                  builder: (context, progression) {
-                    if (progression.every((item) => item == null)) {
-                      return const SizedBox.shrink();
-                    }
+            return GroupsList(
+              groups: state.groups,
+              currentUser: bloc.currentUser,
+              onSelected: (group) {
+                context.goNamed(GroupDetailsScreen.routeName, pathParameters: {'id': group.id}, queryParameters: {'name': group.name});
+              },
+              onEdit: (group) async {
+                if (context.mounted) {
+                  final result = await context.pushNamed<bool>(CreateGroupScreen.routeName, queryParameters: {'id': group.id});
 
-                    return ProgressionCarousel(
-                      height: 132,
-                      progression: progression,
-                      onCompletionPressed: () {
-                        context.pushNamed(ProgressionScreen.routeName);
-                      },
-                      onOverduePressed: () {
-                        context.pushNamed(ProgressionScreen.routeName);
-                      },
-                      onPriorityPressed: () {
-                        context.pushNamed(ProgressionScreen.routeName);
-                      },
-                      onStatusPressed: () {
-                        context.pushNamed(ProgressionScreen.routeName);
-                      },
-                    );
-                  },
-                ),
-                Expanded(
-                  child: GroupsList(
-                    groups: state.groups,
-                    currentUser: bloc.currentUser,
-                    onSelected: (group) {
-                      context.goNamed(GroupDetailsScreen.routeName, pathParameters: {'id': group.id}, queryParameters: {'name': group.name});
-                    },
-                    onEdit: (group) async {
-                      if (context.mounted) {
-                        final result = await context.pushNamed<bool>(CreateGroupScreen.routeName, queryParameters: {'id': group.id});
-
-                        if (result ?? false) {
-                          bloc.updateGroupsForUsers(groupId: group.id);
-                        }
-                      }
-                    },
-                    onRefresh: bloc.refresh,
-                  ),
-                ),
-              ],
+                  if (result ?? false) {
+                    bloc.updateGroupsForUsers(groupId: group.id);
+                  }
+                }
+              },
+              onRefresh: bloc.refresh,
             );
           },
         ),

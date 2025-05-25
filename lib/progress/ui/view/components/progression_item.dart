@@ -21,10 +21,11 @@ class ProgressionItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
         child: Column(
           spacing: AppSpacing.xs,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Row(
-              spacing: AppSpacing.xxs,
+              spacing: AppSpacing.xs,
               children: [
                 Flexible(child: Text('$label Summary', style: theme.textTheme.titleLarge)),
                 Tooltip(
@@ -37,10 +38,13 @@ class ProgressionItem extends StatelessWidget {
             Row(
               spacing: AppSpacing.s,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children:
                   progression.map((progression) {
                     return Column(
-                      spacing: AppSpacing.xxs,
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      spacing: AppSpacing.xs,
                       children: [
                         Text('${(progression?.startDate.day ?? 0)}-${(progression?.endDate.day ?? 0)} / ${(progression?.endDate.month ?? 0)}'),
                         if (progression == null || progression.tasks.isEmpty) const CircleAvatar(child: Icon(Icons.close)) else builder(progression),

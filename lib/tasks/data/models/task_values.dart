@@ -18,7 +18,7 @@ enum TaskPriority {
 
 enum TaskStatus {
   @JsonValue('todo')
-  todo(title: 'To Do', icon: Icons.circle, color: Color.fromARGB(255, 151, 45, 244)),
+  todo(title: 'To do', icon: Icons.circle, color: Color.fromARGB(255, 211, 116, 44)),
   @JsonValue('in_progress')
   inProgress(title: 'In Progress', icon: Icons.circle, color: Color.fromARGB(255, 60, 113, 220)),
   @JsonValue('done')

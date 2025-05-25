@@ -115,6 +115,7 @@ class Locators extends BaseServiceLocators {
           tasksRepository: getIt(),
           commentsRepository: getIt(),
           tasksWebsocket: getIt(),
+          groupsWebsocket: getIt(),
           commentsWebsocket: getIt(),
         ),
       )

@@ -176,6 +176,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                           children:
                               state.progression.map((progression) {
                                 return Column(
+                                  spacing: AppSpacing.s,
                                   children: [
                                     if (progression == null || progression.tasks.isEmpty)
                                       const CircleAvatar(radius: 36, child: Icon(Icons.close))
@@ -185,12 +186,16 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                                         height: 70,
                                         items: TaskPriority.values,
                                         builder: (priority) {
+                                          final count = progression.tasks.where((item) => item.priority == priority).length;
+
                                           return PieChartSectionData(
-                                            color: priority.color,
-                                            value: progression.tasks.where((item) => item.priority == priority).length.toDouble(),
+                                            color: priority.color.withValues(alpha: 0.8),
+                                            borderSide: BorderSide(color: priority.color, width: 3),
+                                            value: count.toDouble(),
                                             radius: 30,
                                             titlePositionPercentageOffset: 0.55,
-                                            title: '',
+                                            title: '$count',
+                                            titleStyle: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
                                           );
                                         },
                                       ),
@@ -223,6 +228,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                           children:
                               state.progression.map((progression) {
                                 return Column(
+                                  spacing: AppSpacing.s,
                                   children: [
                                     if (progression == null || progression.tasks.isEmpty)
                                       const CircleAvatar(radius: 36, child: Icon(Icons.close))
@@ -232,12 +238,16 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                                         height: 70,
                                         items: TaskStatus.values,
                                         builder: (status) {
+                                          final count = progression.tasks.where((item) => item.status == status).length;
+
                                           return PieChartSectionData(
-                                            color: status.color,
-                                            value: progression.tasks.where((item) => item.status == status).length.toDouble(),
+                                            color: status.color.withValues(alpha: 0.8),
+                                            borderSide: BorderSide(color: status.color, width: 3),
+                                            value: count.toDouble(),
                                             radius: 30,
                                             titlePositionPercentageOffset: 0.55,
-                                            title: '',
+                                            title: '$count',
+                                            titleStyle: theme.textTheme.titleMedium?.copyWith(color: Colors.white),
                                           );
                                         },
                                       ),

@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:task_master/app/design_system/theme/app_spacing.dart';
 import 'package:task_master/progress/progress.dart';
 import 'package:task_master/progress/ui/view/components/progression_item_chart.dart';
 import 'package:task_master/tasks/data/models/task_values.dart';
@@ -34,7 +35,10 @@ class ProgressionCarousel extends StatelessWidget {
             onTap: onCompletionPressed,
             progression: progression,
             builder: (item) {
-              return CircularProgressIndicator(value: item.completionPercentage, color: item.completionColor, strokeWidth: 5);
+              return Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.xxxs),
+                child: CircularProgressIndicator(value: item.completionPercentage, color: item.completionColor, strokeWidth: 5),
+              );
             },
           ),
           ProgressionItem(
@@ -42,7 +46,10 @@ class ProgressionCarousel extends StatelessWidget {
             onTap: onOverduePressed,
             progression: progression,
             builder: (item) {
-              return CircularProgressIndicator(value: item.overduePercentage, color: Colors.red, strokeWidth: 5);
+              return Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.xxxs),
+                child: CircularProgressIndicator(value: item.overduePercentage, color: Colors.red, strokeWidth: 5),
+              );
             },
           ),
           ProgressionItem(
@@ -51,13 +58,15 @@ class ProgressionCarousel extends StatelessWidget {
             progression: progression,
             builder: (item) {
               return ProgressionItemChart(
+                height: 40,
+                width: 40,
                 items: TaskPriority.values,
                 builder: (priority) {
                   return PieChartSectionData(
-                    color: priority.color,
+                    color: priority.color.withValues(alpha: 0.4),
+                    borderSide: BorderSide(color: priority.color, width: 2),
                     value: item.tasks.where((item) => item.priority == priority).length.toDouble(),
                     radius: 15,
-                    titlePositionPercentageOffset: 0.55,
                     title: '',
                   );
                 },
@@ -70,10 +79,13 @@ class ProgressionCarousel extends StatelessWidget {
             progression: progression,
             builder: (item) {
               return ProgressionItemChart(
+                height: 40,
+                width: 40,
                 items: TaskStatus.values,
                 builder: (status) {
                   return PieChartSectionData(
-                    color: status.color,
+                    color: status.color.withValues(alpha: 0.4),
+                    borderSide: BorderSide(color: status.color, width: 2),
                     value: item.tasks.where((item) => item.status == status).length.toDouble(),
                     radius: 15,
                     titlePositionPercentageOffset: 0.55,

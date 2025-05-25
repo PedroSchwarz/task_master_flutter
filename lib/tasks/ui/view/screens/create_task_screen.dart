@@ -51,50 +51,6 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   builder:
                       (context, state) => state.isLoading ? const Text('Loading Task...') : Text('${state.isUpdating ? 'Update' : 'Create'} Task'),
                 ),
-                actions: [
-                  BlocBuilder<CreateTaskCubit, CreateTaskState>(
-                    bloc: bloc,
-                    buildWhen: (previous, current) => previous.isLoading != current.isLoading || previous.priority != current.priority,
-                    builder:
-                        (context, state) => AppSkeleton(
-                          isLoading: state.isLoading,
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            width: 24,
-                            height: 24,
-                            decoration: BoxDecoration(border: Border.all(color: state.priority.color, width: 3), shape: BoxShape.circle),
-                            alignment: Alignment.center,
-                            child: Text(
-                              state.priority.title.substring(0, 1),
-                              style: TextStyle(color: state.priority.color, fontWeight: FontWeight.bold, height: 1),
-                            ),
-                          ),
-                        ),
-                  ),
-                  const Gap(AppSpacing.xs),
-                  BlocBuilder<CreateTaskCubit, CreateTaskState>(
-                    bloc: bloc,
-                    buildWhen: (previous, current) => previous.isLoading != current.isLoading || previous.status != current.status,
-                    builder:
-                        (context, state) => AppSkeleton(
-                          isLoading: state.isLoading,
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            width: 21,
-                            height: 21,
-                            child: CircularProgressIndicator(
-                              color: state.status.color,
-                              value: switch (state.status) {
-                                TaskStatus.todo => 0.01,
-                                TaskStatus.inProgress => null,
-                                TaskStatus.done => 1,
-                              },
-                            ),
-                          ),
-                        ),
-                  ),
-                  const Gap(AppSpacing.xs),
-                ],
                 bottom: PreferredSize(
                   preferredSize: const Size(0, AppSpacing.s),
                   child: BlocSelector<CreateTaskCubit, CreateTaskState, bool>(

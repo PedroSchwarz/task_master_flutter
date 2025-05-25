@@ -89,6 +89,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         );
                       },
                     ),
+                    actionsPadding: const EdgeInsets.only(right: AppSpacing.s),
                     actions: [
                       BlocSelector<TaskDetailsCubit, TaskDetailsState, TaskResponse?>(
                         bloc: bloc,
@@ -96,60 +97,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         builder: (context, task) {
                           if (task == null) return const SizedBox.shrink();
 
-                          final currentUserId = bloc.currentUser.id;
-                          final isOwner = task.owner.id == currentUserId;
-                          final isAssignee = task.assignedTo.any((assignee) => assignee.id == currentUserId);
-
-                          return IconButton(
-                            onPressed:
-                                isOwner || isAssignee
-                                    ? () {
-                                      HapticFeedback.heavyImpact();
-                                      bloc.toggleDeleteDialog();
-                                    }
-                                    : null,
-                            icon: const Icon(Icons.delete_outline, size: 24),
-                          );
-                        },
-                      ),
-                      BlocSelector<TaskDetailsCubit, TaskDetailsState, TaskResponse?>(
-                        bloc: bloc,
-                        selector: (state) => state.task,
-                        builder: (context, task) {
-                          if (task == null) return const SizedBox.shrink();
-
-                          final currentUserId = bloc.currentUser.id;
-                          final isOwner = task.owner.id == currentUserId;
-                          final isAssignee = task.assignedTo.any((assignee) => assignee.id == currentUserId);
-
-                          return IconButton(
-                            onPressed:
-                                isOwner || isAssignee
-                                    ? () async {
-                                      if (context.mounted) {
-                                        final result = await context.pushNamed<bool>(
-                                          CreateTaskScreen.routeName,
-                                          pathParameters: {'id': task.group},
-                                          queryParameters: {'taskId': task.id},
-                                        );
-
-                                        if (result ?? false) {
-                                          bloc.updateTaskForMember();
-                                        }
-                                      }
-                                    }
-                                    : null,
-                            icon: const Icon(Icons.edit_outlined, size: 24),
-                          );
-                        },
-                      ),
-                      BlocSelector<TaskDetailsCubit, TaskDetailsState, TaskResponse?>(
-                        bloc: bloc,
-                        selector: (state) => state.task,
-                        builder: (context, task) {
-                          if (task == null) return const SizedBox.shrink();
-
                           return IconButton.filledTonal(
+                            tooltip: '${task.completed ? 'Incomplete' : 'Complete'} Task',
+                            iconSize: 25,
                             onPressed: () {
                               HapticFeedback.heavyImpact();
                               bloc.toggleComplete();
@@ -162,7 +112,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 BorderSide(color: task.completed ? Colors.orange.withValues(alpha: 1) : Colors.green.withValues(alpha: 1), width: 2),
                               ),
                             ),
-                            icon: Icon(task.completed ? Icons.close : Icons.check, size: 24, color: Colors.white),
+                            icon: Icon(task.completed ? Icons.close : Icons.check, color: Colors.white),
                           );
                         },
                       ),
@@ -182,6 +132,73 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
+                          BlocSelector<TaskDetailsCubit, TaskDetailsState, TaskResponse?>(
+                            bloc: bloc,
+                            selector: (state) => state.task,
+                            builder: (context, task) {
+                              if (task == null) return const SizedBox.shrink();
+
+                              final currentUserId = bloc.currentUser.id;
+                              final isOwner = task.owner.id == currentUserId;
+                              final isAssignee = task.assignedTo.any((assignee) => assignee.id == currentUserId);
+
+                              return Column(
+                                spacing: AppSpacing.xxs,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text('Actions', style: theme.textTheme.bodyLarge),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          IconButton.filled(
+                                            tooltip: 'Duplicate Task',
+                                            iconSize: 25,
+                                            onPressed:
+                                                isOwner || isAssignee
+                                                    ? () async {
+                                                      await _duplicateTask(context, task);
+                                                    }
+                                                    : null,
+                                            icon: Icon(Icons.copy_all_rounded, color: theme.colorScheme.onPrimary),
+                                          ),
+                                          SizedBox(
+                                            height: AppSpacing.s,
+                                            child: VerticalDivider(width: AppSpacing.s, color: theme.colorScheme.onPrimaryContainer),
+                                          ),
+                                          IconButton.filledTonal(
+                                            tooltip: 'Edit Task',
+                                            iconSize: 25,
+                                            onPressed:
+                                                isOwner || isAssignee
+                                                    ? () async {
+                                                      await _editTask(context, task);
+                                                    }
+                                                    : null,
+                                            icon: Icon(Icons.edit_outlined, color: theme.colorScheme.onPrimaryContainer),
+                                          ),
+                                        ],
+                                      ),
+                                      IconButton.outlined(
+                                        tooltip: 'Delete Task',
+                                        iconSize: 25,
+                                        onPressed:
+                                            isOwner || isAssignee
+                                                ? () {
+                                                  HapticFeedback.heavyImpact();
+                                                  bloc.toggleDeleteDialog();
+                                                }
+                                                : null,
+                                        icon: const Icon(Icons.delete_outline, color: Colors.red),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                          const Gap(AppSpacing.s),
                           BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
                             bloc: bloc,
                             buildWhen:
@@ -239,9 +256,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                               );
                             },
                           ),
-                          const Gap(AppSpacing.xxs),
+                          const Gap(AppSpacing.s),
                           const Divider(),
-                          const Gap(AppSpacing.xs),
+                          const Gap(AppSpacing.s),
                           BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
                             bloc: bloc,
                             buildWhen:
@@ -261,7 +278,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                               );
                             },
                           ),
-                          const Gap(AppSpacing.xs),
+                          const Gap(AppSpacing.s),
                           BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
                             bloc: bloc,
                             buildWhen:
@@ -304,13 +321,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 return const AppSkeleton(isLoading: true, child: SizedBox(height: 150, width: double.infinity));
                               }
 
-                              return Text(task.description ?? 'No Description', style: theme.textTheme.titleLarge);
+                              return Text(task.description ?? 'No Description', style: theme.textTheme.bodyLarge);
                             },
                           ),
                         ],
                       ),
                     ),
                   ),
+                  SliverToBoxAdapter(child: Divider(indent: AppSpacing.s, endIndent: AppSpacing.s)),
                   AppSliverHeaderWrapper.pinned(
                     maxSize: 128,
                     padding: 0,
@@ -431,6 +449,43 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _editTask(BuildContext context, TaskResponse task) async {
+    if (context.mounted) {
+      final result = await context.pushNamed<bool>(
+        CreateTaskScreen.routeName,
+        pathParameters: {'id': task.group},
+        queryParameters: {'taskId': task.id},
+      );
+
+      if (result ?? false) {
+        bloc.updateTaskForMember();
+      }
+    }
+  }
+
+  Future<void> _duplicateTask(BuildContext context, TaskResponse task) async {
+    if (context.mounted) {
+      final dueDate = task.dueDate.toLocal();
+
+      HapticFeedback.heavyImpact();
+
+      final date = await showDatePicker(
+        context: context,
+        initialDate: dueDate,
+        firstDate: dueDate,
+        lastDate: DateTime.now().add(const Duration(days: 365)),
+      );
+
+      if (date != null && context.mounted) {
+        final time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(dueDate));
+
+        if (time != null) {
+          await bloc.duplicateTask(date, time);
+        }
+      }
+    }
   }
 
   void _listenNavigationFlow(BuildContext context, TaskDetailsState state) {

@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/comments/comments.dart';
+import 'package:task_master/groups/groups.dart';
 import 'package:task_master/tasks/data/models/update_task_request.dart';
 import 'package:task_master/tasks/tasks.dart';
 
@@ -16,6 +18,7 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
     required this.tasksRepository,
     required this.commentsRepository,
     required this.tasksWebsocket,
+    required this.groupsWebsocket,
     required this.commentsWebsocket,
   }) : super(
          const TaskDetailsState(
@@ -42,6 +45,9 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
 
   @visibleForTesting
   final TasksWebsocket tasksWebsocket;
+
+  @visibleForTesting
+  final GroupsWebsocket groupsWebsocket;
 
   @visibleForTesting
   final CommentsWebsocket commentsWebsocket;
@@ -129,6 +135,35 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
     }
   }
 
+  Future<void> duplicateTask(DateTime date, TimeOfDay time) async {
+    final task = state.task;
+
+    if (task == null) {
+      return;
+    }
+
+    emit(state.copyWith(isRefreshing: true));
+
+    try {
+      await tasksRepository.create(
+        CreateTaskRequest(
+          title: task.title,
+          description: task.description,
+          dueDate: DateTime(date.year, date.month, date.day, time.hour, time.minute).toUtc(),
+          priority: task.priority,
+          status: task.status,
+          group: task.group,
+          assignedTo: task.assignedTo.map((user) => user.id).toList(),
+        ),
+      );
+      updateGroupForMember();
+    } catch (e) {
+      _log.severe('Error duplicating task: $e', e);
+    } finally {
+      emit(state.copyWith(isRefreshing: false));
+    }
+  }
+
   void toggleDeleteDialog() {
     emit(state.copyWith(showDeleteDialog: !state.showDeleteDialog));
   }
@@ -179,6 +214,16 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
     }
 
     tasksWebsocket.updateTasks(taskId: task.id);
+  }
+
+  void updateGroupForMember() {
+    final task = state.task;
+
+    if (task == null) {
+      return;
+    }
+
+    groupsWebsocket.updateGroups(groupId: task.group);
   }
 
   Future<void> dispose() async {
