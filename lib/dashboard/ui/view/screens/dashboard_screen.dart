@@ -1,5 +1,6 @@
 import 'package:calendar_pager/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
@@ -82,21 +83,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             previous.isLoading != current.isLoading || //
                             previous.selection != current.selection,
                     builder: (context, state) {
-                      return AppSkeleton(
-                        isLoading: state.isLoading,
-                        child: Row(
-                          spacing: AppSpacing.s,
-                          children:
-                              TaskProgressionSelection.values.map((progression) {
-                                return ChoiceChip(
-                                  onSelected: (_) {
-                                    bloc.updateSelection(progression);
-                                  },
-                                  label: Text(progression.name.toCapitalized()),
-                                  selected: state.selection == progression,
-                                );
-                              }).toList(),
-                        ),
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+                        child:
+                            AppSkeleton(
+                              isLoading: state.isLoading,
+                              child: Row(
+                                spacing: AppSpacing.s,
+                                children:
+                                    TaskProgressionSelection.values.map((progression) {
+                                      return ChoiceChip(
+                                        onSelected: (_) {
+                                          bloc.updateSelection(progression);
+                                        },
+                                        label: Text(progression.name.toCapitalized()),
+                                        selected: state.selection == progression,
+                                      );
+                                    }).toList(),
+                              ),
+                            ).animate().fade(),
                       );
                     },
                   ),
@@ -115,7 +120,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     }
 
                     return ProgressionCarousel(
-                      height: 136,
+                      height: 150,
                       progression: state.progression,
                       onCompletionPressed: () {
                         context.pushNamed(ProgressionScreen.routeName);
@@ -129,7 +134,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       onStatusPressed: () {
                         context.pushNamed(ProgressionScreen.routeName);
                       },
-                    );
+                    ).animate().fade(delay: 100.ms);
                   },
                 ),
               ),

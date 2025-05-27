@@ -17,14 +17,13 @@ class ProgressionItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+        padding: const EdgeInsets.all(AppSpacing.s),
         child: Column(
-          spacing: AppSpacing.xs,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          spacing: AppSpacing.s,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('$label Summary', style: theme.textTheme.titleLarge),
+            Text('$label Summary', style: theme.textTheme.headlineSmall),
             Row(
               spacing: AppSpacing.s,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -37,7 +36,10 @@ class ProgressionItem extends StatelessWidget {
                       spacing: AppSpacing.xs,
                       children: [
                         Text('${(progression?.startDate.day ?? 0)}-${(progression?.endDate.day ?? 0)} / ${(progression?.endDate.month ?? 0)}'),
-                        if (progression == null || progression.tasks.isEmpty) const CircleAvatar(child: Icon(Icons.close)) else builder(progression),
+                        if (progression == null || progression.tasks.isEmpty)
+                          const CircleAvatar(radius: 21, child: Icon(Icons.close))
+                        else
+                          builder(progression),
                       ],
                     );
                   }).toList(),

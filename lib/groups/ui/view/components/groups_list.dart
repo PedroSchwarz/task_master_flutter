@@ -34,7 +34,7 @@ class GroupsList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -55,6 +55,7 @@ class GroupsList extends StatelessWidget {
 
                   return GroupItem(
                     group: group,
+                    position: position,
                     isEditable: group.owner.id == currentUser.id,
                     onTap: () => onSelected(group),
                     onEdit: () => onEdit(group),
@@ -76,6 +77,7 @@ class GroupsList extends StatelessWidget {
 
                   return GroupItem(
                     group: group,
+                    position: position,
                     isEditable: group.owner.id == currentUser.id,
                     onTap: () => onSelected(group),
                     onEdit: () => onEdit(group),

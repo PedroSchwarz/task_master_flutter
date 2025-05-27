@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -78,13 +79,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 padding: const EdgeInsets.all(AppSpacing.xxs),
                                 decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.green, width: 3)),
                                 child: const Icon(Icons.check_rounded, color: Colors.green),
-                              ),
+                              ).animate().fade(),
                             Flexible(
                               child: Text(
                                 task.title,
                                 style: theme.textTheme.headlineLarge?.copyWith(color: task.isOverdue ? Colors.red : theme.colorScheme.primary),
                               ),
-                            ),
+                            ).animate().fade(),
                           ],
                         );
                       },
@@ -113,7 +114,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                               ),
                             ),
                             icon: Icon(task.completed ? Icons.close : Icons.check, color: Colors.white),
-                          );
+                          ).animate().fade(delay: 100.ms);
                         },
                       ),
                     ],
@@ -195,7 +196,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                     ],
                                   ),
                                 ],
-                              );
+                              ).animate().fade(delay: 150.ms);
                             },
                           ),
                           const Gap(AppSpacing.s),
@@ -253,7 +254,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                     ),
                                   ),
                                 ],
-                              );
+                              ).animate().fade(delay: 150.ms);
                             },
                           ),
                           const Gap(AppSpacing.s),
@@ -275,7 +276,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                               return Wrap(
                                 spacing: AppSpacing.xs,
                                 children: task.assignedTo.map((assignee) => CircleAvatar(child: Text(assignee.initials))).toList(),
-                              );
+                              ).animate().fade(delay: 200.ms);
                             },
                           ),
                           const Gap(AppSpacing.s),
@@ -304,7 +305,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                     ),
                                   ),
                                 ],
-                              );
+                              ).animate().fade(delay: 200.ms);
                             },
                           ),
                           const Gap(AppSpacing.s),
@@ -321,7 +322,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 return const AppSkeleton(isLoading: true, child: SizedBox(height: 150, width: double.infinity));
                               }
 
-                              return Text(task.description ?? 'No Description', style: theme.textTheme.bodyLarge);
+                              return Text(task.description ?? 'No Description', style: theme.textTheme.bodyLarge).animate().fade(delay: 250.ms);
                             },
                           ),
                         ],
