@@ -206,6 +206,21 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
     }
   }
 
+  Future<void> deleteComment(String id) async {
+    final task = state.task;
+
+    if (task == null) {
+      return;
+    }
+
+    try {
+      await commentsRepository.delete(id);
+      commentsWebsocket.updateComments(taskId: task.id);
+    } catch (e) {
+      _log.severe('Error deleting comment: $e', e);
+    }
+  }
+
   void updateTaskForMember() {
     final task = state.task;
 

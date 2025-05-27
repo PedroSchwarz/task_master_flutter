@@ -373,7 +373,16 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     builder: (context, state) {
                       return SliverList.separated(
                         itemCount: state.comments.length,
-                        itemBuilder: (context, position) => CommentItem(comment: state.comments[position]),
+                        itemBuilder: (context, position) {
+                          final comment = state.comments[position];
+                          return CommentItem(
+                            comment: comment,
+                            canDelete: comment.owner.id == bloc.currentUser.id,
+                            onDelete: () async {
+                              await bloc.deleteComment(comment.id);
+                            },
+                          );
+                        },
                         separatorBuilder: (context, index) => const Divider(),
                       );
                     },
