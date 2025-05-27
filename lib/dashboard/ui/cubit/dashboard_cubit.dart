@@ -5,7 +5,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/dashboard/dashboard.dart';
-import 'package:task_master/dashboard/data/repository/dashboard_repository.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
 import 'package:task_master/progress/progress.dart';

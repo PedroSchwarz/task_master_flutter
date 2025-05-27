@@ -328,7 +328,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                       ),
                     ),
                   ),
-                  SliverToBoxAdapter(child: Divider(indent: AppSpacing.s, endIndent: AppSpacing.s)),
+                  const SliverToBoxAdapter(child: Divider(indent: AppSpacing.s, endIndent: AppSpacing.s)),
                   AppSliverHeaderWrapper.pinned(
                     maxSize: 128,
                     padding: 0,
