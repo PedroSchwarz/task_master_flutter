@@ -28,4 +28,4 @@ class AppLocalStorage {
   }
 }
 
-enum LocalStorageKey { credentials, user, tasksListView }
+enum LocalStorageKey { credentials, user, tasksListView, progressionSelection, groupsListType }

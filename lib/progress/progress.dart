@@ -1,3 +1,6 @@
+export './data/data_sources/progress_local_data_source.dart';
+export './data/repository/progress_repository.dart';
+export './domain/models/task_progression_selection.dart';
 export './domain/models/weekly_task_progression.dart';
 export './domain/use_cases/get_tasks_progression_for_weeks_use_case.dart';
 export './domain/use_cases/get_users_current_week_use_case.dart';

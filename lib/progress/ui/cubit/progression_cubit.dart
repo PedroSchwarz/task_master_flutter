@@ -7,27 +7,49 @@ import 'package:task_master/progress/progress.dart';
 part 'progression_cubit.freezed.dart';
 
 class ProgressionCubit extends Cubit<ProgressionState> {
-  ProgressionCubit({required this.getTasksProgressionForWeeksUseCase})
-    : super(const ProgressionState(isLoading: false, progression: [], period: ProgressionPeriod.oneMonth, isRefreshing: false));
+  ProgressionCubit({required this.progressRepository, required this.getTasksProgressionForWeeksUseCase})
+    : super(
+        const ProgressionState(
+          isLoading: false,
+          progression: [],
+          period: ProgressionPeriod.oneMonth,
+          selection: TaskProgressionSelection.assigned,
+          isRefreshing: false,
+        ),
+      );
 
   static final _log = Logger('ProgressionCubit');
+
+  @visibleForTesting
+  final ProgressRepository progressRepository;
 
   @visibleForTesting
   final GetTasksProgressionForWeeksUseCase getTasksProgressionForWeeksUseCase;
 
   Future<void> load() async {
     emit(state.copyWith(isLoading: true));
+
+    final selection = await progressRepository.getProgressionSelection();
+    emit(state.copyWith(selection: selection));
+
     await loadProgression();
+
     emit(state.copyWith(isLoading: false));
   }
 
   Future<void> loadProgression({int weeks = 4}) async {
     try {
-      final progression = await getTasksProgressionForWeeksUseCase(weeks: weeks);
+      final progression = await getTasksProgressionForWeeksUseCase(selection: state.selection, weeks: weeks);
       emit(state.copyWith(progression: progression));
     } catch (e) {
       _log.severe('Error loading progression: $e', e);
     }
+  }
+
+  Future<void> updateSelection(TaskProgressionSelection selection) async {
+    emit(state.copyWith(isRefreshing: true, selection: selection));
+    await Future.wait([loadProgression(), progressRepository.setProgressionSelection(selection)]);
+    emit(state.copyWith(isRefreshing: false));
   }
 
   Future<void> updatePeriod(ProgressionPeriod period) async {
@@ -47,6 +69,7 @@ sealed class ProgressionState with _$ProgressionState {
     required bool isLoading,
     required List<WeeklyTaskProgression?> progression,
     required ProgressionPeriod period,
+    required TaskProgressionSelection selection,
     required bool isRefreshing,
   }) = _ProgressionState;
 

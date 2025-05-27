@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:logging/logging.dart';
 import 'package:task_master/auth/auth.dart';
+import 'package:task_master/dashboard/dashboard.dart';
+import 'package:task_master/dashboard/data/repository/dashboard_repository.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
 import 'package:task_master/progress/progress.dart';
@@ -16,12 +18,24 @@ class DashboardCubit extends Cubit<DashboardState> {
   DashboardCubit({
     required this.authRepository,
     required this.usersRepository,
+    required this.dashboardRepository,
     required this.groupsRepository,
     required this.invitesRepository,
+    required this.progressRepository,
     required this.getTasksProgressionForWeeksUseCase,
     required this.groupsWebsocket,
     required this.tasksWebsocket,
-  }) : super(const DashboardState(isLoading: false, groups: [], invites: [], progression: [], isRefreshing: false));
+  }) : super(
+         const DashboardState(
+           isLoading: false,
+           groupsListType: GroupsListType.list,
+           groups: [],
+           invites: [],
+           progression: [],
+           selection: TaskProgressionSelection.owned,
+           isRefreshing: false,
+         ),
+       );
 
   static final _log = Logger('DashboardCubit');
 
@@ -32,10 +46,16 @@ class DashboardCubit extends Cubit<DashboardState> {
   final UsersRepository usersRepository;
 
   @visibleForTesting
+  final DashboardRepository dashboardRepository;
+
+  @visibleForTesting
   final GroupsRepository groupsRepository;
 
   @visibleForTesting
   final InvitesRepository invitesRepository;
+
+  @visibleForTesting
+  final ProgressRepository progressRepository;
 
   @visibleForTesting
   final GetTasksProgressionForWeeksUseCase getTasksProgressionForWeeksUseCase;
@@ -67,19 +87,27 @@ class DashboardCubit extends Cubit<DashboardState> {
       final ids = state.progression.nonNulls.expand((progression) => progression.taskIds);
 
       if (ids.any((taskId) => taskId == id)) {
-        loadProgressions();
+        loadProgression();
       }
     });
 
-    await Future.wait([loadGroups(), loadInvites(), loadProgressions(), usersRepository.updateDeviceToken()]);
+    final selection = await progressRepository.getProgressionSelection();
+    emit(state.copyWith(selection: selection));
+
+    await Future.wait([loadGroupsListType(), loadGroups(), loadInvites(), loadProgression(), usersRepository.updateDeviceToken()]);
 
     emit(state.copyWith(isLoading: false));
   }
 
   Future<void> refresh() async {
     emit(state.copyWith(isRefreshing: true));
-    await Future.wait([loadGroups(), loadInvites(), loadProgressions()]);
+    await Future.wait([loadGroups(), loadInvites(), loadProgression()]);
     emit(state.copyWith(isRefreshing: false));
+  }
+
+  Future<void> loadGroupsListType() async {
+    final type = await dashboardRepository.getGroupsListType();
+    emit(state.copyWith(groupsListType: type));
   }
 
   Future<void> loadGroups() async {
@@ -103,13 +131,25 @@ class DashboardCubit extends Cubit<DashboardState> {
     }
   }
 
-  Future<void> loadProgressions() async {
+  Future<void> loadProgression() async {
     try {
-      final progression = await getTasksProgressionForWeeksUseCase();
+      final progression = await getTasksProgressionForWeeksUseCase(selection: state.selection);
       emit(state.copyWith(progression: progression));
     } catch (e) {
       _log.info('Error loading progressions: $e', e);
     }
+  }
+
+  Future<void> updateGroupsListType() async {
+    final type = state.groupsListType == GroupsListType.list ? GroupsListType.grid : GroupsListType.list;
+    emit(state.copyWith(groupsListType: type));
+    await dashboardRepository.setGroupsListType(type);
+  }
+
+  Future<void> updateSelection(TaskProgressionSelection selection) async {
+    emit(state.copyWith(isRefreshing: true, selection: selection));
+    await Future.wait([loadProgression(), progressRepository.setProgressionSelection(selection)]);
+    emit(state.copyWith(isRefreshing: false));
   }
 
   void updateGroupsForUsers({required String groupId}) {
@@ -129,9 +169,11 @@ class DashboardCubit extends Cubit<DashboardState> {
 sealed class DashboardState with _$DashboardState {
   const factory DashboardState({
     required bool isLoading,
+    required GroupsListType groupsListType,
     required List<GroupResponse> groups,
     required List<InviteResponse> invites,
     required List<WeeklyTaskProgression?> progression,
+    required TaskProgressionSelection selection,
     required bool isRefreshing,
   }) = _DashboardState;
 }
