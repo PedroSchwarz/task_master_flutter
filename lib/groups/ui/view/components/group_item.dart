@@ -20,17 +20,22 @@ class GroupItem extends StatelessWidget {
       children: [
         Card(
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-          margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+          margin: EdgeInsets.zero,
           child: InkWell(
             borderRadius: BorderRadius.circular(AppSpacing.xs),
             onTap: onTap,
             child: Padding(
               padding: const EdgeInsets.all(AppSpacing.s),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(group.name, style: theme.textTheme.titleLarge),
-                  Text(group.description, maxLines: 3, overflow: TextOverflow.ellipsis),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(group.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleLarge),
+                      Text(group.description, maxLines: 3, overflow: TextOverflow.ellipsis),
+                    ],
+                  ),
                   const Gap(AppSpacing.s),
                   SizedBox(
                     height: 40,

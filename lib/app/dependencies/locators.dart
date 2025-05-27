@@ -119,20 +119,26 @@ class Locators extends BaseServiceLocators {
           commentsWebsocket: getIt(),
         ),
       )
+      ..registerSingleton(ProgressLocalDataSource(localStorage: getIt()))
+      ..registerSingleton(ProgressRepository(progressLocalDataSource: getIt()))
       ..registerSingleton(GetUsersCurrentWeekUseCase(authRepository: getIt()))
       ..registerSingleton(GetTasksProgressionForWeeksUseCase(authRepository: getIt(), tasksRepository: getIt(), getUsersCurrentWeekUseCase: getIt()))
+      ..registerSingleton(DashboardLocalDataSource(localStorage: getIt()))
+      ..registerSingleton(DashboardRepository(dashboardLocalDataSource: getIt()))
       ..registerFactory(
         () => DashboardCubit(
           authRepository: getIt(),
           usersRepository: getIt(),
+          dashboardRepository: getIt(),
           groupsRepository: getIt(),
           invitesRepository: getIt(),
+          progressRepository: getIt(),
           getTasksProgressionForWeeksUseCase: getIt(),
           groupsWebsocket: getIt(),
           tasksWebsocket: getIt(),
         ),
       )
-      ..registerFactory(() => ProgressionCubit(getTasksProgressionForWeeksUseCase: getIt()));
+      ..registerFactory(() => ProgressionCubit(progressRepository: getIt(), getTasksProgressionForWeeksUseCase: getIt()));
   }
 
   Dio createDio({required String baseUrl}) {

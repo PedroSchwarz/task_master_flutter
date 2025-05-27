@@ -1,3 +1,4 @@
+import 'package:calendar_pager/utils/extensions/string_extensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,17 +36,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar.medium(
-            title: Row(
-              spacing: AppSpacing.xs,
-              children: [
-                const Text('Progression'),
-                Tooltip(
-                  message: 'Information regarding assigned tasks',
-                  textStyle: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onPrimary),
-                  child: Icon(Icons.info_outline_rounded, color: theme.colorScheme.primary, size: 32),
-                ),
-              ],
-            ),
+            title: const Text('Progression'),
             bottom: PreferredSize(
               preferredSize: const Size(0, AppSpacing.s),
               child: BlocSelector<ProgressionCubit, ProgressionState, bool>(
@@ -55,7 +46,32 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
               ),
             ),
           ),
+          SliverToBoxAdapter(
+            child: BlocSelector<ProgressionCubit, ProgressionState, TaskProgressionSelection>(
+              bloc: bloc,
+              selector: (state) => state.selection,
+              builder: (context, selection) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
+                  child: Row(
+                    spacing: AppSpacing.s,
+                    children:
+                        TaskProgressionSelection.values.map((progression) {
+                          return ChoiceChip(
+                            label: Text(progression.name.toCapitalized()),
+                            selected: progression == selection,
+                            onSelected: (_) {
+                              bloc.updateSelection(progression);
+                            },
+                          );
+                        }).toList(),
+                  ),
+                );
+              },
+            ),
+          ),
           AppSliverHeaderWrapper.floating(
+            maxSize: 60,
             padding: 0,
             child: BlocSelector<ProgressionCubit, ProgressionState, ProgressionPeriod>(
               bloc: bloc,

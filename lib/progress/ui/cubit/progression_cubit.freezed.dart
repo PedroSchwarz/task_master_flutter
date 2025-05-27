@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProgressionState {
 
- bool get isLoading; List<WeeklyTaskProgression?> get progression; ProgressionPeriod get period; bool get isRefreshing;
+ bool get isLoading; List<WeeklyTaskProgression?> get progression; ProgressionPeriod get period; TaskProgressionSelection get selection; bool get isRefreshing;
 /// Create a copy of ProgressionState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $ProgressionStateCopyWith<ProgressionState> get copyWith => _$ProgressionStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProgressionState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.progression, progression)&&(identical(other.period, period) || other.period == period)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProgressionState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.progression, progression)&&(identical(other.period, period) || other.period == period)&&(identical(other.selection, selection) || other.selection == selection)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(progression),period,isRefreshing);
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(progression),period,selection,isRefreshing);
 
 @override
 String toString() {
-  return 'ProgressionState(isLoading: $isLoading, progression: $progression, period: $period, isRefreshing: $isRefreshing)';
+  return 'ProgressionState(isLoading: $isLoading, progression: $progression, period: $period, selection: $selection, isRefreshing: $isRefreshing)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $ProgressionStateCopyWith<$Res>  {
   factory $ProgressionStateCopyWith(ProgressionState value, $Res Function(ProgressionState) _then) = _$ProgressionStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, List<WeeklyTaskProgression?> progression, ProgressionPeriod period, bool isRefreshing
+ bool isLoading, List<WeeklyTaskProgression?> progression, ProgressionPeriod period, TaskProgressionSelection selection, bool isRefreshing
 });
 
 
@@ -63,12 +63,13 @@ class _$ProgressionStateCopyWithImpl<$Res>
 
 /// Create a copy of ProgressionState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? progression = null,Object? period = null,Object? isRefreshing = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? progression = null,Object? period = null,Object? selection = null,Object? isRefreshing = null,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,progression: null == progression ? _self.progression : progression // ignore: cast_nullable_to_non_nullable
 as List<WeeklyTaskProgression?>,period: null == period ? _self.period : period // ignore: cast_nullable_to_non_nullable
-as ProgressionPeriod,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
+as ProgressionPeriod,selection: null == selection ? _self.selection : selection // ignore: cast_nullable_to_non_nullable
+as TaskProgressionSelection,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -80,7 +81,7 @@ as bool,
 
 
 class _ProgressionState extends ProgressionState {
-  const _ProgressionState({required this.isLoading, required final  List<WeeklyTaskProgression?> progression, required this.period, required this.isRefreshing}): _progression = progression,super._();
+  const _ProgressionState({required this.isLoading, required final  List<WeeklyTaskProgression?> progression, required this.period, required this.selection, required this.isRefreshing}): _progression = progression,super._();
   
 
 @override final  bool isLoading;
@@ -92,6 +93,7 @@ class _ProgressionState extends ProgressionState {
 }
 
 @override final  ProgressionPeriod period;
+@override final  TaskProgressionSelection selection;
 @override final  bool isRefreshing;
 
 /// Create a copy of ProgressionState
@@ -104,16 +106,16 @@ _$ProgressionStateCopyWith<_ProgressionState> get copyWith => __$ProgressionStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProgressionState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._progression, _progression)&&(identical(other.period, period) || other.period == period)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProgressionState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._progression, _progression)&&(identical(other.period, period) || other.period == period)&&(identical(other.selection, selection) || other.selection == selection)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_progression),period,isRefreshing);
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_progression),period,selection,isRefreshing);
 
 @override
 String toString() {
-  return 'ProgressionState(isLoading: $isLoading, progression: $progression, period: $period, isRefreshing: $isRefreshing)';
+  return 'ProgressionState(isLoading: $isLoading, progression: $progression, period: $period, selection: $selection, isRefreshing: $isRefreshing)';
 }
 
 
@@ -124,7 +126,7 @@ abstract mixin class _$ProgressionStateCopyWith<$Res> implements $ProgressionSta
   factory _$ProgressionStateCopyWith(_ProgressionState value, $Res Function(_ProgressionState) _then) = __$ProgressionStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, List<WeeklyTaskProgression?> progression, ProgressionPeriod period, bool isRefreshing
+ bool isLoading, List<WeeklyTaskProgression?> progression, ProgressionPeriod period, TaskProgressionSelection selection, bool isRefreshing
 });
 
 
@@ -141,12 +143,13 @@ class __$ProgressionStateCopyWithImpl<$Res>
 
 /// Create a copy of ProgressionState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? progression = null,Object? period = null,Object? isRefreshing = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? progression = null,Object? period = null,Object? selection = null,Object? isRefreshing = null,}) {
   return _then(_ProgressionState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,progression: null == progression ? _self._progression : progression // ignore: cast_nullable_to_non_nullable
 as List<WeeklyTaskProgression?>,period: null == period ? _self.period : period // ignore: cast_nullable_to_non_nullable
-as ProgressionPeriod,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
+as ProgressionPeriod,selection: null == selection ? _self.selection : selection // ignore: cast_nullable_to_non_nullable
+as TaskProgressionSelection,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

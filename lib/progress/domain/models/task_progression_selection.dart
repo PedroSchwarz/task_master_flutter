@@ -1,0 +1,1 @@
+enum TaskProgressionSelection { assigned, owned }

@@ -1,3 +1,4 @@
+import 'package:calendar_pager/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -72,6 +73,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
+                  child: BlocBuilder<DashboardCubit, DashboardState>(
+                    bloc: bloc,
+                    buildWhen:
+                        (previous, current) =>
+                            previous.isLoading != current.isLoading || //
+                            previous.selection != current.selection,
+                    builder: (context, state) {
+                      return AppSkeleton(
+                        isLoading: state.isLoading,
+                        child: Row(
+                          spacing: AppSpacing.s,
+                          children:
+                              TaskProgressionSelection.values.map((progression) {
+                                return ChoiceChip(
+                                  onSelected: (_) {
+                                    bloc.updateSelection(progression);
+                                  },
+                                  label: Text(progression.name.toCapitalized()),
+                                  selected: state.selection == progression,
+                                );
+                              }).toList(),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
                 child: BlocBuilder<DashboardCubit, DashboardState>(
                   bloc: bloc,
                   buildWhen:
@@ -108,10 +139,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
           buildWhen:
               (previous, current) =>
                   previous.isLoading != current.isLoading || //
-                  previous.groups != current.groups,
+                  previous.groups != current.groups || //
+                  previous.groupsListType != current.groupsListType,
           builder: (context, state) {
             if (state.isLoading) {
-              return const GroupListLoading();
+              return GroupListLoading(listType: state.groupsListType);
             }
 
             if (state.groups.isEmpty) {
@@ -120,6 +152,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
             return GroupsList(
               groups: state.groups,
+              listType: state.groupsListType,
+              onToggleListType: bloc.updateGroupsListType,
               currentUser: bloc.currentUser,
               onSelected: (group) {
                 context.goNamed(GroupDetailsScreen.routeName, pathParameters: {'id': group.id}, queryParameters: {'name': group.name});

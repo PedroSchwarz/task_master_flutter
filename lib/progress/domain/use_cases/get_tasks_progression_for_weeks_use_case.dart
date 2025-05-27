@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:task_master/auth/auth.dart';
+import 'package:task_master/progress/domain/models/task_progression_selection.dart';
 import 'package:task_master/progress/domain/models/weekly_task_progression.dart';
 import 'package:task_master/progress/domain/use_cases/get_users_current_week_use_case.dart';
 import 'package:task_master/tasks/tasks.dart';
@@ -16,8 +17,11 @@ class GetTasksProgressionForWeeksUseCase {
   @visibleForTesting
   final GetUsersCurrentWeekUseCase getUsersCurrentWeekUseCase;
 
-  Future<List<WeeklyTaskProgression?>> call({int weeks = 5}) async {
-    final assignedTasks = await tasksRepository.getAllAssigned();
+  Future<List<WeeklyTaskProgression?>> call({required TaskProgressionSelection selection, int weeks = 5}) async {
+    final assignedTasks = switch (selection) {
+      TaskProgressionSelection.owned => await tasksRepository.getAllOwned(),
+      TaskProgressionSelection.assigned => await tasksRepository.getAllAssigned(),
+    };
 
     final registrationDate = authRepository.currentUser.value!.createdAt.toLocal();
 

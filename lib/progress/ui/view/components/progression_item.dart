@@ -24,17 +24,7 @@ class ProgressionItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              spacing: AppSpacing.xs,
-              children: [
-                Flexible(child: Text('$label Summary', style: theme.textTheme.titleLarge)),
-                Tooltip(
-                  message: 'Information regarding assigned tasks',
-                  textStyle: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onPrimary),
-                  child: const Icon(Icons.info_outline_rounded),
-                ),
-              ],
-            ),
+            Text('$label Summary', style: theme.textTheme.titleLarge),
             Row(
               spacing: AppSpacing.s,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
