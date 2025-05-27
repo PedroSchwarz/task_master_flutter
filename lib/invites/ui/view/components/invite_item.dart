@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/invites/data/models/invite_response.dart';
 
@@ -21,7 +22,7 @@ class InviteItem extends StatelessWidget {
               ? CircleAvatar(
                 backgroundColor: theme.scaffoldBackgroundColor,
                 child: const Icon(Icons.check, color: Colors.green, size: AppSpacing.xxm),
-              )
+              ).animate().fade(delay: 50.ms)
               : null,
       title: Text(invite.group.name),
       subtitle: Text('Invited by: ${invite.from.completeName}'),

@@ -35,6 +35,7 @@ class TasksList extends StatelessWidget {
 
           return TaskItem(
             task: task,
+            position: position,
             canDelete: task.owner.id == currentUserId || task.assignedTo.any((assignee) => assignee.id == currentUserId),
             onTap: () async => await onPressed(task),
             onComplete: onComplete,

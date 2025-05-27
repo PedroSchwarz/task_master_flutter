@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gap/gap.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/invites/invites.dart';
 import 'package:task_master/invites/ui/view/components/invite_item.dart';
@@ -24,6 +25,8 @@ class _InvitesScreenState extends State<InvitesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder:
@@ -40,21 +43,37 @@ class _InvitesScreenState extends State<InvitesScreen> {
                 ),
               ),
             ],
-        body: BlocSelector<InvitesCubit, InvitesState, List<InviteResponse>>(
+        body: BlocBuilder<InvitesCubit, InvitesState>(
           bloc: bloc,
-          selector: (state) => state.invites,
-          builder:
-              (context, invites) =>
-                  invites.isEmpty
-                      ? const Center(child: Text('No invitations for now.'))
-                      : ListView.separated(
-                        padding: const EdgeInsets.only(top: AppSpacing.s, bottom: AppSpacing.max),
-                        itemCount: invites.length,
-                        itemBuilder: (context, position) {
-                          return InviteItem(invite: invites[position], onAccepted: bloc.acceptInvite, onRejected: bloc.rejectInvite);
-                        },
-                        separatorBuilder: (_, __) => const Divider(),
-                      ),
+          buildWhen:
+              (previous, current) =>
+                  previous.invites != current.invites || //
+                  previous.isLoading != current.isLoading,
+          builder: (context, state) {
+            if (state.isLoading) {
+              return ListView.separated(
+                padding: const EdgeInsets.all(AppSpacing.s),
+                itemCount: 10,
+                itemBuilder: (context, position) {
+                  return const AppSkeleton(isLoading: true, child: SizedBox(height: 100, width: double.infinity));
+                },
+                separatorBuilder: (_, __) => const Gap(AppSpacing.s),
+              );
+            }
+
+            if (state.invites.isEmpty) {
+              return Center(child: Text('No invitations for now.', style: theme.textTheme.bodyLarge));
+            }
+
+            return ListView.separated(
+              padding: const EdgeInsets.only(top: AppSpacing.s, bottom: AppSpacing.max),
+              itemCount: state.invites.length,
+              itemBuilder: (context, position) {
+                return InviteItem(invite: state.invites[position], onAccepted: bloc.acceptInvite, onRejected: bloc.rejectInvite);
+              },
+              separatorBuilder: (_, __) => const Divider(),
+            );
+          },
         ),
       ),
     );

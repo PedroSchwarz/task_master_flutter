@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:task_master/app/design_system/theme/app_spacing.dart';
 import 'package:task_master/tasks/data/models/task_response.dart';
@@ -7,6 +10,7 @@ import 'package:task_master/tasks/data/models/task_response.dart';
 class TaskItem extends StatelessWidget {
   const TaskItem({
     required this.task,
+    required this.position,
     required this.canDelete,
     required this.onTap,
     required this.onComplete,
@@ -16,6 +20,7 @@ class TaskItem extends StatelessWidget {
   });
 
   final TaskResponse task;
+  final int position;
   final bool canDelete;
   final VoidCallback onTap;
   final Future<void> Function(TaskResponse) onComplete;
@@ -152,6 +157,6 @@ class TaskItem extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ).animate().fade(delay: Duration(milliseconds: min(100 * position, 500)));
   }
 }

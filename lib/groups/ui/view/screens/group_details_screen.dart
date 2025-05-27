@@ -1,5 +1,6 @@
 import 'package:calendar_pager/calendar_pager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
@@ -122,7 +123,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                         return const SizedBox.shrink();
                       }
                     },
-                  ),
+                  ).animate().fade(delay: 100.ms),
                 ),
               ];
             },

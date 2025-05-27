@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -62,7 +63,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           const Gap(AppSpacing.s),
                           Column(
                             spacing: AppSpacing.s,
-                            children: [const AppLogo(), Text('Task Master', style: Theme.of(context).textTheme.headlineLarge)],
+                            children: [
+                              const AppLogo().animate().fade(),
+                              Text('Task Master', style: Theme.of(context).textTheme.headlineLarge).animate().fade(delay: 100.ms),
+                            ],
                           ),
                           Column(
                             spacing: AppSpacing.s,

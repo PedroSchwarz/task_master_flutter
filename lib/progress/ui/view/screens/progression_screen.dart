@@ -1,6 +1,7 @@
 import 'package:calendar_pager/utils/extensions/string_extensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:task_master/app/app.dart';
@@ -66,7 +67,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                           );
                         }).toList(),
                   ),
-                );
+                ).animate().fade(delay: 100.ms);
               },
             ),
           ),
@@ -96,7 +97,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                     );
                   },
                   separatorBuilder: (context, index) => const Gap(AppSpacing.s),
-                );
+                ).animate().fade(delay: 150.ms);
               },
             ),
           ),
@@ -161,7 +162,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                               gridData: const FlGridData(show: false),
                             ),
                           ),
-                        ),
+                        ).animate().fade(delay: 200.ms),
                         const Wrap(
                           spacing: AppSpacing.m,
                           runSpacing: AppSpacing.s,
@@ -182,9 +183,9 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                               children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: Colors.blue), Text('Total')],
                             ),
                           ],
-                        ),
+                        ).animate().fade(delay: 200.ms),
                         const Divider(),
-                        Text('Priorities Overview', style: theme.textTheme.titleLarge),
+                        Text('Priorities Overview', style: theme.textTheme.titleLarge).animate().fade(delay: 300.ms),
                         Wrap(
                           spacing: AppSpacing.m,
                           runSpacing: AppSpacing.s,
@@ -222,7 +223,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                                   ],
                                 );
                               }).toList(),
-                        ),
+                        ).animate().fade(delay: 300.ms),
                         Wrap(
                           spacing: AppSpacing.m,
                           runSpacing: AppSpacing.s,
@@ -234,9 +235,9 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                                   children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: priority.color), Text(priority.title)],
                                 );
                               }).toList(),
-                        ),
+                        ).animate().fade(delay: 300.ms),
                         const Divider(),
-                        Text('Status Overview', style: theme.textTheme.titleLarge),
+                        Text('Status Overview', style: theme.textTheme.titleLarge).animate().fade(delay: 500.ms),
                         Wrap(
                           spacing: AppSpacing.m,
                           runSpacing: AppSpacing.s,
@@ -274,7 +275,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                                   ],
                                 );
                               }).toList(),
-                        ),
+                        ).animate().fade(delay: 400.ms),
                         Wrap(
                           spacing: AppSpacing.m,
                           runSpacing: AppSpacing.s,
@@ -286,7 +287,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                                   children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: status.color), Text(status.title)],
                                 );
                               }).toList(),
-                        ),
+                        ).animate().fade(delay: 400.ms),
                       ],
                     ),
                   ),

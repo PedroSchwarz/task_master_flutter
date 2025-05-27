@@ -1,12 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:task_master/app/design_system/theme/app_spacing.dart';
 import 'package:task_master/groups/groups.dart';
 
 class GroupItem extends StatelessWidget {
-  const GroupItem({required this.group, required this.isEditable, required this.onTap, required this.onEdit, super.key});
+  const GroupItem({required this.group, required this.position, required this.isEditable, required this.onTap, required this.onEdit, super.key});
 
   final GroupResponse group;
+  final int position;
   final bool isEditable;
   final VoidCallback onTap;
   final VoidCallback onEdit;
@@ -44,7 +48,6 @@ class GroupItem extends StatelessWidget {
                       itemCount: group.members.length,
                       itemBuilder: (context, index) {
                         final member = group.members[index];
-
                         return CircleAvatar(child: Text(member.initials));
                       },
                       separatorBuilder: (context, index) => const Gap(AppSpacing.xs),
@@ -58,6 +61,6 @@ class GroupItem extends StatelessWidget {
         if (isEditable)
           Transform.translate(offset: const Offset(0, -AppSpacing.s), child: IconButton.filled(onPressed: onEdit, icon: const Icon(Icons.edit))),
       ],
-    );
+    ).animate().fade(delay: Duration(milliseconds: min(100 * (position + 1), 500)));
   }
 }
