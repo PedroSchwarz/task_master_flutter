@@ -1,4 +1,3 @@
-// This is the function that will be called when a background message is received
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,6 +5,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:go_router/go_router.dart';
+import 'package:task_master/app/ui/navigation.dart';
 import 'package:task_master/firebase_options.dart';
 
 @pragma('vm:entry-point')
@@ -128,7 +129,33 @@ class NotificationsRepository {
 
   void _handleNotificationTap(NotificationResponse details) {
     if (details.payload != null) {
-      final Map<String, dynamic> _ = jsonDecode(details.payload ?? '{}');
+      final Map<String, dynamic> payload = jsonDecode(details.payload ?? '{}');
+
+      if (payload.containsKey('type')) {
+        final String type = payload['type'];
+
+        if (navigatorKey.currentContext != null) {
+          final router = GoRouter.of(navigatorKey.currentContext!);
+
+          switch (type) {
+            case 'GROUP_INVITE':
+              router.go('/dashboard/invites');
+              break;
+            case 'TASK_ASSIGNMENT':
+              final taskId = payload['task_id'];
+              final groupId = payload['group_id'];
+              router.go('/dashboard/group/$groupId/task/$taskId');
+              break;
+            case 'TASK_EXPIRATION':
+              final taskId = payload['task_id'];
+              final groupId = payload['group_id'];
+              router.go('/dashboard/group/$groupId/task/$taskId');
+              break;
+            default:
+              break;
+          }
+        }
+      }
     }
   }
 

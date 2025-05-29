@@ -26,6 +26,10 @@ abstract class GroupsRemoteDataSource {
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future<void> addMember(@Path('id') String id);
 
+  @POST('/{id}/leave')
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<void> leave(@Path('id') String id);
+
   @PUT('/{id}')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future<void> update(@Path('id') String id, @Body() UpdateGroupRequest request);

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/dashboard/dashboard.dart';
@@ -12,8 +12,9 @@ import 'package:task_master/tasks/tasks.dart';
 import 'package:task_master/users/data/repository/users_repository.dart';
 
 part 'dashboard_cubit.freezed.dart';
+part 'dashboard_cubit.g.dart';
 
-class DashboardCubit extends Cubit<DashboardState> {
+class DashboardCubit extends HydratedCubit<DashboardState> {
   DashboardCubit({
     required this.authRepository,
     required this.usersRepository,
@@ -74,7 +75,9 @@ class DashboardCubit extends Cubit<DashboardState> {
   Timer? _invitesFetchTimer;
 
   Future<void> load() async {
-    emit(state.copyWith(isLoading: true));
+    final hasContent = state.groups.isNotEmpty;
+
+    emit(state.copyWith(isLoading: !hasContent, isRefreshing: hasContent));
 
     _groupsSubscription = groupsWebsocket.groupsUpdatedStream.listen((id) {
       if (state.groups.any((group) => group.id == id)) {
@@ -95,7 +98,7 @@ class DashboardCubit extends Cubit<DashboardState> {
 
     await Future.wait([loadGroupsListType(), loadGroups(), loadInvites(), loadProgression(), usersRepository.updateDeviceToken()]);
 
-    emit(state.copyWith(isLoading: false));
+    emit(state.copyWith(isLoading: false, isRefreshing: false));
   }
 
   Future<void> refresh() async {
@@ -162,6 +165,12 @@ class DashboardCubit extends Cubit<DashboardState> {
     await usersRepository.removeNotifications();
     await authRepository.signOut();
   }
+
+  @override
+  DashboardState? fromJson(Map<String, dynamic> json) => DashboardState.fromJson(json);
+
+  @override
+  Map<String, dynamic>? toJson(DashboardState state) => state.toJson();
 }
 
 @freezed
@@ -175,4 +184,6 @@ sealed class DashboardState with _$DashboardState {
     required TaskProgressionSelection selection,
     required bool isRefreshing,
   }) = _DashboardState;
+
+  factory DashboardState.fromJson(Map<String, dynamic> json) => _$DashboardStateFromJson(json);
 }

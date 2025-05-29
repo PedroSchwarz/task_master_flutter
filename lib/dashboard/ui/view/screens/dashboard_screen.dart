@@ -43,14 +43,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
               SliverAppBar.medium(
                 title: const Text('Dashboard'),
                 actions: [
-                  BlocSelector<DashboardCubit, DashboardState, int>(
+                  BlocSelector<DashboardCubit, DashboardState, List<InviteResponse>>(
                     bloc: bloc,
-                    selector: (state) => state.invites.length,
-                    builder: (context, invitesCount) {
+                    selector: (state) => state.invites,
+                    builder: (context, invites) {
                       return Badge.count(
                         textStyle: Theme.of(context).textTheme.labelLarge,
                         offset: const Offset(-5, 0),
-                        count: invitesCount,
+                        count: invites.length,
                         child: IconButton(
                           onPressed: () async {
                             if (context.mounted) {

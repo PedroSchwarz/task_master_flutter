@@ -36,6 +36,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
            priorityFilter: TaskPriorityFilter.all,
            dateSort: TaskDateSort.newest,
            prioritySort: TaskPrioritySort.none,
+           showLeaveDialog: false,
            isRefreshing: false,
            shouldGoBack: false,
          ),
@@ -249,6 +250,29 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     }
   }
 
+  void toggleLeaveDialog() {
+    emit(state.copyWith(showLeaveDialog: !state.showLeaveDialog));
+  }
+
+  Future<void> leaveGroup() async {
+    final group = state.group;
+
+    if (group == null) {
+      return;
+    }
+
+    emit(state.copyWith(showLeaveDialog: false, isRefreshing: true));
+
+    try {
+      await groupsRepository.leaveGroup(group.id);
+      updateGroupForMember(groupId: group.id);
+    } catch (e) {
+      _log.severe('Error leaving group: $e', e);
+    } finally {
+      emit(state.copyWith(isRefreshing: false));
+    }
+  }
+
   void updateTasksForMember({required String taskId}) {
     tasksWebsocket.updateTasks(taskId: taskId);
   }
@@ -277,6 +301,7 @@ sealed class GroupDetailsState with _$GroupDetailsState {
     required TaskPriorityFilter priorityFilter,
     required TaskDateSort dateSort,
     required TaskPrioritySort prioritySort,
+    required bool showLeaveDialog,
     required bool isRefreshing,
     required bool shouldGoBack,
     GroupResponse? group,
