@@ -12,6 +12,7 @@ import 'package:task_master/tasks/tasks.dart';
 import 'package:task_master/users/data/repository/users_repository.dart';
 
 part 'dashboard_cubit.freezed.dart';
+part 'dashboard_cubit.g.dart';
 
 class DashboardCubit extends Cubit<DashboardState> {
   DashboardCubit({
@@ -74,7 +75,9 @@ class DashboardCubit extends Cubit<DashboardState> {
   Timer? _invitesFetchTimer;
 
   Future<void> load() async {
-    emit(state.copyWith(isLoading: true));
+    final hasContent = state.groups.isNotEmpty;
+
+    emit(state.copyWith(isLoading: !hasContent, isRefreshing: hasContent));
 
     _groupsSubscription = groupsWebsocket.groupsUpdatedStream.listen((id) {
       if (state.groups.any((group) => group.id == id)) {
@@ -95,7 +98,7 @@ class DashboardCubit extends Cubit<DashboardState> {
 
     await Future.wait([loadGroupsListType(), loadGroups(), loadInvites(), loadProgression(), usersRepository.updateDeviceToken()]);
 
-    emit(state.copyWith(isLoading: false));
+    emit(state.copyWith(isLoading: false, isRefreshing: false));
   }
 
   Future<void> refresh() async {
@@ -175,4 +178,6 @@ sealed class DashboardState with _$DashboardState {
     required TaskProgressionSelection selection,
     required bool isRefreshing,
   }) = _DashboardState;
+
+  factory DashboardState.fromJson(Map<String, dynamic> json) => _$DashboardStateFromJson(json);
 }

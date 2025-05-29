@@ -10,10 +10,13 @@ import 'package:task_master/progress/progress.dart';
 import 'package:task_master/splash/ui/view/splash_screen.dart';
 import 'package:task_master/tasks/tasks.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 GoRouter createRouter({required AuthRepository authRepository}) {
   List<String> authWhiteList = [SplashScreen.routeName, LoginScreen.routeName, RegisterScreen.routeName];
 
   final router = GoRouter(
+    navigatorKey: navigatorKey,
     initialLocation: '/${SplashScreen.routeName}',
     refreshListenable: GoRouterRefreshStreamListenable(authRepository.currentUser.distinct()),
     redirect: (context, state) {
@@ -52,12 +55,12 @@ GoRouter createRouter({required AuthRepository authRepository}) {
                 name: CreateTaskScreen.routeName,
                 builder: (context, state) => CreateTaskScreen(groupId: state.pathParameters['id'] ?? '', taskId: state.uri.queryParameters['taskId']),
               ),
+              GoRoute(
+                path: '/${TaskDetailsScreen.routeName}/:taskId',
+                name: TaskDetailsScreen.routeName,
+                builder: (context, state) => TaskDetailsScreen(id: state.pathParameters['taskId'] ?? ''),
+              ),
             ],
-          ),
-          GoRoute(
-            path: '/${TaskDetailsScreen.routeName}/:id',
-            name: TaskDetailsScreen.routeName,
-            builder: (context, state) => TaskDetailsScreen(id: state.pathParameters['id'] ?? ''),
           ),
           GoRoute(path: '/${ProgressionScreen.routeName}', name: ProgressionScreen.routeName, builder: (context, state) => const ProgressionScreen()),
         ],

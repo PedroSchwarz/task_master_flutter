@@ -5,6 +5,7 @@ import 'package:task_master/app/ui/app.dart';
 
 Future<void> bootstrap(Future<void> Function(Widget) builder) async {
   WidgetsFlutterBinding.ensureInitialized();
+
   Logger.root.level = Level.ALL;
 
   Logger.root.onRecord.listen((record) {

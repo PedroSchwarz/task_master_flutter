@@ -12,6 +12,7 @@ part of 'weekly_task_progression.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$WeeklyTaskProgression {
 
@@ -22,6 +23,8 @@ mixin _$WeeklyTaskProgression {
 @pragma('vm:prefer-inline')
 $WeeklyTaskProgressionCopyWith<WeeklyTaskProgression> get copyWith => _$WeeklyTaskProgressionCopyWithImpl<WeeklyTaskProgression>(this as WeeklyTaskProgression, _$identity);
 
+  /// Serializes this WeeklyTaskProgression to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -29,7 +32,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is WeeklyTaskProgression&&(identical(other.week, week) || other.week == week)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.total, total) || other.total == total)&&(identical(other.overdue, overdue) || other.overdue == overdue)&&const DeepCollectionEquality().equals(other.tasks, tasks));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,week,startDate,endDate,completed,total,overdue,const DeepCollectionEquality().hash(tasks));
 
@@ -80,11 +83,11 @@ as List<SimplifiedTaskResponse>,
 
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _WeeklyTaskProgression extends WeeklyTaskProgression {
   const _WeeklyTaskProgression({required this.week, required this.startDate, required this.endDate, required this.completed, required this.total, required this.overdue, required final  List<SimplifiedTaskResponse> tasks}): _tasks = tasks,super._();
-  
+  factory _WeeklyTaskProgression.fromJson(Map<String, dynamic> json) => _$WeeklyTaskProgressionFromJson(json);
 
 @override final  int week;
 @override final  DateTime startDate;
@@ -106,14 +109,17 @@ class _WeeklyTaskProgression extends WeeklyTaskProgression {
 @pragma('vm:prefer-inline')
 _$WeeklyTaskProgressionCopyWith<_WeeklyTaskProgression> get copyWith => __$WeeklyTaskProgressionCopyWithImpl<_WeeklyTaskProgression>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$WeeklyTaskProgressionToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _WeeklyTaskProgression&&(identical(other.week, week) || other.week == week)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.total, total) || other.total == total)&&(identical(other.overdue, overdue) || other.overdue == overdue)&&const DeepCollectionEquality().equals(other._tasks, _tasks));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,week,startDate,endDate,completed,total,overdue,const DeepCollectionEquality().hash(_tasks));
 

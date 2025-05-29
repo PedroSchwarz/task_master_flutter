@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:task_master/tasks/tasks.dart';
 
 part 'weekly_task_progression.freezed.dart';
+part 'weekly_task_progression.g.dart';
 
 @freezed
 abstract class WeeklyTaskProgression with _$WeeklyTaskProgression {
@@ -17,6 +18,8 @@ abstract class WeeklyTaskProgression with _$WeeklyTaskProgression {
   }) = _WeeklyTaskProgression;
 
   const WeeklyTaskProgression._();
+
+  factory WeeklyTaskProgression.fromJson(Map<String, dynamic> json) => _$WeeklyTaskProgressionFromJson(json);
 
   List<String> get taskIds => tasks.map((task) => task.id).toList();
 

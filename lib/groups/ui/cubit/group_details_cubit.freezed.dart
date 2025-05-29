@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GroupDetailsState {
 
- bool get isLoading; List<TaskResponse> get tasks; List<InviteResponse> get invites; DateTime get selectedDate; TaskListView get listView; TaskUserFilter get userFilter; TaskCompletionFilter get completionFilter; TaskStatusFilter get statusFilter; TaskPriorityFilter get priorityFilter; TaskDateSort get dateSort; TaskPrioritySort get prioritySort; bool get isRefreshing; bool get shouldGoBack; GroupResponse? get group; UserData? get currentUser; UserResponse? get userToFilterBy; TaskResponse? get taskToDelete;
+ bool get isLoading; List<TaskResponse> get tasks; List<InviteResponse> get invites; DateTime get selectedDate; TaskListView get listView; TaskUserFilter get userFilter; TaskCompletionFilter get completionFilter; TaskStatusFilter get statusFilter; TaskPriorityFilter get priorityFilter; TaskDateSort get dateSort; TaskPrioritySort get prioritySort; bool get showLeaveDialog; bool get isRefreshing; bool get shouldGoBack; GroupResponse? get group; UserData? get currentUser; UserResponse? get userToFilterBy; TaskResponse? get taskToDelete;
 /// Create a copy of GroupDetailsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $GroupDetailsStateCopyWith<GroupDetailsState> get copyWith => _$GroupDetailsStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GroupDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.tasks, tasks)&&const DeepCollectionEquality().equals(other.invites, invites)&&(identical(other.selectedDate, selectedDate) || other.selectedDate == selectedDate)&&(identical(other.listView, listView) || other.listView == listView)&&(identical(other.userFilter, userFilter) || other.userFilter == userFilter)&&(identical(other.completionFilter, completionFilter) || other.completionFilter == completionFilter)&&(identical(other.statusFilter, statusFilter) || other.statusFilter == statusFilter)&&(identical(other.priorityFilter, priorityFilter) || other.priorityFilter == priorityFilter)&&(identical(other.dateSort, dateSort) || other.dateSort == dateSort)&&(identical(other.prioritySort, prioritySort) || other.prioritySort == prioritySort)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&(identical(other.group, group) || other.group == group)&&(identical(other.currentUser, currentUser) || other.currentUser == currentUser)&&(identical(other.userToFilterBy, userToFilterBy) || other.userToFilterBy == userToFilterBy)&&(identical(other.taskToDelete, taskToDelete) || other.taskToDelete == taskToDelete));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GroupDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.tasks, tasks)&&const DeepCollectionEquality().equals(other.invites, invites)&&(identical(other.selectedDate, selectedDate) || other.selectedDate == selectedDate)&&(identical(other.listView, listView) || other.listView == listView)&&(identical(other.userFilter, userFilter) || other.userFilter == userFilter)&&(identical(other.completionFilter, completionFilter) || other.completionFilter == completionFilter)&&(identical(other.statusFilter, statusFilter) || other.statusFilter == statusFilter)&&(identical(other.priorityFilter, priorityFilter) || other.priorityFilter == priorityFilter)&&(identical(other.dateSort, dateSort) || other.dateSort == dateSort)&&(identical(other.prioritySort, prioritySort) || other.prioritySort == prioritySort)&&(identical(other.showLeaveDialog, showLeaveDialog) || other.showLeaveDialog == showLeaveDialog)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&(identical(other.group, group) || other.group == group)&&(identical(other.currentUser, currentUser) || other.currentUser == currentUser)&&(identical(other.userToFilterBy, userToFilterBy) || other.userToFilterBy == userToFilterBy)&&(identical(other.taskToDelete, taskToDelete) || other.taskToDelete == taskToDelete));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(tasks),const DeepCollectionEquality().hash(invites),selectedDate,listView,userFilter,completionFilter,statusFilter,priorityFilter,dateSort,prioritySort,isRefreshing,shouldGoBack,group,currentUser,userToFilterBy,taskToDelete);
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(tasks),const DeepCollectionEquality().hash(invites),selectedDate,listView,userFilter,completionFilter,statusFilter,priorityFilter,dateSort,prioritySort,showLeaveDialog,isRefreshing,shouldGoBack,group,currentUser,userToFilterBy,taskToDelete);
 
 @override
 String toString() {
-  return 'GroupDetailsState(isLoading: $isLoading, tasks: $tasks, invites: $invites, selectedDate: $selectedDate, listView: $listView, userFilter: $userFilter, completionFilter: $completionFilter, statusFilter: $statusFilter, priorityFilter: $priorityFilter, dateSort: $dateSort, prioritySort: $prioritySort, isRefreshing: $isRefreshing, shouldGoBack: $shouldGoBack, group: $group, currentUser: $currentUser, userToFilterBy: $userToFilterBy, taskToDelete: $taskToDelete)';
+  return 'GroupDetailsState(isLoading: $isLoading, tasks: $tasks, invites: $invites, selectedDate: $selectedDate, listView: $listView, userFilter: $userFilter, completionFilter: $completionFilter, statusFilter: $statusFilter, priorityFilter: $priorityFilter, dateSort: $dateSort, prioritySort: $prioritySort, showLeaveDialog: $showLeaveDialog, isRefreshing: $isRefreshing, shouldGoBack: $shouldGoBack, group: $group, currentUser: $currentUser, userToFilterBy: $userToFilterBy, taskToDelete: $taskToDelete)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $GroupDetailsStateCopyWith<$Res>  {
   factory $GroupDetailsStateCopyWith(GroupDetailsState value, $Res Function(GroupDetailsState) _then) = _$GroupDetailsStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, List<TaskResponse> tasks, List<InviteResponse> invites, DateTime selectedDate, TaskListView listView, TaskUserFilter userFilter, TaskCompletionFilter completionFilter, TaskStatusFilter statusFilter, TaskPriorityFilter priorityFilter, TaskDateSort dateSort, TaskPrioritySort prioritySort, bool isRefreshing, bool shouldGoBack, GroupResponse? group, UserData? currentUser, UserResponse? userToFilterBy, TaskResponse? taskToDelete
+ bool isLoading, List<TaskResponse> tasks, List<InviteResponse> invites, DateTime selectedDate, TaskListView listView, TaskUserFilter userFilter, TaskCompletionFilter completionFilter, TaskStatusFilter statusFilter, TaskPriorityFilter priorityFilter, TaskDateSort dateSort, TaskPrioritySort prioritySort, bool showLeaveDialog, bool isRefreshing, bool shouldGoBack, GroupResponse? group, UserData? currentUser, UserResponse? userToFilterBy, TaskResponse? taskToDelete
 });
 
 
@@ -63,7 +63,7 @@ class _$GroupDetailsStateCopyWithImpl<$Res>
 
 /// Create a copy of GroupDetailsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? tasks = null,Object? invites = null,Object? selectedDate = null,Object? listView = null,Object? userFilter = null,Object? completionFilter = null,Object? statusFilter = null,Object? priorityFilter = null,Object? dateSort = null,Object? prioritySort = null,Object? isRefreshing = null,Object? shouldGoBack = null,Object? group = freezed,Object? currentUser = freezed,Object? userToFilterBy = freezed,Object? taskToDelete = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? tasks = null,Object? invites = null,Object? selectedDate = null,Object? listView = null,Object? userFilter = null,Object? completionFilter = null,Object? statusFilter = null,Object? priorityFilter = null,Object? dateSort = null,Object? prioritySort = null,Object? showLeaveDialog = null,Object? isRefreshing = null,Object? shouldGoBack = null,Object? group = freezed,Object? currentUser = freezed,Object? userToFilterBy = freezed,Object? taskToDelete = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,tasks: null == tasks ? _self.tasks : tasks // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,8 @@ as TaskCompletionFilter,statusFilter: null == statusFilter ? _self.statusFilter 
 as TaskStatusFilter,priorityFilter: null == priorityFilter ? _self.priorityFilter : priorityFilter // ignore: cast_nullable_to_non_nullable
 as TaskPriorityFilter,dateSort: null == dateSort ? _self.dateSort : dateSort // ignore: cast_nullable_to_non_nullable
 as TaskDateSort,prioritySort: null == prioritySort ? _self.prioritySort : prioritySort // ignore: cast_nullable_to_non_nullable
-as TaskPrioritySort,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
+as TaskPrioritySort,showLeaveDialog: null == showLeaveDialog ? _self.showLeaveDialog : showLeaveDialog // ignore: cast_nullable_to_non_nullable
+as bool,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
 as bool,shouldGoBack: null == shouldGoBack ? _self.shouldGoBack : shouldGoBack // ignore: cast_nullable_to_non_nullable
 as bool,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
 as GroupResponse?,currentUser: freezed == currentUser ? _self.currentUser : currentUser // ignore: cast_nullable_to_non_nullable
@@ -141,7 +142,7 @@ $TaskResponseCopyWith<$Res>? get taskToDelete {
 
 
 class _GroupDetailsState extends GroupDetailsState {
-  const _GroupDetailsState({required this.isLoading, required final  List<TaskResponse> tasks, required final  List<InviteResponse> invites, required this.selectedDate, required this.listView, required this.userFilter, required this.completionFilter, required this.statusFilter, required this.priorityFilter, required this.dateSort, required this.prioritySort, required this.isRefreshing, required this.shouldGoBack, this.group, this.currentUser, this.userToFilterBy, this.taskToDelete}): _tasks = tasks,_invites = invites,super._();
+  const _GroupDetailsState({required this.isLoading, required final  List<TaskResponse> tasks, required final  List<InviteResponse> invites, required this.selectedDate, required this.listView, required this.userFilter, required this.completionFilter, required this.statusFilter, required this.priorityFilter, required this.dateSort, required this.prioritySort, required this.showLeaveDialog, required this.isRefreshing, required this.shouldGoBack, this.group, this.currentUser, this.userToFilterBy, this.taskToDelete}): _tasks = tasks,_invites = invites,super._();
   
 
 @override final  bool isLoading;
@@ -167,6 +168,7 @@ class _GroupDetailsState extends GroupDetailsState {
 @override final  TaskPriorityFilter priorityFilter;
 @override final  TaskDateSort dateSort;
 @override final  TaskPrioritySort prioritySort;
+@override final  bool showLeaveDialog;
 @override final  bool isRefreshing;
 @override final  bool shouldGoBack;
 @override final  GroupResponse? group;
@@ -184,16 +186,16 @@ _$GroupDetailsStateCopyWith<_GroupDetailsState> get copyWith => __$GroupDetailsS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GroupDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._tasks, _tasks)&&const DeepCollectionEquality().equals(other._invites, _invites)&&(identical(other.selectedDate, selectedDate) || other.selectedDate == selectedDate)&&(identical(other.listView, listView) || other.listView == listView)&&(identical(other.userFilter, userFilter) || other.userFilter == userFilter)&&(identical(other.completionFilter, completionFilter) || other.completionFilter == completionFilter)&&(identical(other.statusFilter, statusFilter) || other.statusFilter == statusFilter)&&(identical(other.priorityFilter, priorityFilter) || other.priorityFilter == priorityFilter)&&(identical(other.dateSort, dateSort) || other.dateSort == dateSort)&&(identical(other.prioritySort, prioritySort) || other.prioritySort == prioritySort)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&(identical(other.group, group) || other.group == group)&&(identical(other.currentUser, currentUser) || other.currentUser == currentUser)&&(identical(other.userToFilterBy, userToFilterBy) || other.userToFilterBy == userToFilterBy)&&(identical(other.taskToDelete, taskToDelete) || other.taskToDelete == taskToDelete));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GroupDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._tasks, _tasks)&&const DeepCollectionEquality().equals(other._invites, _invites)&&(identical(other.selectedDate, selectedDate) || other.selectedDate == selectedDate)&&(identical(other.listView, listView) || other.listView == listView)&&(identical(other.userFilter, userFilter) || other.userFilter == userFilter)&&(identical(other.completionFilter, completionFilter) || other.completionFilter == completionFilter)&&(identical(other.statusFilter, statusFilter) || other.statusFilter == statusFilter)&&(identical(other.priorityFilter, priorityFilter) || other.priorityFilter == priorityFilter)&&(identical(other.dateSort, dateSort) || other.dateSort == dateSort)&&(identical(other.prioritySort, prioritySort) || other.prioritySort == prioritySort)&&(identical(other.showLeaveDialog, showLeaveDialog) || other.showLeaveDialog == showLeaveDialog)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&(identical(other.group, group) || other.group == group)&&(identical(other.currentUser, currentUser) || other.currentUser == currentUser)&&(identical(other.userToFilterBy, userToFilterBy) || other.userToFilterBy == userToFilterBy)&&(identical(other.taskToDelete, taskToDelete) || other.taskToDelete == taskToDelete));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_tasks),const DeepCollectionEquality().hash(_invites),selectedDate,listView,userFilter,completionFilter,statusFilter,priorityFilter,dateSort,prioritySort,isRefreshing,shouldGoBack,group,currentUser,userToFilterBy,taskToDelete);
+int get hashCode => Object.hash(runtimeType,isLoading,const DeepCollectionEquality().hash(_tasks),const DeepCollectionEquality().hash(_invites),selectedDate,listView,userFilter,completionFilter,statusFilter,priorityFilter,dateSort,prioritySort,showLeaveDialog,isRefreshing,shouldGoBack,group,currentUser,userToFilterBy,taskToDelete);
 
 @override
 String toString() {
-  return 'GroupDetailsState(isLoading: $isLoading, tasks: $tasks, invites: $invites, selectedDate: $selectedDate, listView: $listView, userFilter: $userFilter, completionFilter: $completionFilter, statusFilter: $statusFilter, priorityFilter: $priorityFilter, dateSort: $dateSort, prioritySort: $prioritySort, isRefreshing: $isRefreshing, shouldGoBack: $shouldGoBack, group: $group, currentUser: $currentUser, userToFilterBy: $userToFilterBy, taskToDelete: $taskToDelete)';
+  return 'GroupDetailsState(isLoading: $isLoading, tasks: $tasks, invites: $invites, selectedDate: $selectedDate, listView: $listView, userFilter: $userFilter, completionFilter: $completionFilter, statusFilter: $statusFilter, priorityFilter: $priorityFilter, dateSort: $dateSort, prioritySort: $prioritySort, showLeaveDialog: $showLeaveDialog, isRefreshing: $isRefreshing, shouldGoBack: $shouldGoBack, group: $group, currentUser: $currentUser, userToFilterBy: $userToFilterBy, taskToDelete: $taskToDelete)';
 }
 
 
@@ -204,7 +206,7 @@ abstract mixin class _$GroupDetailsStateCopyWith<$Res> implements $GroupDetailsS
   factory _$GroupDetailsStateCopyWith(_GroupDetailsState value, $Res Function(_GroupDetailsState) _then) = __$GroupDetailsStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, List<TaskResponse> tasks, List<InviteResponse> invites, DateTime selectedDate, TaskListView listView, TaskUserFilter userFilter, TaskCompletionFilter completionFilter, TaskStatusFilter statusFilter, TaskPriorityFilter priorityFilter, TaskDateSort dateSort, TaskPrioritySort prioritySort, bool isRefreshing, bool shouldGoBack, GroupResponse? group, UserData? currentUser, UserResponse? userToFilterBy, TaskResponse? taskToDelete
+ bool isLoading, List<TaskResponse> tasks, List<InviteResponse> invites, DateTime selectedDate, TaskListView listView, TaskUserFilter userFilter, TaskCompletionFilter completionFilter, TaskStatusFilter statusFilter, TaskPriorityFilter priorityFilter, TaskDateSort dateSort, TaskPrioritySort prioritySort, bool showLeaveDialog, bool isRefreshing, bool shouldGoBack, GroupResponse? group, UserData? currentUser, UserResponse? userToFilterBy, TaskResponse? taskToDelete
 });
 
 
@@ -221,7 +223,7 @@ class __$GroupDetailsStateCopyWithImpl<$Res>
 
 /// Create a copy of GroupDetailsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? tasks = null,Object? invites = null,Object? selectedDate = null,Object? listView = null,Object? userFilter = null,Object? completionFilter = null,Object? statusFilter = null,Object? priorityFilter = null,Object? dateSort = null,Object? prioritySort = null,Object? isRefreshing = null,Object? shouldGoBack = null,Object? group = freezed,Object? currentUser = freezed,Object? userToFilterBy = freezed,Object? taskToDelete = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? tasks = null,Object? invites = null,Object? selectedDate = null,Object? listView = null,Object? userFilter = null,Object? completionFilter = null,Object? statusFilter = null,Object? priorityFilter = null,Object? dateSort = null,Object? prioritySort = null,Object? showLeaveDialog = null,Object? isRefreshing = null,Object? shouldGoBack = null,Object? group = freezed,Object? currentUser = freezed,Object? userToFilterBy = freezed,Object? taskToDelete = freezed,}) {
   return _then(_GroupDetailsState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,tasks: null == tasks ? _self._tasks : tasks // ignore: cast_nullable_to_non_nullable
@@ -234,7 +236,8 @@ as TaskCompletionFilter,statusFilter: null == statusFilter ? _self.statusFilter 
 as TaskStatusFilter,priorityFilter: null == priorityFilter ? _self.priorityFilter : priorityFilter // ignore: cast_nullable_to_non_nullable
 as TaskPriorityFilter,dateSort: null == dateSort ? _self.dateSort : dateSort // ignore: cast_nullable_to_non_nullable
 as TaskDateSort,prioritySort: null == prioritySort ? _self.prioritySort : prioritySort // ignore: cast_nullable_to_non_nullable
-as TaskPrioritySort,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
+as TaskPrioritySort,showLeaveDialog: null == showLeaveDialog ? _self.showLeaveDialog : showLeaveDialog // ignore: cast_nullable_to_non_nullable
+as bool,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing // ignore: cast_nullable_to_non_nullable
 as bool,shouldGoBack: null == shouldGoBack ? _self.shouldGoBack : shouldGoBack // ignore: cast_nullable_to_non_nullable
 as bool,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
 as GroupResponse?,currentUser: freezed == currentUser ? _self.currentUser : currentUser // ignore: cast_nullable_to_non_nullable

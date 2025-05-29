@@ -12,6 +12,7 @@ part of 'dashboard_cubit.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
+
 /// @nodoc
 mixin _$DashboardState {
 
@@ -22,6 +23,8 @@ mixin _$DashboardState {
 @pragma('vm:prefer-inline')
 $DashboardStateCopyWith<DashboardState> get copyWith => _$DashboardStateCopyWithImpl<DashboardState>(this as DashboardState, _$identity);
 
+  /// Serializes this DashboardState to a JSON map.
+  Map<String, dynamic> toJson();
 
 
 @override
@@ -29,7 +32,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is DashboardState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.groupsListType, groupsListType) || other.groupsListType == groupsListType)&&const DeepCollectionEquality().equals(other.groups, groups)&&const DeepCollectionEquality().equals(other.invites, invites)&&const DeepCollectionEquality().equals(other.progression, progression)&&(identical(other.selection, selection) || other.selection == selection)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,isLoading,groupsListType,const DeepCollectionEquality().hash(groups),const DeepCollectionEquality().hash(invites),const DeepCollectionEquality().hash(progression),selection,isRefreshing);
 
@@ -80,11 +83,11 @@ as bool,
 
 
 /// @nodoc
-
+@JsonSerializable()
 
 class _DashboardState implements DashboardState {
   const _DashboardState({required this.isLoading, required this.groupsListType, required final  List<GroupResponse> groups, required final  List<InviteResponse> invites, required final  List<WeeklyTaskProgression?> progression, required this.selection, required this.isRefreshing}): _groups = groups,_invites = invites,_progression = progression;
-  
+  factory _DashboardState.fromJson(Map<String, dynamic> json) => _$DashboardStateFromJson(json);
 
 @override final  bool isLoading;
 @override final  GroupsListType groupsListType;
@@ -118,14 +121,17 @@ class _DashboardState implements DashboardState {
 @pragma('vm:prefer-inline')
 _$DashboardStateCopyWith<_DashboardState> get copyWith => __$DashboardStateCopyWithImpl<_DashboardState>(this, _$identity);
 
-
+@override
+Map<String, dynamic> toJson() {
+  return _$DashboardStateToJson(this, );
+}
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _DashboardState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.groupsListType, groupsListType) || other.groupsListType == groupsListType)&&const DeepCollectionEquality().equals(other._groups, _groups)&&const DeepCollectionEquality().equals(other._invites, _invites)&&const DeepCollectionEquality().equals(other._progression, _progression)&&(identical(other.selection, selection) || other.selection == selection)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing));
 }
 
-
+@JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode => Object.hash(runtimeType,isLoading,groupsListType,const DeepCollectionEquality().hash(_groups),const DeepCollectionEquality().hash(_invites),const DeepCollectionEquality().hash(_progression),selection,isRefreshing);
 
