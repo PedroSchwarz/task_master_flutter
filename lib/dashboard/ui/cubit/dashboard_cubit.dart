@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:logging/logging.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/dashboard/dashboard.dart';
@@ -14,7 +14,7 @@ import 'package:task_master/users/data/repository/users_repository.dart';
 part 'dashboard_cubit.freezed.dart';
 part 'dashboard_cubit.g.dart';
 
-class DashboardCubit extends HydratedCubit<DashboardState> {
+class DashboardCubit extends Cubit<DashboardState> {
   DashboardCubit({
     required this.authRepository,
     required this.usersRepository,
@@ -165,12 +165,6 @@ class DashboardCubit extends HydratedCubit<DashboardState> {
     await usersRepository.removeNotifications();
     await authRepository.signOut();
   }
-
-  @override
-  DashboardState? fromJson(Map<String, dynamic> json) => DashboardState.fromJson(json);
-
-  @override
-  Map<String, dynamic>? toJson(DashboardState state) => state.toJson();
 }
 
 @freezed
