@@ -81,8 +81,8 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
 
                       return CheckboxListTile(
                         value: isSelected,
-                        title: Text(user.firstName),
-                        subtitle: Text('${user.lastName} - ${user.email}'),
+                        title: Text(user.completeName),
+                        subtitle: Text(user.email),
                         secondary: CircleAvatar(child: Text(user.initials)),
                         checkboxShape: const CircleBorder(),
                         checkboxScaleFactor: 1.2,

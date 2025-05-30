@@ -14,5 +14,5 @@ abstract class UserResponse with _$UserResponse {
 
   String get initials => '${firstName.substring(0, 1)}${lastName.substring(0, 1)}';
 
-  String get completeName => '$firstName $lastName';
+  String get completeName => '${firstName.trim()} ${lastName.trim()}';
 }

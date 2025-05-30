@@ -17,7 +17,7 @@ abstract class UserData with _$UserData {
 
   const UserData._();
 
-  String get completeName => '$firstName $lastName';
+  String get completeName => '${firstName.trim()} ${lastName.trim()}';
 
   String get initials => '${firstName.substring(0, 1)}${lastName.substring(0, 1)}';
 }

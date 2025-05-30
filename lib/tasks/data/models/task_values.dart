@@ -3,11 +3,11 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 enum TaskPriority {
   @JsonValue('low')
-  low(title: 'Low', icon: Icons.trending_down, color: Color.fromARGB(255, 57, 167, 23)),
+  low(title: 'Low', icon: Icons.circle, color: Color.fromARGB(255, 57, 167, 23)),
   @JsonValue('medium')
-  medium(title: 'Medium', icon: Icons.trending_flat, color: Color.fromARGB(255, 227, 176, 24)),
+  medium(title: 'Medium', icon: Icons.circle, color: Color.fromARGB(255, 227, 176, 24)),
   @JsonValue('high')
-  high(title: 'High', icon: Icons.trending_up, color: Color.fromARGB(255, 195, 44, 33));
+  high(title: 'High', icon: Icons.circle, color: Color.fromARGB(255, 195, 44, 33));
 
   const TaskPriority({required this.title, required this.icon, required this.color});
 

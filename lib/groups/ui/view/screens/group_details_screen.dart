@@ -127,32 +127,35 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                                     child: Row(
                                       spacing: AppSpacing.xs,
                                       children: [
-                                        const Text('Actions').animate().fade(delay: 100.ms),
-                                        if (isOwner)
-                                          IconButton.filledTonal(
-                                            onPressed: () async {
-                                              if (context.mounted) {
-                                                final result = await context.pushNamed<bool>(
-                                                  CreateGroupScreen.routeName,
-                                                  queryParameters: {'id': group!.id},
-                                                );
+                                        const Text('Actions:').animate().fade(delay: 100.ms),
+                                        IconButton.filledTonal(
+                                          color: theme.colorScheme.onPrimaryContainer,
+                                          onPressed:
+                                              isOwner
+                                                  ? () async {
+                                                    if (context.mounted) {
+                                                      final result = await context.pushNamed<bool>(
+                                                        CreateGroupScreen.routeName,
+                                                        queryParameters: {'id': group!.id},
+                                                      );
 
-                                                if (result ?? false) {
-                                                  bloc.updateGroupForMember(groupId: group.id);
-                                                }
-                                              }
-                                            },
-                                            icon: const Icon(Icons.edit_outlined),
-                                          ).animate().fade(delay: 200.ms),
+                                                      if (result ?? false) {
+                                                        bloc.updateGroupForMember(groupId: group.id);
+                                                      }
+                                                    }
+                                                  }
+                                                  : null,
+                                          icon: const Icon(Icons.edit_outlined),
+                                        ).animate().fade(delay: 200.ms),
                                       ],
                                     ),
                                   ),
-                                  if (!isOwner)
-                                    IconButton.outlined(
-                                      tooltip: 'Leave group',
-                                      onPressed: bloc.toggleLeaveDialog,
-                                      icon: const Icon(Icons.exit_to_app, color: Colors.red),
-                                    ).animate().fade(delay: 200.ms),
+                                  IconButton.outlined(
+                                    color: Colors.red,
+                                    tooltip: 'Leave group',
+                                    onPressed: isOwner ? null : bloc.toggleLeaveDialog,
+                                    icon: const Icon(Icons.exit_to_app),
+                                  ).animate().fade(delay: 200.ms),
                                 ],
                               ),
                             ),
@@ -174,7 +177,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                                       return Row(
                                         spacing: AppSpacing.s,
                                         children: [
-                                          const Text('Members').animate().fade(delay: 100.ms),
+                                          const Text('Members:').animate().fade(delay: 100.ms),
                                           CircleAvatar(child: Text(member.initials)).animate().fade(delay: 200.ms),
                                         ],
                                       );

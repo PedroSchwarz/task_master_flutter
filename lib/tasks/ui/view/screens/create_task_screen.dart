@@ -119,7 +119,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 return AppSkeleton(
                                   isLoading: state.isLoading,
                                   child: DropdownMenu(
-                                    label: const Text('Priority'),
+                                    label: Row(
+                                      spacing: AppSpacing.xs,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [Icon(state.priority.icon, color: state.priority.color), const Text('Priority')],
+                                    ),
                                     initialSelection: state.priority,
                                     inputDecorationTheme: InputDecorationTheme(
                                       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
@@ -157,7 +161,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 return AppSkeleton(
                                   isLoading: state.isLoading,
                                   child: DropdownMenu(
-                                    label: const Text('Status'),
+                                    label: Row(
+                                      spacing: AppSpacing.xs,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [Icon(state.status.icon, color: state.status.color), const Text('Status')],
+                                    ),
                                     initialSelection: state.status,
                                     inputDecorationTheme: InputDecorationTheme(
                                       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),

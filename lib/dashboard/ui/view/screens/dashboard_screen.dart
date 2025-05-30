@@ -116,7 +116,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           previous.isLoading != current.isLoading,
                   builder: (context, state) {
                     if (state.isLoading) {
-                      return const Padding(padding: EdgeInsets.only(top: 16), child: AppSkeleton(isLoading: true, child: SizedBox(height: 136)));
+                      return const Padding(padding: EdgeInsets.all(AppSpacing.s), child: AppSkeleton(isLoading: true, child: SizedBox(height: 150)));
                     }
 
                     return ProgressionCarousel(
