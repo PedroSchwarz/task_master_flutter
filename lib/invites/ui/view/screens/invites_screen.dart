@@ -26,13 +26,14 @@ class _InvitesScreenState extends State<InvitesScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localization = context.localization;
 
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder:
             (_, __) => [
               SliverAppBar.medium(
-                title: const Text('Invites'),
+                title: Text(localization.invites),
                 bottom: PreferredSize(
                   preferredSize: const Size(0, AppSpacing.s),
                   child: BlocSelector<InvitesCubit, InvitesState, bool>(
@@ -62,7 +63,7 @@ class _InvitesScreenState extends State<InvitesScreen> {
             }
 
             if (state.invites.isEmpty) {
-              return Center(child: Text('No invitations for now.', style: theme.textTheme.bodyLarge));
+              return Center(child: Text(localization.empty_invites_description, style: theme.textTheme.bodyLarge));
             }
 
             return ListView.separated(

@@ -33,6 +33,7 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localization = context.localization;
 
     return Scaffold(
       appBar: AppBar(leading: IconButton(onPressed: context.pop, icon: const Icon(Icons.close)), automaticallyImplyLeading: false),
@@ -50,7 +51,7 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
                       padding: const EdgeInsets.all(AppSpacing.s),
                       color: theme.scaffoldBackgroundColor,
                       child: AppTextField(
-                        label: 'Search user',
+                        label: localization.search_user,
                         onChanged: (value) {
                           if (value.isEmpty) {
                             setState(() {
@@ -96,7 +97,10 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-              child: FilledButton(onPressed: () => widget.onPressed(_selectedIds), child: Text(widget.isUpdating ? 'Update' : 'Invite')),
+              child: FilledButton(
+                onPressed: () => widget.onPressed(_selectedIds),
+                child: Text(widget.isUpdating ? localization.update : localization.invite),
+              ),
             ),
           ],
         ),

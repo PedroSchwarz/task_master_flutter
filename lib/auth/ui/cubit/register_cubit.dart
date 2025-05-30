@@ -17,6 +17,9 @@ class RegisterCubit extends Cubit<RegisterState> {
           hidePassword: true,
           isSubmitting: false,
           isAuthenticated: false,
+          emailError: false,
+          passwordError: false,
+          confirmPasswordError: false,
         ),
       );
 
@@ -24,67 +27,49 @@ class RegisterCubit extends Cubit<RegisterState> {
   final AuthRepository authRepository;
 
   void updateFirstName(String firstName) {
-    emit(state.copyWith(firstName: firstName, errorMessage: null));
+    emit(state.copyWith(firstName: firstName, error: null));
   }
 
   void updateLastName(String lastName) {
-    emit(state.copyWith(lastName: lastName, errorMessage: null));
+    emit(state.copyWith(lastName: lastName, error: null));
   }
 
   void updateEmail(String email) {
-    emit(state.copyWith(email: email, errorMessage: null));
-
+    emit(state.copyWith(email: email, error: null));
     final emailRegex = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$");
-    if (!emailRegex.hasMatch(email)) {
-      emit(state.copyWith(emailError: 'Invalid email'));
-    } else {
-      emit(state.copyWith(emailError: null));
-    }
+    emit(state.copyWith(emailError: !emailRegex.hasMatch(email)));
   }
 
   void updatePassword(String password) {
-    emit(state.copyWith(password: password, errorMessage: null));
-
+    emit(state.copyWith(password: password, error: null));
     final passwordRegex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$');
-    if (!passwordRegex.hasMatch(password)) {
-      emit(state.copyWith(passwordError: 'Invalid password'));
-    } else {
-      emit(state.copyWith(passwordError: null));
-    }
+    emit(state.copyWith(passwordError: !passwordRegex.hasMatch(password)));
 
     if (state.confirmPassword.isNotEmpty && password != state.confirmPassword) {
-      emit(state.copyWith(confirmPasswordError: 'Passwords do not match'));
+      emit(state.copyWith(confirmPasswordError: true));
     } else {
-      emit(state.copyWith(confirmPasswordError: null));
+      emit(state.copyWith(confirmPasswordError: false));
     }
   }
 
   void updateConfirmPassword(String password) {
-    emit(state.copyWith(confirmPassword: password, errorMessage: null));
-
-    if (password != state.password) {
-      emit(state.copyWith(confirmPasswordError: 'Passwords do not match'));
-    } else {
-      emit(state.copyWith(confirmPasswordError: null));
-    }
+    emit(state.copyWith(confirmPassword: password, confirmPasswordError: password != state.password, error: null));
   }
 
   void togglePasswordVisibility() {
-    emit(state.copyWith(hidePassword: !state.hidePassword, errorMessage: null));
+    emit(state.copyWith(hidePassword: !state.hidePassword, error: null));
   }
 
   Future<void> register() async {
-    emit(state.copyWith(isSubmitting: true, errorMessage: null));
+    emit(state.copyWith(isSubmitting: true, error: null));
 
     final result = await authRepository.register(firstName: state.firstName, lastName: state.lastName, email: state.email, password: state.password);
 
     switch (result) {
       case RegisterResult.success:
         emit(state.copyWith(isAuthenticated: true));
-      case RegisterResult.emailConflict:
-        emit(state.copyWith(errorMessage: 'Email already in use.'));
-      case RegisterResult.networkError:
-        emit(state.copyWith(errorMessage: 'Unable to register.'));
+      default:
+        emit(state.copyWith(error: result));
     }
 
     emit(state.copyWith(isSubmitting: false));
@@ -102,10 +87,10 @@ sealed class RegisterState with _$RegisterState {
     required bool hidePassword,
     required bool isSubmitting,
     required bool isAuthenticated,
-    String? emailError,
-    String? passwordError,
-    String? confirmPasswordError,
-    String? errorMessage,
+    required bool emailError,
+    required bool passwordError,
+    required bool confirmPasswordError,
+    RegisterResult? error,
   }) = _RegisterState;
 
   const RegisterState._();
@@ -154,9 +139,9 @@ sealed class RegisterState with _$RegisterState {
       email.isNotEmpty &&
       password.isNotEmpty &&
       confirmPassword.isNotEmpty &&
-      emailError == null &&
-      passwordError == null &&
-      confirmPasswordError == null;
+      !emailError &&
+      !passwordError &&
+      !confirmPasswordError;
 
   bool get canSubmit => isFormValid && !isSubmitting;
 }

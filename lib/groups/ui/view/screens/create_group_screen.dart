@@ -29,6 +29,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = context.localization;
+
     return BlocListener<CreateGroupCubit, CreateGroupState>(
       bloc: bloc,
       listenWhen: (previous, current) => previous.showInviteUsersSheet != current.showInviteUsersSheet,
@@ -57,9 +59,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                       title: BlocBuilder<CreateGroupCubit, CreateGroupState>(
                         bloc: bloc,
                         buildWhen: (previous, current) => previous.isLoading != current.isLoading || previous.isUpdating != current.isUpdating,
-                        builder:
-                            (context, state) =>
-                                state.isLoading ? const Text('Loading Group...') : Text('${state.isUpdating ? 'Update' : 'Create'} Group'),
+                        builder: (context, state) {
+                          return AppSkeleton(
+                            isLoading: state.isLoading,
+                            child: Text(state.isUpdating ? localization.update_group : localization.create_group),
+                          );
+                        },
                       ),
                       bottom: PreferredSize(
                         preferredSize: const Size(0, AppSpacing.s),
@@ -87,7 +92,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                 return AppSkeleton(
                                   isLoading: state.isLoading,
                                   child: AppTextField(
-                                    label: 'Name',
+                                    label: localization.group_name,
                                     initialValue: state.name,
                                     onChanged: bloc.updateName,
                                     textCapitalization: TextCapitalization.words,
@@ -105,7 +110,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                 return AppSkeleton(
                                   isLoading: state.isLoading,
                                   child: AppTextField(
-                                    label: 'Description',
+                                    label: localization.group_description,
                                     initialValue: state.description,
                                     onChanged: bloc.updateDescription,
                                     textCapitalization: TextCapitalization.sentences,
@@ -132,11 +137,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                     TextButton(
                                       onPressed: bloc.toggleInviteUsersSheet,
                                       child: Row(
-                                        spacing: AppSpacing.s,
-                                        children: [const Icon(Icons.person_add_outlined), Text(state.isUpdating ? 'Manage member' : 'Invite people')],
+                                        spacing: AppSpacing.xs,
+                                        children: [
+                                          const Icon(Icons.person_add_outlined),
+                                          Text(state.isUpdating ? localization.group_manage_members : localization.group_invite_members),
+                                        ],
                                       ),
                                     ),
-                                    Text('${state.selectedUsersIds.length} selected'),
+                                    Text(localization.group_members_selected(state.selectedUsersIds.length)),
                                   ],
                                 ).animate().fadeIn();
                               },
@@ -164,7 +172,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                 Expanded(
                                   child: FilledButton(
                                     onPressed: state.canSubmit ? bloc.saveGroup : null,
-                                    child: Text(state.isUpdating ? 'Update' : 'Create'),
+                                    child: Text(state.isUpdating ? localization.update : localization.create),
                                   ),
                                 ),
                                 if (state.isUpdating)
@@ -174,7 +182,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                         HapticFeedback.heavyImpact();
                                         bloc.toggleDeleteDialog();
                                       },
-                                      child: const Text('Delete'),
+                                      child: Text(localization.delete),
                                     ),
                                   ),
                               ],

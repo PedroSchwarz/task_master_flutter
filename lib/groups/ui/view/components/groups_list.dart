@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:task_master/app/design_system/theme/app_spacing.dart';
+import 'package:task_master/app/app.dart';
 import 'package:task_master/auth/data/models/user_data.dart';
 import 'package:task_master/dashboard/dashboard.dart';
 import 'package:task_master/groups/groups.dart';
@@ -29,6 +29,7 @@ class GroupsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localization = context.localization;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +39,7 @@ class GroupsList extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Groups', style: theme.textTheme.headlineSmall),
+              Text(localization.groups, style: theme.textTheme.headlineSmall),
               IconButton(onPressed: onToggleListType, icon: Icon(listType == GroupsListType.list ? Icons.grid_view : Icons.table_rows_outlined)),
             ],
           ),

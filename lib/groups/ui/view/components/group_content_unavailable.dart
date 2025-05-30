@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_master/app/design_system/theme/app_spacing.dart';
+import 'package:task_master/app/app.dart';
 
 class GroupContentUnavailable extends StatelessWidget {
   const GroupContentUnavailable({required this.onRefresh, super.key});
@@ -9,6 +9,7 @@ class GroupContentUnavailable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localization = context.localization;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -23,14 +24,14 @@ class GroupContentUnavailable extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text("You don't belong to any groups yet.", style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
+                    Text(localization.empty_groups_title, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
                     RichText(
                       text: TextSpan(
                         style: theme.textTheme.titleMedium,
                         children: [
-                          const TextSpan(text: 'You can create a new group by tapping the'),
-                          TextSpan(text: ' + ', style: theme.textTheme.headlineLarge?.copyWith(color: theme.colorScheme.primary)),
-                          const TextSpan(text: 'button or join an existing one.'),
+                          TextSpan(text: localization.empty_groups_description_1),
+                          TextSpan(text: ' + ', style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.primary)),
+                          TextSpan(text: localization.empty_groups_description_2),
                         ],
                       ),
                       textAlign: TextAlign.center,

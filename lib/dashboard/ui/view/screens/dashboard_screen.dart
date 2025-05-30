@@ -1,4 +1,3 @@
-import 'package:calendar_pager/utils/extensions/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +29,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = context.localization;
+
     return Scaffold(
       drawer: DashboardDrawer(
         initials: bloc.currentUser.initials,
@@ -96,7 +97,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         onSelected: (_) {
                                           bloc.updateSelection(progression);
                                         },
-                                        label: Text(progression.name.toCapitalized()),
+                                        label: Text(switch (progression) {
+                                          TaskProgressionSelection.assigned => localization.filter_assigned,
+                                          TaskProgressionSelection.owned => localization.filter_owned,
+                                        }),
                                         selected: state.selection == progression,
                                       );
                                     }).toList(),
@@ -179,7 +183,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
-        label: const Text('Create Group'),
+        label: Text(localization.create_group),
         icon: const Icon(Icons.add),
         onPressed: () async {
           if (context.mounted) {
