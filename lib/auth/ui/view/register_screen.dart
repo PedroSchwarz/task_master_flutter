@@ -217,7 +217,8 @@ class _AnimatedLinearProgressIndicatorState extends State<AnimatedLinearProgress
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _animation,
-      builder: (context, _) => LinearProgressIndicator(value: _animation.value, color: widget.color, backgroundColor: widget.color.withOpacity(0.2)),
+      builder:
+          (context, _) => LinearProgressIndicator(value: _animation.value, color: widget.color, backgroundColor: widget.color.withValues(alpha: 0.2)),
     );
   }
 }
