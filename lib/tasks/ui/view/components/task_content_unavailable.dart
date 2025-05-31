@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_master/app/design_system/theme/app_spacing.dart';
+import 'package:task_master/app/app.dart';
 
 class TaskContentUnavailable extends StatelessWidget {
   const TaskContentUnavailable({super.key});
@@ -7,6 +7,7 @@ class TaskContentUnavailable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localization = context.localization;
 
     return Padding(
       padding: const EdgeInsets.all(AppSpacing.s),
@@ -15,14 +16,14 @@ class TaskContentUnavailable extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const Spacer(),
-          Text("No tasks were created yet.", style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
+          Text(localization.empty_tasks_title, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
           RichText(
             text: TextSpan(
               style: theme.textTheme.titleMedium,
               children: [
-                const TextSpan(text: 'You can create a new task by tapping the'),
-                TextSpan(text: ' + ', style: theme.textTheme.headlineLarge?.copyWith(color: theme.colorScheme.primary)),
-                const TextSpan(text: 'button.'),
+                TextSpan(text: localization.empty_tasks_description_1),
+                TextSpan(text: ' + ', style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.primary)),
+                TextSpan(text: localization.empty_tasks_description_2),
               ],
             ),
             textAlign: TextAlign.center,

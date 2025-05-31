@@ -86,26 +86,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     builder: (context, state) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                        child:
-                            AppSkeleton(
-                              isLoading: state.isLoading,
-                              child: Row(
-                                spacing: AppSpacing.s,
-                                children:
-                                    TaskProgressionSelection.values.map((progression) {
-                                      return ChoiceChip(
-                                        onSelected: (_) {
-                                          bloc.updateSelection(progression);
-                                        },
-                                        label: Text(switch (progression) {
-                                          TaskProgressionSelection.assigned => localization.filter_assigned,
-                                          TaskProgressionSelection.owned => localization.filter_owned,
-                                        }),
-                                        selected: state.selection == progression,
-                                      );
-                                    }).toList(),
-                              ),
-                            ).animate().fade(),
+                        child: AppSkeleton(
+                          isLoading: state.isLoading,
+                          child: Row(
+                            spacing: AppSpacing.s,
+                            children:
+                                TaskProgressionSelection.values.map((progression) {
+                                  return ChoiceChip(
+                                    onSelected: (_) {
+                                      bloc.updateSelection(progression);
+                                    },
+                                    label: Text(switch (progression) {
+                                      TaskProgressionSelection.assigned => localization.filter_assigned,
+                                      TaskProgressionSelection.owned => localization.filter_owned,
+                                    }),
+                                    selected: state.selection == progression,
+                                  );
+                                }).toList(),
+                          ),
+                        ).animate().fade(delay: 100.ms),
                       );
                     },
                   ),

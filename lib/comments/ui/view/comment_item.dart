@@ -14,7 +14,7 @@ class CommentItem extends StatefulWidget {
 }
 
 class _CommentItemState extends State<CommentItem> {
-  bool show = true;
+  bool isExpanded = true;
 
   @override
   Widget build(BuildContext context) {
@@ -22,24 +22,23 @@ class _CommentItemState extends State<CommentItem> {
       key: Key(widget.comment.id),
       dismissThresholds: const {DismissDirection.startToEnd: 0.6},
       direction: widget.canDelete ? DismissDirection.startToEnd : DismissDirection.none,
-
       confirmDismiss: (_) async {
         await widget.onDelete();
-        return true;
+        return false;
       },
       background: Container(
-        padding: const EdgeInsets.all(AppSpacing.m),
+        padding: isExpanded ? const EdgeInsets.all(AppSpacing.m) : const EdgeInsets.symmetric(horizontal: AppSpacing.m),
         alignment: Alignment.centerLeft,
         decoration: const BoxDecoration(color: Colors.red),
         child: const Icon(Icons.delete_outline, color: Colors.white, size: 32),
       ),
       child: ExpansionTile(
-        initiallyExpanded: show,
+        initiallyExpanded: isExpanded,
         dense: true,
         shape: const BeveledRectangleBorder(),
         onExpansionChanged: (value) {
           setState(() {
-            show = !show;
+            isExpanded = !isExpanded;
           });
         },
         leading: CircleAvatar(child: Text(widget.comment.owner.initials)),

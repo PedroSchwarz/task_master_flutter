@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/comments/comments.dart';
+import 'package:task_master/tasks/data/models/task_values.dart';
 import 'package:task_master/tasks/tasks.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
@@ -37,6 +38,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localization = context.localization;
 
     return BlocListener<TaskDetailsCubit, TaskDetailsState>(
       bloc: bloc,
@@ -67,26 +69,28 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                               previous.task != current.task,
                       builder: (context, state) {
                         final task = state.task;
-                        if (state.isLoading || task == null) {
-                          return const Text('Loading Task...');
-                        }
 
-                        return Row(
-                          spacing: AppSpacing.xs,
-                          children: [
-                            if (task.completed)
-                              Container(
-                                padding: const EdgeInsets.all(AppSpacing.xxs),
-                                decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.green, width: 3)),
-                                child: const Icon(Icons.check_rounded, color: Colors.green),
+                        return AppSkeleton(
+                          isLoading: state.isLoading,
+                          child: Row(
+                            spacing: AppSpacing.xs,
+                            children: [
+                              if (task?.completed ?? false)
+                                Container(
+                                  padding: const EdgeInsets.all(AppSpacing.xxs),
+                                  decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.green, width: 3)),
+                                  child: const Icon(Icons.check_rounded, color: Colors.green),
+                                ).animate().fade(),
+                              Flexible(
+                                child: Text(
+                                  task?.title ?? '',
+                                  style: theme.textTheme.headlineLarge?.copyWith(
+                                    color: (task?.isOverdue ?? false) ? Colors.red : theme.colorScheme.primary,
+                                  ),
+                                ),
                               ).animate().fade(),
-                            Flexible(
-                              child: Text(
-                                task.title,
-                                style: theme.textTheme.headlineLarge?.copyWith(color: task.isOverdue ? Colors.red : theme.colorScheme.primary),
-                              ),
-                            ).animate().fade(),
-                          ],
+                            ],
+                          ),
                         );
                       },
                     ),
@@ -99,7 +103,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                           if (task == null) return const SizedBox.shrink();
 
                           return IconButton.filledTonal(
-                            tooltip: '${task.completed ? 'Incomplete' : 'Complete'} Task',
+                            tooltip: task.completed ? localization.pending : localization.completed,
                             iconSize: 25,
                             onPressed: () {
                               HapticFeedback.heavyImpact();
@@ -147,14 +151,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 spacing: AppSpacing.xxs,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Text('Actions', style: theme.textTheme.bodyLarge),
+                                  Text(localization.actions, style: theme.textTheme.bodyLarge),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         children: [
                                           IconButton.filled(
-                                            tooltip: 'Duplicate Task',
+                                            tooltip: localization.duplicate_task,
                                             iconSize: 25,
                                             onPressed:
                                                 isOwner || isAssignee
@@ -169,7 +173,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                             child: VerticalDivider(width: AppSpacing.s, color: theme.colorScheme.onPrimaryContainer),
                                           ),
                                           IconButton.filledTonal(
-                                            tooltip: 'Edit Task',
+                                            tooltip: localization.edit_task,
                                             iconSize: 25,
                                             onPressed:
                                                 isOwner || isAssignee
@@ -182,7 +186,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         ],
                                       ),
                                       IconButton.outlined(
-                                        tooltip: 'Delete Task',
+                                        tooltip: localization.delete_task,
                                         iconSize: 25,
                                         onPressed:
                                             isOwner || isAssignee
@@ -220,7 +224,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                     Flexible(
                                       child: Chip(
                                         label: Text(
-                                          'Overdue',
+                                          localization.overdue,
                                           style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
                                         ),
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
@@ -231,10 +235,11 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                     ),
                                   Flexible(
                                     child: Chip(
-                                      label: Text(
-                                        task.priority.title,
-                                        style: theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-                                      ),
+                                      label: Text(switch (task.priority) {
+                                        TaskPriority.low => localization.low,
+                                        TaskPriority.medium => localization.medium,
+                                        TaskPriority.high => localization.high,
+                                      }, style: theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
                                       padding: const EdgeInsets.all(AppSpacing.xs),
                                       backgroundColor: task.priority.color,
@@ -243,10 +248,11 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                   ),
                                   Flexible(
                                     child: Chip(
-                                      label: Text(
-                                        task.status.title,
-                                        style: theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-                                      ),
+                                      label: Text(switch (task.status) {
+                                        TaskStatus.todo => localization.to_do,
+                                        TaskStatus.inProgress => localization.in_progress,
+                                        TaskStatus.done => localization.done,
+                                      }, style: theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
                                       padding: const EdgeInsets.all(AppSpacing.xs),
                                       backgroundColor: task.status.color,
@@ -255,6 +261,29 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                   ),
                                 ],
                               ).animate().fade(delay: 150.ms);
+                            },
+                          ),
+                          const Gap(AppSpacing.s),
+                          BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
+                            bloc: bloc,
+                            buildWhen:
+                                (previous, current) =>
+                                    previous.isLoading != current.isLoading || //
+                                    previous.task != current.task,
+                            builder: (context, state) {
+                              final task = state.task;
+
+                              if (state.isLoading || task == null) {
+                                return const AppSkeleton(isLoading: true, child: SizedBox(height: 20, width: double.infinity));
+                              }
+
+                              return Text(
+                                '${localization.due_by}: ${task.formattedDueDate}',
+                                style: theme.textTheme.bodyLarge?.copyWith(
+                                  color: task.isOverdue ? Colors.red : null,
+                                  fontWeight: task.isOverdue ? FontWeight.bold : null,
+                                ),
+                              ).animate().fade(delay: 200.ms);
                             },
                           ),
                           const Gap(AppSpacing.s),
@@ -290,39 +319,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                               final task = state.task;
 
                               if (state.isLoading || task == null) {
-                                return const AppSkeleton(isLoading: true, child: SizedBox(height: 20, width: double.infinity));
-                              }
-
-                              return Row(
-                                spacing: AppSpacing.xs,
-                                children: [
-                                  if (task.isOverdue) const Icon(Icons.watch_later_outlined, color: Colors.red),
-                                  Text(
-                                    'Due by: ${task.formattedDueDate}',
-                                    style: theme.textTheme.bodyLarge?.copyWith(
-                                      color: task.isOverdue ? Colors.red : null,
-                                      fontWeight: task.isOverdue ? FontWeight.bold : null,
-                                    ),
-                                  ),
-                                ],
-                              ).animate().fade(delay: 200.ms);
-                            },
-                          ),
-                          const Gap(AppSpacing.s),
-                          BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
-                            bloc: bloc,
-                            buildWhen:
-                                (previous, current) =>
-                                    previous.isLoading != current.isLoading || //
-                                    previous.task != current.task,
-                            builder: (context, state) {
-                              final task = state.task;
-
-                              if (state.isLoading || task == null) {
                                 return const AppSkeleton(isLoading: true, child: SizedBox(height: 150, width: double.infinity));
                               }
 
-                              return Text(task.description ?? 'No Description', style: theme.textTheme.bodyLarge).animate().fade(delay: 250.ms);
+                              return Text(
+                                task.description ?? localization.no_description,
+                                style: theme.textTheme.bodyLarge,
+                              ).animate().fade(delay: 250.ms);
                             },
                           ),
                         ],
@@ -334,35 +337,51 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     maxSize: 128,
                     padding: 0,
                     child: Container(
-                      padding: const EdgeInsets.all(AppSpacing.s),
                       decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
                       child: Column(
                         spacing: AppSpacing.xs,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const Text('Comments'),
-                          Row(
-                            spacing: AppSpacing.s,
-                            children: [
-                              Flexible(child: AppTextField(label: 'Comment', onChanged: bloc.updateComment)),
-                              BlocSelector<TaskDetailsCubit, TaskDetailsState, bool>(
-                                bloc: bloc,
-                                selector: (state) => state.canSubmit,
-                                builder: (context, canSubmit) {
-                                  return IconButton.filled(
-                                    onPressed: canSubmit ? bloc.createComment : null,
-                                    icon: const Icon(Icons.send),
-                                    padding: const EdgeInsets.all(AppSpacing.s),
-                                  );
-                                },
-                              ),
-                            ],
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
+                            child: Text(localization.comments),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+                            child: Row(
+                              spacing: AppSpacing.s,
+                              children: [
+                                Flexible(
+                                  child: BlocSelector<TaskDetailsCubit, TaskDetailsState, String>(
+                                    bloc: bloc,
+                                    selector: (state) => state.comment,
+                                    builder: (context, comment) {
+                                      return AppTextField(label: localization.comment, initialValue: comment, onChanged: bloc.updateComment);
+                                    },
+                                  ),
+                                ),
+                                BlocSelector<TaskDetailsCubit, TaskDetailsState, bool>(
+                                  bloc: bloc,
+                                  selector: (state) => state.canSubmit,
+                                  builder: (context, canSubmit) {
+                                    return IconButton.filled(
+                                      onPressed: canSubmit ? bloc.createComment : null,
+                                      icon: const Icon(Icons.send),
+                                      padding: const EdgeInsets.all(AppSpacing.s),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
                           BlocSelector<TaskDetailsCubit, TaskDetailsState, bool>(
                             bloc: bloc,
                             selector: (state) => state.isLoadingComments,
                             builder: (context, isLoadingComments) {
-                              return SizedBox(child: isLoadingComments ? const LinearProgressIndicator() : null);
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(vertical: AppSpacing.xxs),
+                                child: SizedBox(child: isLoadingComments ? const LinearProgressIndicator() : null),
+                              );
                             },
                           ),
                         ],
@@ -372,6 +391,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
                     bloc: bloc,
                     builder: (context, state) {
+                      if (state.comments.isEmpty) {
+                        return SliverToBoxAdapter(child: Center(child: Text(localization.no_comments)));
+                      }
+
                       return SliverList.separated(
                         itemCount: state.comments.length,
                         itemBuilder: (context, position) {
@@ -402,7 +425,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text('Created at:'),
+                                    Text('${localization.created_at}:'),
                                     BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
                                       bloc: bloc,
                                       buildWhen:
@@ -413,10 +436,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         final task = state.task;
 
                                         if (state.isLoading || task == null) {
-                                          return const AppSkeleton(isLoading: true, child: Text('EE, MMMM d hh:mm a'));
+                                          return const AppSkeleton(isLoading: true, child: Text('EEEE, d MMMM - hh:mm a'));
                                         }
 
-                                        return Text(task.formattedCreatedAt);
+                                        return Text(task.formattedCreatedAt, style: theme.textTheme.bodySmall);
                                       },
                                     ),
                                   ],
@@ -426,7 +449,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
-                                    const Text('Last updated at:'),
+                                    Text('${localization.updated_at}:'),
                                     BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
                                       bloc: bloc,
                                       buildWhen:
@@ -437,10 +460,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         final task = state.task;
 
                                         if (state.isLoading || task == null) {
-                                          return const AppSkeleton(isLoading: true, child: Text('EE, MMMM d hh:mm a'));
+                                          return const AppSkeleton(isLoading: true, child: Text('EEEE, d MMMM - hh:mm a'));
                                         }
 
-                                        return Text(task.formattedUpdatedAt);
+                                        return Text(task.formattedUpdatedAt, style: theme.textTheme.bodySmall);
                                       },
                                     ),
                                   ],
@@ -516,12 +539,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
         barrierDismissible: false,
         context: context,
         builder: (context) {
+          final localization = context.localization;
+
           return AlertDialog(
-            title: Text('Delete ${task.title}?'),
-            content: const Text('This action cannot be undone.'),
+            title: Text('${localization.delete} ${task.title}?'),
+            content: Text(localization.action_cannot_be_undone),
             actions: [
-              TextButton(onPressed: bloc.toggleDeleteDialog, child: const Text('Cancel', textAlign: TextAlign.end)),
-              TextButton(onPressed: bloc.deleteTask, child: const Text('Delete', textAlign: TextAlign.end)),
+              TextButton(onPressed: bloc.toggleDeleteDialog, child: Text(localization.cancel, textAlign: TextAlign.end)),
+              TextButton(onPressed: bloc.deleteTask, child: Text(localization.delete, textAlign: TextAlign.end)),
             ],
           );
         },

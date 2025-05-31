@@ -332,7 +332,7 @@ sealed class GroupDetailsState with _$GroupDetailsState {
             switch (userFilter) {
               case TaskUserFilter.all:
                 return true;
-              case TaskUserFilter.owner:
+              case TaskUserFilter.myself:
                 return task.assignedTo.any((user) => user.id == currentUser!.id);
               case TaskUserFilter.others:
                 return task.assignedTo.any((user) {
@@ -407,67 +407,16 @@ sealed class GroupDetailsState with _$GroupDetailsState {
           .toList();
 }
 
-enum TaskListView {
-  calendar(title: 'Calendar'),
-  list(title: 'List');
+enum TaskListView { calendar, list }
 
-  const TaskListView({required this.title});
-  final String title;
-}
+enum TaskUserFilter { all, myself, others }
 
-enum TaskUserFilter {
-  all(title: 'All'),
-  owner(title: 'Myself'),
-  others(title: 'Others');
+enum TaskCompletionFilter { all, pending, completed }
 
-  const TaskUserFilter({required this.title});
-  final String title;
-}
+enum TaskStatusFilter { all, todo, inProgress, done }
 
-enum TaskCompletionFilter {
-  all(title: 'All'),
-  pending(title: 'Pending'),
-  completed(title: 'Completed');
+enum TaskPriorityFilter { all, low, medium, high }
 
-  const TaskCompletionFilter({required this.title});
-  final String title;
-}
+enum TaskDateSort { newest, oldest }
 
-enum TaskStatusFilter {
-  all(title: 'All'),
-  todo(title: 'To Do'),
-  inProgress(title: 'In Progress'),
-  done(title: 'Done');
-
-  const TaskStatusFilter({required this.title});
-  final String title;
-}
-
-enum TaskPriorityFilter {
-  all(title: 'All'),
-  low(title: 'Low'),
-  medium(title: 'Medium'),
-  high(title: 'High');
-
-  const TaskPriorityFilter({required this.title});
-  final String title;
-}
-
-enum TaskDateSort {
-  newest(title: 'Newest'),
-  oldest(title: 'Oldest');
-
-  const TaskDateSort({required this.title});
-
-  final String title;
-}
-
-enum TaskPrioritySort {
-  none(title: 'None'),
-  highest(title: 'Highest'),
-  lowest(title: 'Lowest');
-
-  const TaskPrioritySort({required this.title});
-
-  final String title;
-}
+enum TaskPrioritySort { none, highest, lowest }

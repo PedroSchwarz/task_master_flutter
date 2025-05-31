@@ -40,6 +40,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localization = context.localization;
 
     return BlocListener<GroupDetailsCubit, GroupDetailsState>(
       bloc: bloc,
@@ -111,7 +112,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                         final isOwner = group?.owner.id == bloc.currentUser.id;
 
                         return ExpansionTile(
-                          title: Text('Details', style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.secondary)),
+                          title: Text(localization.details, style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.secondary)),
                           shape: const RoundedRectangleBorder(),
                           tilePadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
                           children: [
@@ -127,7 +128,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                                     child: Row(
                                       spacing: AppSpacing.xs,
                                       children: [
-                                        const Text('Actions:').animate().fade(delay: 100.ms),
+                                        Text('${localization.actions}:').animate().fade(delay: 100.ms),
                                         IconButton.filledTonal(
                                           color: theme.colorScheme.onPrimaryContainer,
                                           onPressed:
@@ -152,7 +153,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                                   ),
                                   IconButton.outlined(
                                     color: Colors.red,
-                                    tooltip: 'Leave group',
+                                    tooltip: localization.leave_group,
                                     onPressed: isOwner ? null : bloc.toggleLeaveDialog,
                                     icon: const Icon(Icons.exit_to_app),
                                   ).animate().fade(delay: 200.ms),
@@ -177,7 +178,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                                       return Row(
                                         spacing: AppSpacing.s,
                                         children: [
-                                          const Text('Members:').animate().fade(delay: 100.ms),
+                                          Text('${localization.members}:').animate().fade(delay: 100.ms),
                                           CircleAvatar(child: Text(member.initials)).animate().fade(delay: 200.ms),
                                         ],
                                       );
@@ -272,7 +273,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                   }
                 }
               },
-              label: const Text('Create task'),
+              label: Text(localization.create_task),
               icon: const Icon(Icons.add),
             ),
           ),
@@ -287,11 +288,13 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
         barrierDismissible: false,
         context: context,
         builder: (context) {
+          final localization = context.localization;
+
           return AlertDialog(
-            title: const Text('Leave Group?'),
+            title: Text('${localization.leave_group}?'),
             actions: [
-              TextButton(onPressed: bloc.toggleLeaveDialog, child: const Text('Cancel', textAlign: TextAlign.end)),
-              TextButton(onPressed: bloc.leaveGroup, child: const Text('Leave', textAlign: TextAlign.end)),
+              TextButton(onPressed: bloc.toggleLeaveDialog, child: Text(localization.cancel, textAlign: TextAlign.end)),
+              TextButton(onPressed: bloc.leaveGroup, child: Text(localization.leave, textAlign: TextAlign.end)),
             ],
           );
         },
@@ -309,12 +312,14 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
         barrierDismissible: false,
         context: context,
         builder: (context) {
+          final localization = context.localization;
+
           return AlertDialog(
-            title: Text('Delete ${task.title}?'),
-            content: const Text('This action cannot be undone.'),
+            title: Text('${localization.delete} ${task.title}?'),
+            content: Text(localization.action_cannot_be_undone),
             actions: [
-              TextButton(onPressed: () => bloc.setTaskToDelete(null), child: const Text('Cancel', textAlign: TextAlign.end)),
-              TextButton(onPressed: () => bloc.deleteTask(task), child: const Text('Delete', textAlign: TextAlign.end)),
+              TextButton(onPressed: () => bloc.setTaskToDelete(null), child: Text(localization.cancel, textAlign: TextAlign.end)),
+              TextButton(onPressed: () => bloc.deleteTask(task), child: Text(localization.delete, textAlign: TextAlign.end)),
             ],
           );
         },

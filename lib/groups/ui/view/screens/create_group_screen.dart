@@ -92,7 +92,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                 return AppSkeleton(
                                   isLoading: state.isLoading,
                                   child: AppTextField(
-                                    label: localization.group_name,
+                                    label: localization.name,
                                     initialValue: state.name,
                                     onChanged: bloc.updateName,
                                     textCapitalization: TextCapitalization.words,
@@ -110,7 +110,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                 return AppSkeleton(
                                   isLoading: state.isLoading,
                                   child: AppTextField(
-                                    label: localization.group_description,
+                                    label: localization.description,
                                     initialValue: state.description,
                                     onChanged: bloc.updateDescription,
                                     textCapitalization: TextCapitalization.sentences,
@@ -235,12 +235,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
         barrierDismissible: false,
         context: context,
         builder: (context) {
+          final localization = context.localization;
+
           return AlertDialog(
-            title: Text('Delete ${group.name}?'),
-            content: const Text('This action cannot be undone.'),
+            title: Text('${localization.delete} ${group.name}?'),
+            content: Text(localization.action_cannot_be_undone),
             actions: [
-              TextButton(onPressed: bloc.toggleDeleteDialog, child: const Text('Cancel', textAlign: TextAlign.end)),
-              TextButton(onPressed: bloc.deleteGroup, child: const Text('Delete', textAlign: TextAlign.end)),
+              TextButton(onPressed: bloc.toggleDeleteDialog, child: Text(localization.cancel, textAlign: TextAlign.end)),
+              TextButton(onPressed: bloc.deleteGroup, child: Text(localization.delete, textAlign: TextAlign.end)),
             ],
           );
         },

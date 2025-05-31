@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/auth/data/models/user_data.dart';
@@ -43,7 +44,7 @@ class GroupsList extends StatelessWidget {
               IconButton(onPressed: onToggleListType, icon: Icon(listType == GroupsListType.list ? Icons.grid_view : Icons.table_rows_outlined)),
             ],
           ),
-        ),
+        ).animate().fade(delay: 100.ms),
         Expanded(
           child: RefreshIndicator(
             onRefresh: onRefresh,
