@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
-import 'package:task_master/app/design_system/theme/app_spacing.dart';
+import 'package:task_master/app/app.dart';
 import 'package:task_master/tasks/data/models/task_response.dart';
+import 'package:task_master/tasks/data/models/task_values.dart';
 
 class TaskItem extends StatelessWidget {
   const TaskItem({
@@ -30,6 +31,9 @@ class TaskItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localization = context.localization;
+
+    final assignees = task.assignedTo.sublist(0, min(task.assignedTo.length, 2)).indexed;
 
     return Dismissible(
       key: Key(task.title),
@@ -44,7 +48,7 @@ class TaskItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.delete_outline, color: Colors.white, size: 32),
-            if (!task.completed) Text('Delete', style: theme.textTheme.titleMedium?.copyWith(color: Colors.white)),
+            if (!task.completed) Text(localization.delete, style: theme.textTheme.titleMedium?.copyWith(color: Colors.white)),
           ],
         ),
       ),
@@ -56,7 +60,7 @@ class TaskItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(task.completed ? Icons.close : Icons.check, color: Colors.white, size: 32),
-            if (!task.completed) Text('Complete', style: theme.textTheme.titleMedium?.copyWith(color: Colors.white)),
+            if (!task.completed) Text(localization.complete, style: theme.textTheme.titleMedium?.copyWith(color: Colors.white)),
           ],
         ),
       ),
@@ -96,7 +100,12 @@ class TaskItem extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(task.title, style: theme.textTheme.titleLarge?.copyWith(color: task.isOverdue ? Colors.red : null)),
-                      Text(task.description ?? 'No description', style: theme.textTheme.bodyLarge, maxLines: 2, overflow: TextOverflow.ellipsis),
+                      Text(
+                        task.description ?? localization.no_description,
+                        style: theme.textTheme.bodyLarge,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
 
                       if (!task.completed) ...[
                         const Gap(AppSpacing.xs),
@@ -118,17 +127,21 @@ class TaskItem extends StatelessWidget {
                           children: [
                             if (task.isOverdue)
                               Chip(
-                                label: Text('Overdue', style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                                label: Text(
+                                  localization.overdue,
+                                  style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                                ),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
                                 padding: const EdgeInsets.all(AppSpacing.xxs),
                                 backgroundColor: Colors.red,
                                 side: BorderSide.none,
                               ),
                             Chip(
-                              label: Text(
-                                task.status.title,
-                                style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-                              ),
+                              label: Text(switch (task.status) {
+                                TaskStatus.todo => localization.to_do,
+                                TaskStatus.inProgress => localization.in_progress,
+                                TaskStatus.done => localization.done,
+                              }, style: theme.textTheme.bodyMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
                               padding: const EdgeInsets.all(AppSpacing.xs),
                               backgroundColor: task.status.color.withValues(alpha: 0.8),
@@ -142,13 +155,16 @@ class TaskItem extends StatelessWidget {
                 ),
                 Stack(
                   children:
-                      task.assignedTo.indexed.map((item) {
+                      assignees.map((item) {
                         final index = item.$1;
                         final assignee = item.$2;
 
                         return Transform.translate(
                           offset: Offset(index * 10, 0),
-                          child: CircleAvatar(child: Text(assignee.initials, style: theme.textTheme.titleMedium)),
+                          child: CircleAvatar(
+                            backgroundColor: assignees.length > 1 && index == 0 ? theme.colorScheme.surfaceContainer : null,
+                            child: Text(assignee.initials, style: theme.textTheme.titleMedium),
+                          ),
                         );
                       }).toList(),
                 ),

@@ -12,28 +12,26 @@ class LoginCubit extends Cubit<LoginState> {
   final AuthRepository authRepository;
 
   void updateEmail(String email) {
-    emit(state.copyWith(email: email, errorMessage: null));
+    emit(state.copyWith(email: email, error: null));
   }
 
   void updatePassword(String password) {
-    emit(state.copyWith(password: password, errorMessage: null));
+    emit(state.copyWith(password: password, error: null));
   }
 
   void togglePasswordVisibility() {
-    emit(state.copyWith(hidePassword: !state.hidePassword, errorMessage: null));
+    emit(state.copyWith(hidePassword: !state.hidePassword, error: null));
   }
 
   void login() async {
-    emit(state.copyWith(isSubmitting: true, errorMessage: null));
+    emit(state.copyWith(isSubmitting: true, error: null));
     final result = await authRepository.login(state.email, state.password);
 
     switch (result) {
       case LoginResult.success:
         emit(state.copyWith(isAuthenticated: true));
-      case LoginResult.userNotFound:
-        emit(state.copyWith(errorMessage: "Account doesn't exist."));
-      case LoginResult.networkError:
-        emit(state.copyWith(errorMessage: 'Unable to login.'));
+      default:
+        emit(state.copyWith(error: result));
     }
 
     emit(state.copyWith(isSubmitting: false));
@@ -48,7 +46,7 @@ sealed class LoginState with _$LoginState {
     required bool hidePassword,
     required bool isSubmitting,
     required bool isAuthenticated,
-    String? errorMessage,
+    LoginResult? error,
   }) = _LoginState;
 
   const LoginState._();

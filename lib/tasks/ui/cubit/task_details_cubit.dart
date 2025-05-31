@@ -203,6 +203,8 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
       commentsWebsocket.updateComments(taskId: task.id);
     } catch (e) {
       _log.severe('Error creating comment: $e', e);
+    } finally {
+      emit(state.copyWith(comment: ''));
     }
   }
 

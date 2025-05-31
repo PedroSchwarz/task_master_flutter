@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:task_master/app/design_system/theme/app_spacing.dart';
+import 'package:task_master/app/extensions/build_context_extensions.dart';
 import 'package:task_master/progress/progress.dart';
 import 'package:task_master/progress/ui/view/components/progression_item_chart.dart';
 import 'package:task_master/tasks/data/models/task_values.dart';
@@ -25,13 +26,15 @@ class ProgressionCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = context.localization;
+
     return SizedBox(
       height: height,
       child: PageView(
         scrollDirection: Axis.horizontal,
         children: [
           ProgressionItem(
-            label: 'Completion',
+            label: localization.completion_summary,
             onTap: onCompletionPressed,
             progression: progression,
             builder: (item) {
@@ -42,7 +45,7 @@ class ProgressionCarousel extends StatelessWidget {
             },
           ),
           ProgressionItem(
-            label: 'Overdue',
+            label: localization.overdue_summary,
             onTap: onOverduePressed,
             progression: progression,
             builder: (item) {
@@ -53,7 +56,7 @@ class ProgressionCarousel extends StatelessWidget {
             },
           ),
           ProgressionItem(
-            label: 'Priority',
+            label: localization.priority_summary,
             onTap: onPriorityPressed,
             progression: progression,
             builder: (item) {
@@ -74,7 +77,7 @@ class ProgressionCarousel extends StatelessWidget {
             },
           ),
           ProgressionItem(
-            label: 'Status',
+            label: localization.status_summary,
             onTap: onStatusPressed,
             progression: progression,
             builder: (item) {

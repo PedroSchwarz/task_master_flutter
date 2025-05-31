@@ -20,6 +20,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = context.localization;
+
     return BlocListener<RegisterCubit, RegisterState>(
       bloc: bloc,
       listenWhen: (previous, current) => previous.isAuthenticated != current.isAuthenticated,
@@ -33,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Register'),
+            title: Text(localization.register),
             centerTitle: false,
             bottom: PreferredSize(
               preferredSize: const Size(0, AppSpacing.s),
@@ -61,15 +63,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const Gap(AppSpacing.s),
                           Column(
                             spacing: AppSpacing.s,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              AppTextField(label: 'First Name', onChanged: bloc.updateFirstName, textCapitalization: TextCapitalization.words),
-                              AppTextField(label: 'Last Name', onChanged: bloc.updateLastName, textCapitalization: TextCapitalization.words),
+                              AppTextField(
+                                label: localization.first_name,
+                                onChanged: bloc.updateFirstName,
+                                textCapitalization: TextCapitalization.words,
+                              ),
+                              AppTextField(
+                                label: localization.last_name,
+                                onChanged: bloc.updateLastName,
+                                textCapitalization: TextCapitalization.words,
+                              ),
                               BlocSelector<RegisterCubit, RegisterState, String?>(
                                 bloc: bloc,
-                                selector: (state) => state.emailError,
+                                selector: (state) => state.emailError ? localization.invalid_email : null,
                                 builder:
                                     (context, emailError) => AppTextField(
-                                      label: 'Email',
+                                      label: localization.email,
                                       onChanged: bloc.updateEmail,
                                       keyboardType: TextInputType.emailAddress,
                                       error: emailError,
@@ -83,18 +94,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       spacing: AppSpacing.s,
                                       children: [
                                         AppTextField(
-                                          label: 'Password',
+                                          label: localization.password,
                                           onChanged: bloc.updatePassword,
                                           obscureText: state.hidePassword,
-                                          error: state.passwordError,
+                                          error: state.passwordError ? localization.invalid_password : null,
                                           suffixIcon: TogglePasswordButton(onPressed: bloc.togglePasswordVisibility, value: state.hidePassword),
                                         ),
                                         AnimatedLinearProgressIndicator(value: state.passwordStrength, color: state.passwordStrengthColor),
                                         AppTextField(
-                                          label: 'Confirm Password',
+                                          label: localization.confirm_password,
                                           onChanged: bloc.updateConfirmPassword,
                                           obscureText: state.hidePassword,
-                                          error: state.confirmPasswordError,
+                                          error: state.confirmPasswordError ? localization.invalid_confirm_password : null,
                                           suffixIcon: TogglePasswordButton(onPressed: bloc.togglePasswordVisibility, value: state.hidePassword),
                                         ),
                                       ],
@@ -102,7 +113,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               BlocSelector<RegisterCubit, RegisterState, String?>(
                                 bloc: bloc,
-                                selector: (state) => state.errorMessage,
+                                selector:
+                                    (state) => switch (state.error) {
+                                      RegisterResult.emailConflict => localization.register_email_conflict_error,
+                                      RegisterResult.networkError => localization.register_generic_error,
+                                      _ => null,
+                                    },
                                 builder: (context, errorMessage) => errorMessage != null ? Text(errorMessage) : const SizedBox.shrink(),
                               ),
                             ],
@@ -114,7 +130,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 bloc: bloc,
                                 selector: (state) => state.canSubmit,
                                 builder: (context, canSubmit) {
-                                  return FilledButton(onPressed: canSubmit ? bloc.register : null, child: const Text('Register'));
+                                  return FilledButton(onPressed: canSubmit ? bloc.register : null, child: Text(localization.register));
                                 },
                               ),
                               BlocSelector<RegisterCubit, RegisterState, bool>(
@@ -123,7 +139,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 builder: (context, isSubmitting) {
                                   return TextButton(
                                     onPressed: isSubmitting ? null : context.pop,
-                                    child: const Text('Access Account', textAlign: TextAlign.start),
+                                    child: Text(localization.access_account, textAlign: TextAlign.start),
                                   );
                                 },
                               ),
@@ -201,7 +217,8 @@ class _AnimatedLinearProgressIndicatorState extends State<AnimatedLinearProgress
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _animation,
-      builder: (context, _) => LinearProgressIndicator(value: _animation.value, color: widget.color, backgroundColor: widget.color.withOpacity(0.2)),
+      builder:
+          (context, _) => LinearProgressIndicator(value: _animation.value, color: widget.color, backgroundColor: widget.color.withValues(alpha: 0.2)),
     );
   }
 }

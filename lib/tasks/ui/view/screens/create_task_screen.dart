@@ -29,6 +29,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localization = context.localization;
 
     return BlocListener<CreateTaskCubit, CreateTaskState>(
       bloc: bloc,
@@ -48,8 +49,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 title: BlocBuilder<CreateTaskCubit, CreateTaskState>(
                   bloc: bloc,
                   buildWhen: (previous, current) => previous.isUpdating != current.isUpdating || previous.isLoading != current.isLoading,
-                  builder:
-                      (context, state) => state.isLoading ? const Text('Loading Task...') : Text('${state.isUpdating ? 'Update' : 'Create'} Task'),
+                  builder: (context, state) {
+                    return AppSkeleton(
+                      isLoading: state.isLoading,
+                      child: Text(state.isUpdating ? localization.update_task : localization.create_task),
+                    );
+                  },
                 ),
                 bottom: PreferredSize(
                   preferredSize: const Size(0, AppSpacing.s),
@@ -77,7 +82,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           return AppSkeleton(
                             isLoading: state.isLoading,
                             child: AppTextField(
-                              label: 'Title',
+                              label: localization.title,
                               initialValue: state.title,
                               onChanged: bloc.updateTitle,
                               textCapitalization: TextCapitalization.words,
@@ -95,7 +100,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           return AppSkeleton(
                             isLoading: state.isLoading,
                             child: AppTextField(
-                              label: 'Description',
+                              label: localization.description,
                               initialValue: state.description,
                               onChanged: bloc.updateDescription,
                               maxLines: 5,
@@ -122,7 +127,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                     label: Row(
                                       spacing: AppSpacing.xs,
                                       mainAxisSize: MainAxisSize.min,
-                                      children: [Icon(state.priority.icon, color: state.priority.color), const Text('Priority')],
+                                      children: [Icon(state.priority.icon, color: state.priority.color), Text(localization.priority)],
                                     ),
                                     initialSelection: state.priority,
                                     inputDecorationTheme: InputDecorationTheme(
@@ -140,7 +145,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                             .map(
                                               (priority) => DropdownMenuEntry(
                                                 value: priority,
-                                                label: priority.title,
+                                                label: switch (priority) {
+                                                  TaskPriority.low => localization.low,
+                                                  TaskPriority.medium => localization.medium,
+                                                  TaskPriority.high => localization.high,
+                                                },
                                                 leadingIcon: Icon(priority.icon, color: priority.color),
                                               ),
                                             )
@@ -182,7 +191,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                             .map(
                                               (status) => DropdownMenuEntry(
                                                 value: status,
-                                                label: status.title,
+                                                label: switch (status) {
+                                                  TaskStatus.todo => localization.to_do,
+                                                  TaskStatus.inProgress => localization.in_progress,
+                                                  TaskStatus.done => localization.done,
+                                                },
                                                 leadingIcon: Icon(status.icon, color: status.color),
                                               ),
                                             )
@@ -194,7 +207,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           ),
                         ],
                       ),
-                      Text('Due Date and Time', style: theme.textTheme.titleMedium),
+                      Text(localization.due_date_time, style: theme.textTheme.titleMedium),
                       Row(
                         spacing: AppSpacing.s,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -214,7 +227,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                       final date = await showDatePicker(
                                         context: context,
                                         initialDate: state.date,
-                                        firstDate: DateTime.now(),
+                                        firstDate: DateTime.now().isAfter(state.date) ? state.date : DateTime.now(),
                                         lastDate: DateTime.now().add(const Duration(days: 365)),
                                       );
                                       bloc.updateDate(date);
@@ -253,7 +266,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         ],
                       ),
                       const Divider(),
-                      Text('Assigne to', style: theme.textTheme.titleMedium),
+                      Text(localization.assign_to, style: theme.textTheme.titleMedium),
                     ],
                   ),
                 ),
@@ -324,7 +337,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           children: [
                             FilledButton(
                               onPressed: state.canSubmit ? bloc.saveTask : null,
-                              child: Text('${state.isUpdating ? 'Update' : 'Create'} Task'),
+                              child: Text(state.isUpdating ? localization.update : localization.create),
                             ),
                           ],
                         );

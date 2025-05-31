@@ -38,8 +38,16 @@ class _AppTextFieldState extends State<AppTextField> {
   }
 
   @override
+  void didUpdateWidget(covariant AppTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialValue?.isEmpty ?? false) {
+      _controller.clear();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: _controller,
       onChanged: widget.onChanged,
       obscureText: widget.obscureText ?? false,

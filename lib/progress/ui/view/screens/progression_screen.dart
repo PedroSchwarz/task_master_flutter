@@ -1,4 +1,3 @@
-import 'package:calendar_pager/utils/extensions/string_extensions.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -32,12 +31,13 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localization = context.localization;
 
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar.medium(
-            title: const Text('Progression'),
+            title: Text(localization.progression),
             bottom: PreferredSize(
               preferredSize: const Size(0, AppSpacing.s),
               child: BlocSelector<ProgressionCubit, ProgressionState, bool>(
@@ -59,7 +59,10 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                     children:
                         TaskProgressionSelection.values.map((progression) {
                           return ChoiceChip(
-                            label: Text(progression.name.toCapitalized()),
+                            label: Text(switch (progression) {
+                              TaskProgressionSelection.assigned => localization.filter_assigned,
+                              TaskProgressionSelection.owned => localization.filter_owned,
+                            }),
                             selected: progression == selection,
                             onSelected: (_) {
                               bloc.updateSelection(progression);
@@ -88,10 +91,10 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                     return FilterChip(
                       selected: selectedPeriod == period,
                       label: switch (period) {
-                        ProgressionPeriod.oneMonth => const Text('1 Month'),
-                        ProgressionPeriod.threeMonths => const Text('3 Month'),
-                        ProgressionPeriod.sixMonths => const Text('6 Month'),
-                        ProgressionPeriod.oneYear => const Text('1 Year'),
+                        ProgressionPeriod.oneMonth => Text(localization.one_month),
+                        ProgressionPeriod.threeMonths => Text(localization.three_months),
+                        ProgressionPeriod.sixMonths => Text(localization.six_months),
+                        ProgressionPeriod.oneYear => Text(localization.one_year),
                       },
                       onSelected: (_) => bloc.updatePeriod(period),
                     );
@@ -163,29 +166,32 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                             ),
                           ),
                         ).animate().fade(delay: 200.ms),
-                        const Wrap(
+                        Wrap(
                           spacing: AppSpacing.m,
                           runSpacing: AppSpacing.s,
                           children: [
                             Row(
                               spacing: AppSpacing.xs,
                               mainAxisSize: MainAxisSize.min,
-                              children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: Colors.green), Text('Completed')],
+                              children: [
+                                const CircleAvatar(radius: AppSpacing.xs, backgroundColor: Colors.green),
+                                Text(localization.completed_tasks),
+                              ],
                             ),
                             Row(
                               spacing: AppSpacing.xs,
                               mainAxisSize: MainAxisSize.min,
-                              children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: Colors.red), Text('Overdue')],
+                              children: [const CircleAvatar(radius: AppSpacing.xs, backgroundColor: Colors.red), Text(localization.overdue_tasks)],
                             ),
                             Row(
                               spacing: AppSpacing.xs,
                               mainAxisSize: MainAxisSize.min,
-                              children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: Colors.blue), Text('Total')],
+                              children: [const CircleAvatar(radius: AppSpacing.xs, backgroundColor: Colors.blue), Text(localization.total_tasks)],
                             ),
                           ],
                         ).animate().fade(delay: 200.ms),
                         const Divider(),
-                        Text('Priorities Overview', style: theme.textTheme.titleLarge).animate().fade(delay: 300.ms),
+                        Text(localization.priority_summary, style: theme.textTheme.titleLarge).animate().fade(delay: 300.ms),
                         Wrap(
                           spacing: AppSpacing.m,
                           runSpacing: AppSpacing.s,
@@ -232,12 +238,19 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                                 return Row(
                                   spacing: AppSpacing.xs,
                                   mainAxisSize: MainAxisSize.min,
-                                  children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: priority.color), Text(priority.title)],
+                                  children: [
+                                    CircleAvatar(radius: AppSpacing.xs, backgroundColor: priority.color),
+                                    Text(switch (priority) {
+                                      TaskPriority.low => localization.low,
+                                      TaskPriority.medium => localization.medium,
+                                      TaskPriority.high => localization.high,
+                                    }),
+                                  ],
                                 );
                               }).toList(),
                         ).animate().fade(delay: 300.ms),
                         const Divider(),
-                        Text('Status Overview', style: theme.textTheme.titleLarge).animate().fade(delay: 500.ms),
+                        Text(localization.status_summary, style: theme.textTheme.titleLarge).animate().fade(delay: 500.ms),
                         Wrap(
                           spacing: AppSpacing.m,
                           runSpacing: AppSpacing.s,
@@ -284,7 +297,14 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                                 return Row(
                                   spacing: AppSpacing.xs,
                                   mainAxisSize: MainAxisSize.min,
-                                  children: [CircleAvatar(radius: AppSpacing.xs, backgroundColor: status.color), Text(status.title)],
+                                  children: [
+                                    CircleAvatar(radius: AppSpacing.xs, backgroundColor: status.color),
+                                    Text(switch (status) {
+                                      TaskStatus.todo => localization.to_do,
+                                      TaskStatus.inProgress => localization.in_progress,
+                                      TaskStatus.done => localization.done,
+                                    }),
+                                  ],
                                 );
                               }).toList(),
                         ).animate().fade(delay: 400.ms),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
+import 'package:task_master/l10n/app_localizations.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -14,6 +15,8 @@ class App extends StatelessWidget {
       themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
       routerConfig: getIt<GoRouter>(),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

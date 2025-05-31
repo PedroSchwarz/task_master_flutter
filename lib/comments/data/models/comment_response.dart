@@ -21,7 +21,7 @@ abstract class CommentResponse with _$CommentResponse {
 
   String get formattedCreatedAt {
     final localDate = createdAt.toLocal();
-    final formatter = DateFormat('EE, MMMM d hh:mm a');
+    final formatter = DateFormat('EEEE, d MMMM - hh:mm a');
 
     return formatter.format(localDate);
   }

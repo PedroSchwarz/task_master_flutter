@@ -13,6 +13,7 @@ class DashboardDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localization = context.localization;
 
     return Drawer(
       child: SafeArea(
@@ -36,7 +37,7 @@ class DashboardDrawer extends StatelessWidget {
                 ],
               ),
               const Spacer(),
-              FilledButton.tonal(onPressed: onSignOut, child: const Text('Sign Out')),
+              FilledButton.tonal(onPressed: onSignOut, child: Text(localization.sign_out)),
             ],
           ),
         ),

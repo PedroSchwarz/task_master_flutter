@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:task_master/app/design_system/theme/app_spacing.dart';
+import 'package:task_master/app/app.dart';
 import 'package:task_master/groups/ui/cubit/group_details_cubit.dart';
 import 'package:task_master/users/users.dart';
 
@@ -49,6 +49,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localization = context.localization;
 
     return SafeArea(
       child: Padding(
@@ -62,7 +63,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('Tasks List View', style: theme.textTheme.titleLarge),
+                    Text(localization.tasks_list_view, style: theme.textTheme.titleLarge),
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
@@ -71,7 +72,10 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                               .map(
                                 (view) => FilterChip(
                                   selected: listView == view,
-                                  label: Text(view.title),
+                                  label: Text(switch (view) {
+                                    TaskListView.list => localization.list,
+                                    TaskListView.calendar => localization.calendar,
+                                  }),
                                   onSelected: (value) {
                                     toggleListView();
                                   },
@@ -80,7 +84,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                               .toList(),
                     ),
                     const Gap(AppSpacing.s),
-                    Text('Assignee', style: theme.textTheme.titleLarge),
+                    Text(localization.assignee, style: theme.textTheme.titleLarge),
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
@@ -89,7 +93,11 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                               .map(
                                 (filter) => FilterChip(
                                   selected: userFilter == filter,
-                                  label: Text(filter.title),
+                                  label: Text(switch (filter) {
+                                    TaskUserFilter.all => localization.all,
+                                    TaskUserFilter.myself => localization.myself,
+                                    TaskUserFilter.others => localization.others,
+                                  }),
                                   onSelected: (value) {
                                     updateUserFilter(filter, value: value);
                                   },
@@ -116,7 +124,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                                 .toList(),
                       ),
                     const Gap(AppSpacing.s),
-                    Text('Completion', style: theme.textTheme.titleLarge),
+                    Text(localization.completion, style: theme.textTheme.titleLarge),
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
@@ -125,7 +133,11 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                               .map(
                                 (filter) => FilterChip(
                                   selected: completionFilter == filter,
-                                  label: Text(filter.title),
+                                  label: Text(switch (filter) {
+                                    TaskCompletionFilter.all => localization.all,
+                                    TaskCompletionFilter.pending => localization.pending,
+                                    TaskCompletionFilter.completed => localization.completed,
+                                  }),
                                   onSelected: (value) {
                                     updateCompletionFilter(filter, value: value);
                                   },
@@ -134,7 +146,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                               .toList(),
                     ),
                     const Gap(AppSpacing.s),
-                    Text('Status', style: theme.textTheme.titleLarge),
+                    Text(localization.status, style: theme.textTheme.titleLarge),
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
@@ -143,7 +155,12 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                               .map(
                                 (filter) => FilterChip(
                                   selected: statusFilter == filter,
-                                  label: Text(filter.title),
+                                  label: Text(switch (filter) {
+                                    TaskStatusFilter.all => localization.all,
+                                    TaskStatusFilter.todo => localization.to_do,
+                                    TaskStatusFilter.inProgress => localization.in_progress,
+                                    TaskStatusFilter.done => localization.done,
+                                  }),
                                   onSelected: (value) {
                                     updateStatusFilter(filter, value: value);
                                   },
@@ -152,7 +169,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                               .toList(),
                     ),
                     const Gap(AppSpacing.s),
-                    Text('Priority', style: theme.textTheme.titleLarge),
+                    Text(localization.priority, style: theme.textTheme.titleLarge),
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
@@ -161,7 +178,12 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                               .map(
                                 (filter) => FilterChip(
                                   selected: priorityFilter == filter,
-                                  label: Text(filter.title),
+                                  label: Text(switch (filter) {
+                                    TaskPriorityFilter.all => localization.all,
+                                    TaskPriorityFilter.high => localization.high,
+                                    TaskPriorityFilter.medium => localization.medium,
+                                    TaskPriorityFilter.low => localization.low,
+                                  }),
                                   onSelected: (value) {
                                     updatePriorityFilter(filter, value: value);
                                   },
@@ -170,7 +192,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                               .toList(),
                     ),
                     const Gap(AppSpacing.s),
-                    Text('Sort Date', style: theme.textTheme.titleLarge),
+                    Text(localization.sort_date, style: theme.textTheme.titleLarge),
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
@@ -179,7 +201,10 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                               .map(
                                 (sort) => FilterChip(
                                   selected: dateSort == sort,
-                                  label: Text(sort.title),
+                                  label: Text(switch (sort) {
+                                    TaskDateSort.newest => localization.newest,
+                                    TaskDateSort.oldest => localization.oldest,
+                                  }),
                                   onSelected: (value) {
                                     updateDateSort(sort, value: value);
                                   },
@@ -188,7 +213,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                               .toList(),
                     ),
                     const Gap(AppSpacing.s),
-                    Text('Sort Priority', style: theme.textTheme.titleLarge),
+                    Text(localization.sort_priority, style: theme.textTheme.titleLarge),
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
@@ -197,7 +222,11 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                               .map(
                                 (sort) => FilterChip(
                                   selected: prioritySort == sort,
-                                  label: Text(sort.title),
+                                  label: Text(switch (sort) {
+                                    TaskPrioritySort.none => localization.none,
+                                    TaskPrioritySort.highest => localization.highest,
+                                    TaskPrioritySort.lowest => localization.lowest,
+                                  }),
                                   onSelected: (value) {
                                     updatePrioritySort(sort, value: value);
                                   },
@@ -209,7 +238,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                 ),
               ),
             ),
-            FilledButton(onPressed: resetFiltersAndSort, child: const Text('Reset')),
+            FilledButton(onPressed: resetFiltersAndSort, child: Text(localization.reset)),
           ],
         ),
       ),

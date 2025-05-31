@@ -23,7 +23,7 @@ class ProgressionItem extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('$label Summary', style: theme.textTheme.headlineSmall),
+            Text(label, style: theme.textTheme.headlineSmall),
             Row(
               spacing: AppSpacing.s,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

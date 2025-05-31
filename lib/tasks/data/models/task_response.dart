@@ -31,21 +31,21 @@ abstract class TaskResponse with _$TaskResponse {
 
   String get formattedDueDate {
     final localDate = dueDate;
-    final formatter = DateFormat('EE, MMMM d hh:mm a');
+    final formatter = DateFormat('EEEE, d MMMM - hh:mm a');
 
     return formatter.format(localDate.toLocal());
   }
 
   String get formattedCreatedAt {
     final localDate = createdAt;
-    final formatter = DateFormat('EE, MMMM d hh:mm a');
+    final formatter = DateFormat('EEEE, d MMMM - hh:mm a');
 
     return formatter.format(localDate.toLocal());
   }
 
   String get formattedUpdatedAt {
     final localDate = updatedAt;
-    final formatter = DateFormat('EE, MMMM d hh:mm a');
+    final formatter = DateFormat('EEEE, d MMMM - hh:mm a');
 
     return formatter.format(localDate.toLocal());
   }

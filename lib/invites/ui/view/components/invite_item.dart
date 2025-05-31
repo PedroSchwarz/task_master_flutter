@@ -14,9 +14,10 @@ class InviteItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localizations = context.localization;
 
     return ListTile(
-      contentPadding: const EdgeInsets.all(AppSpacing.s),
+      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
       leading:
           invite.status == InviteStatus.accepted
               ? CircleAvatar(
@@ -25,7 +26,7 @@ class InviteItem extends StatelessWidget {
               ).animate().fade(delay: 50.ms)
               : null,
       title: Text(invite.group.name),
-      subtitle: Text('Invited by: ${invite.from.completeName}'),
+      subtitle: Text('${localizations.invited_by} ${invite.from.completeName}'),
       trailing:
           invite.status == InviteStatus.pending
               ? Row(

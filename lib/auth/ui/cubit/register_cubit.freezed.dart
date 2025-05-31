@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RegisterState {
 
- String get firstName; String get lastName; String get email; String get password; String get confirmPassword; bool get hidePassword; bool get isSubmitting; bool get isAuthenticated; String? get emailError; String? get passwordError; String? get confirmPasswordError; String? get errorMessage;
+ String get firstName; String get lastName; String get email; String get password; String get confirmPassword; bool get hidePassword; bool get isSubmitting; bool get isAuthenticated; bool get emailError; bool get passwordError; bool get confirmPasswordError; RegisterResult? get error;
 /// Create a copy of RegisterState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $RegisterStateCopyWith<RegisterState> get copyWith => _$RegisterStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterState&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.confirmPassword, confirmPassword) || other.confirmPassword == confirmPassword)&&(identical(other.hidePassword, hidePassword) || other.hidePassword == hidePassword)&&(identical(other.isSubmitting, isSubmitting) || other.isSubmitting == isSubmitting)&&(identical(other.isAuthenticated, isAuthenticated) || other.isAuthenticated == isAuthenticated)&&(identical(other.emailError, emailError) || other.emailError == emailError)&&(identical(other.passwordError, passwordError) || other.passwordError == passwordError)&&(identical(other.confirmPasswordError, confirmPasswordError) || other.confirmPasswordError == confirmPasswordError)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterState&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.confirmPassword, confirmPassword) || other.confirmPassword == confirmPassword)&&(identical(other.hidePassword, hidePassword) || other.hidePassword == hidePassword)&&(identical(other.isSubmitting, isSubmitting) || other.isSubmitting == isSubmitting)&&(identical(other.isAuthenticated, isAuthenticated) || other.isAuthenticated == isAuthenticated)&&(identical(other.emailError, emailError) || other.emailError == emailError)&&(identical(other.passwordError, passwordError) || other.passwordError == passwordError)&&(identical(other.confirmPasswordError, confirmPasswordError) || other.confirmPasswordError == confirmPasswordError)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,firstName,lastName,email,password,confirmPassword,hidePassword,isSubmitting,isAuthenticated,emailError,passwordError,confirmPasswordError,errorMessage);
+int get hashCode => Object.hash(runtimeType,firstName,lastName,email,password,confirmPassword,hidePassword,isSubmitting,isAuthenticated,emailError,passwordError,confirmPasswordError,error);
 
 @override
 String toString() {
-  return 'RegisterState(firstName: $firstName, lastName: $lastName, email: $email, password: $password, confirmPassword: $confirmPassword, hidePassword: $hidePassword, isSubmitting: $isSubmitting, isAuthenticated: $isAuthenticated, emailError: $emailError, passwordError: $passwordError, confirmPasswordError: $confirmPasswordError, errorMessage: $errorMessage)';
+  return 'RegisterState(firstName: $firstName, lastName: $lastName, email: $email, password: $password, confirmPassword: $confirmPassword, hidePassword: $hidePassword, isSubmitting: $isSubmitting, isAuthenticated: $isAuthenticated, emailError: $emailError, passwordError: $passwordError, confirmPasswordError: $confirmPasswordError, error: $error)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $RegisterStateCopyWith<$Res>  {
   factory $RegisterStateCopyWith(RegisterState value, $Res Function(RegisterState) _then) = _$RegisterStateCopyWithImpl;
 @useResult
 $Res call({
- String firstName, String lastName, String email, String password, String confirmPassword, bool hidePassword, bool isSubmitting, bool isAuthenticated, String? emailError, String? passwordError, String? confirmPasswordError, String? errorMessage
+ String firstName, String lastName, String email, String password, String confirmPassword, bool hidePassword, bool isSubmitting, bool isAuthenticated, bool emailError, bool passwordError, bool confirmPasswordError, RegisterResult? error
 });
 
 
@@ -63,7 +63,7 @@ class _$RegisterStateCopyWithImpl<$Res>
 
 /// Create a copy of RegisterState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? firstName = null,Object? lastName = null,Object? email = null,Object? password = null,Object? confirmPassword = null,Object? hidePassword = null,Object? isSubmitting = null,Object? isAuthenticated = null,Object? emailError = freezed,Object? passwordError = freezed,Object? confirmPasswordError = freezed,Object? errorMessage = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? firstName = null,Object? lastName = null,Object? email = null,Object? password = null,Object? confirmPassword = null,Object? hidePassword = null,Object? isSubmitting = null,Object? isAuthenticated = null,Object? emailError = null,Object? passwordError = null,Object? confirmPasswordError = null,Object? error = freezed,}) {
   return _then(_self.copyWith(
 firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
@@ -73,11 +73,11 @@ as String,confirmPassword: null == confirmPassword ? _self.confirmPassword : con
 as String,hidePassword: null == hidePassword ? _self.hidePassword : hidePassword // ignore: cast_nullable_to_non_nullable
 as bool,isSubmitting: null == isSubmitting ? _self.isSubmitting : isSubmitting // ignore: cast_nullable_to_non_nullable
 as bool,isAuthenticated: null == isAuthenticated ? _self.isAuthenticated : isAuthenticated // ignore: cast_nullable_to_non_nullable
-as bool,emailError: freezed == emailError ? _self.emailError : emailError // ignore: cast_nullable_to_non_nullable
-as String?,passwordError: freezed == passwordError ? _self.passwordError : passwordError // ignore: cast_nullable_to_non_nullable
-as String?,confirmPasswordError: freezed == confirmPasswordError ? _self.confirmPasswordError : confirmPasswordError // ignore: cast_nullable_to_non_nullable
-as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
+as bool,emailError: null == emailError ? _self.emailError : emailError // ignore: cast_nullable_to_non_nullable
+as bool,passwordError: null == passwordError ? _self.passwordError : passwordError // ignore: cast_nullable_to_non_nullable
+as bool,confirmPasswordError: null == confirmPasswordError ? _self.confirmPasswordError : confirmPasswordError // ignore: cast_nullable_to_non_nullable
+as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as RegisterResult?,
   ));
 }
 
@@ -88,7 +88,7 @@ as String?,
 
 
 class _RegisterState extends RegisterState {
-  const _RegisterState({required this.firstName, required this.lastName, required this.email, required this.password, required this.confirmPassword, required this.hidePassword, required this.isSubmitting, required this.isAuthenticated, this.emailError, this.passwordError, this.confirmPasswordError, this.errorMessage}): super._();
+  const _RegisterState({required this.firstName, required this.lastName, required this.email, required this.password, required this.confirmPassword, required this.hidePassword, required this.isSubmitting, required this.isAuthenticated, required this.emailError, required this.passwordError, required this.confirmPasswordError, this.error}): super._();
   
 
 @override final  String firstName;
@@ -99,10 +99,10 @@ class _RegisterState extends RegisterState {
 @override final  bool hidePassword;
 @override final  bool isSubmitting;
 @override final  bool isAuthenticated;
-@override final  String? emailError;
-@override final  String? passwordError;
-@override final  String? confirmPasswordError;
-@override final  String? errorMessage;
+@override final  bool emailError;
+@override final  bool passwordError;
+@override final  bool confirmPasswordError;
+@override final  RegisterResult? error;
 
 /// Create a copy of RegisterState
 /// with the given fields replaced by the non-null parameter values.
@@ -114,16 +114,16 @@ _$RegisterStateCopyWith<_RegisterState> get copyWith => __$RegisterStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterState&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.confirmPassword, confirmPassword) || other.confirmPassword == confirmPassword)&&(identical(other.hidePassword, hidePassword) || other.hidePassword == hidePassword)&&(identical(other.isSubmitting, isSubmitting) || other.isSubmitting == isSubmitting)&&(identical(other.isAuthenticated, isAuthenticated) || other.isAuthenticated == isAuthenticated)&&(identical(other.emailError, emailError) || other.emailError == emailError)&&(identical(other.passwordError, passwordError) || other.passwordError == passwordError)&&(identical(other.confirmPasswordError, confirmPasswordError) || other.confirmPasswordError == confirmPasswordError)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterState&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.lastName, lastName) || other.lastName == lastName)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.confirmPassword, confirmPassword) || other.confirmPassword == confirmPassword)&&(identical(other.hidePassword, hidePassword) || other.hidePassword == hidePassword)&&(identical(other.isSubmitting, isSubmitting) || other.isSubmitting == isSubmitting)&&(identical(other.isAuthenticated, isAuthenticated) || other.isAuthenticated == isAuthenticated)&&(identical(other.emailError, emailError) || other.emailError == emailError)&&(identical(other.passwordError, passwordError) || other.passwordError == passwordError)&&(identical(other.confirmPasswordError, confirmPasswordError) || other.confirmPasswordError == confirmPasswordError)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,firstName,lastName,email,password,confirmPassword,hidePassword,isSubmitting,isAuthenticated,emailError,passwordError,confirmPasswordError,errorMessage);
+int get hashCode => Object.hash(runtimeType,firstName,lastName,email,password,confirmPassword,hidePassword,isSubmitting,isAuthenticated,emailError,passwordError,confirmPasswordError,error);
 
 @override
 String toString() {
-  return 'RegisterState(firstName: $firstName, lastName: $lastName, email: $email, password: $password, confirmPassword: $confirmPassword, hidePassword: $hidePassword, isSubmitting: $isSubmitting, isAuthenticated: $isAuthenticated, emailError: $emailError, passwordError: $passwordError, confirmPasswordError: $confirmPasswordError, errorMessage: $errorMessage)';
+  return 'RegisterState(firstName: $firstName, lastName: $lastName, email: $email, password: $password, confirmPassword: $confirmPassword, hidePassword: $hidePassword, isSubmitting: $isSubmitting, isAuthenticated: $isAuthenticated, emailError: $emailError, passwordError: $passwordError, confirmPasswordError: $confirmPasswordError, error: $error)';
 }
 
 
@@ -134,7 +134,7 @@ abstract mixin class _$RegisterStateCopyWith<$Res> implements $RegisterStateCopy
   factory _$RegisterStateCopyWith(_RegisterState value, $Res Function(_RegisterState) _then) = __$RegisterStateCopyWithImpl;
 @override @useResult
 $Res call({
- String firstName, String lastName, String email, String password, String confirmPassword, bool hidePassword, bool isSubmitting, bool isAuthenticated, String? emailError, String? passwordError, String? confirmPasswordError, String? errorMessage
+ String firstName, String lastName, String email, String password, String confirmPassword, bool hidePassword, bool isSubmitting, bool isAuthenticated, bool emailError, bool passwordError, bool confirmPasswordError, RegisterResult? error
 });
 
 
@@ -151,7 +151,7 @@ class __$RegisterStateCopyWithImpl<$Res>
 
 /// Create a copy of RegisterState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? firstName = null,Object? lastName = null,Object? email = null,Object? password = null,Object? confirmPassword = null,Object? hidePassword = null,Object? isSubmitting = null,Object? isAuthenticated = null,Object? emailError = freezed,Object? passwordError = freezed,Object? confirmPasswordError = freezed,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? firstName = null,Object? lastName = null,Object? email = null,Object? password = null,Object? confirmPassword = null,Object? hidePassword = null,Object? isSubmitting = null,Object? isAuthenticated = null,Object? emailError = null,Object? passwordError = null,Object? confirmPasswordError = null,Object? error = freezed,}) {
   return _then(_RegisterState(
 firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,lastName: null == lastName ? _self.lastName : lastName // ignore: cast_nullable_to_non_nullable
@@ -161,11 +161,11 @@ as String,confirmPassword: null == confirmPassword ? _self.confirmPassword : con
 as String,hidePassword: null == hidePassword ? _self.hidePassword : hidePassword // ignore: cast_nullable_to_non_nullable
 as bool,isSubmitting: null == isSubmitting ? _self.isSubmitting : isSubmitting // ignore: cast_nullable_to_non_nullable
 as bool,isAuthenticated: null == isAuthenticated ? _self.isAuthenticated : isAuthenticated // ignore: cast_nullable_to_non_nullable
-as bool,emailError: freezed == emailError ? _self.emailError : emailError // ignore: cast_nullable_to_non_nullable
-as String?,passwordError: freezed == passwordError ? _self.passwordError : passwordError // ignore: cast_nullable_to_non_nullable
-as String?,confirmPasswordError: freezed == confirmPasswordError ? _self.confirmPasswordError : confirmPasswordError // ignore: cast_nullable_to_non_nullable
-as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
+as bool,emailError: null == emailError ? _self.emailError : emailError // ignore: cast_nullable_to_non_nullable
+as bool,passwordError: null == passwordError ? _self.passwordError : passwordError // ignore: cast_nullable_to_non_nullable
+as bool,confirmPasswordError: null == confirmPasswordError ? _self.confirmPasswordError : confirmPasswordError // ignore: cast_nullable_to_non_nullable
+as bool,error: freezed == error ? _self.error : error // ignore: cast_nullable_to_non_nullable
+as RegisterResult?,
   ));
 }
 

@@ -4,8 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
-import 'package:task_master/auth/ui/cubit/login_cubit.dart';
-import 'package:task_master/auth/ui/view/register_screen.dart';
+import 'package:task_master/auth/auth.dart';
 import 'package:task_master/dashboard/ui/view/screens/dashboard_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -22,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = context.localization;
+
     return BlocListener<LoginCubit, LoginState>(
       bloc: bloc,
       listenWhen: (previous, current) => previous.isAuthenticated != current.isAuthenticated,
@@ -35,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Login'),
+            title: Text(localization.login),
             centerTitle: false,
             bottom: PreferredSize(
               preferredSize: const Size(0, AppSpacing.s),
@@ -56,8 +57,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         spacing: AppSpacing.s,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           const Gap(AppSpacing.s),
@@ -70,9 +71,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           Column(
                             spacing: AppSpacing.s,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               AppTextField(
-                                label: 'Email',
+                                label: localization.email,
                                 onChanged: bloc.updateEmail,
                                 keyboardType: TextInputType.emailAddress,
                                 textCapitalization: TextCapitalization.none,
@@ -82,7 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 selector: (state) => state.hidePassword,
                                 builder:
                                     (context, hidePassword) => AppTextField(
-                                      label: 'Password',
+                                      label: localization.password,
                                       onChanged: bloc.updatePassword,
                                       obscureText: hidePassword,
                                       suffixIcon: TogglePasswordButton(onPressed: bloc.togglePasswordVisibility, value: hidePassword),
@@ -90,8 +92,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               BlocSelector<LoginCubit, LoginState, String?>(
                                 bloc: bloc,
-                                selector: (state) => state.errorMessage,
-                                builder: (context, errorMessage) => errorMessage != null ? Text(errorMessage) : const SizedBox.shrink(),
+                                selector:
+                                    (state) => switch (state.error) {
+                                      LoginResult.userNotFound => localization.login_user_not_found_error,
+                                      LoginResult.networkError => localization.login_generic_error,
+                                      _ => null,
+                                    },
+                                builder:
+                                    (context, errorMessage) =>
+                                        errorMessage != null ? Text(errorMessage, textAlign: TextAlign.start) : const SizedBox.shrink(),
                               ),
                             ],
                           ),
@@ -102,7 +111,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 bloc: bloc,
                                 selector: (state) => state.canSubmit,
                                 builder: (context, canSubmit) {
-                                  return FilledButton(onPressed: canSubmit ? bloc.login : null, child: const Text('Login'));
+                                  return FilledButton(onPressed: canSubmit ? bloc.login : null, child: Text(localization.login));
                                 },
                               ),
                               BlocSelector<LoginCubit, LoginState, bool>(
@@ -111,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 builder: (context, isSubmitting) {
                                   return TextButton(
                                     onPressed: isSubmitting ? null : () => context.pushNamed(RegisterScreen.routeName),
-                                    child: const Text('Create a New Account', textAlign: TextAlign.start),
+                                    child: Text(localization.create_new_account, textAlign: TextAlign.start),
                                   );
                                 },
                               ),

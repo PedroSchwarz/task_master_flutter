@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/find_locale.dart';
 import 'package:logging/logging.dart';
 import 'package:task_master/app/ui/app.dart';
 
 Future<void> bootstrap(Future<void> Function(Widget) builder) async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await findSystemLocale();
 
   Logger.root.level = Level.ALL;
 
