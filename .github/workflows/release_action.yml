@@ -45,13 +45,14 @@ jobs:
           npm install -g firebase-tools
 
       - name: Upload APK to Firebase App Distribution
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: firebase-service-account.json
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > firebase-service-account.json
           firebase appdistribution:distribute build/app/outputs/flutter-apk/app-release.apk \
             --app ${{ secrets.FIREBASE_ANDROID_APP_ID }} \
             --groups punchbowl \
-            --release-notes "Automated build from branch: ${{ github.ref_name }}, Commit: ${{ github.sha }}" \
-            --service-account firebase-service-account.json
+            --release-notes "Automated build from branch: ${{ github.ref_name }}, Commit: ${{ github.sha }}"
           rm firebase-service-account.json
 
       - name: Upload APK as artifact
@@ -128,13 +129,14 @@ jobs:
           npm install -g firebase-tools
 
       - name: Upload IPA to Firebase App Distribution
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: firebase-service-account.json
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}' > firebase-service-account.json
           firebase appdistribution:distribute ios/build/*.ipa \
             --app ${{ secrets.FIREBASE_IOS_APP_ID }} \
             --groups punchbowl \
-            --release-notes "Automated build from branch: ${{ github.ref_name }}, Commit: ${{ github.sha }}" \
-            --service-account firebase-service-account.json
+            --release-notes "Automated build from branch: ${{ github.ref_name }}, Commit: ${{ github.sha }}"
           rm firebase-service-account.json
 
       - name: Upload IPA as artifact
