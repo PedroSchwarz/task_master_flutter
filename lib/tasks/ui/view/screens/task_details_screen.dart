@@ -82,10 +82,19 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                   child: const Icon(Icons.check_rounded, color: Colors.green),
                                 ).animate().fade(),
                               Flexible(
-                                child: Text(
-                                  task?.title ?? '',
-                                  style: theme.textTheme.headlineLarge?.copyWith(
-                                    color: (task?.isOverdue ?? false) ? Colors.red : theme.colorScheme.primary,
+                                child: Tooltip(
+                                  message: task?.title ?? '',
+                                  textStyle: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onPrimary),
+                                  waitDuration: const Duration(milliseconds: 100),
+                                  showDuration: const Duration(seconds: 4),
+
+                                  child: Text(
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    task?.title ?? '',
+                                    style: theme.textTheme.headlineLarge?.copyWith(
+                                      color: (task?.isOverdue ?? false) ? Colors.red : theme.colorScheme.primary,
+                                    ),
                                   ),
                                 ),
                               ).animate().fade(),
