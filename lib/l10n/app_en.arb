@@ -216,5 +216,15 @@
     "overdue_tasks": "Overdue",
     "@overdue_tasks": {},
     "total_tasks": "Total",
-    "@total_tasks": {}
+    "@total_tasks": {},
+    "dashboard_upcoming_tasks": "Upcoming Tasks",
+    "@dashboard_upcoming_tasks": {},
+    "dashboard_overdue_tasks": "Overdue Tasks",
+    "@dashboard_overdue_tasks": {},
+    "dashboard_highlights": "Highlights",
+    "@dashboard_highlights": {},
+    "dashboard_showing_progression": "Show Summaries",
+    "@dashboard_showing_progression": {},
+    "dashboard_showing_highlights": "Show Highlights",
+    "@dashboard_showing_highlights": {}
 }

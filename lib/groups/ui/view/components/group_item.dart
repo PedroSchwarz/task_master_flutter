@@ -59,7 +59,10 @@ class GroupItem extends StatelessWidget {
           ),
         ),
         if (isEditable)
-          Transform.translate(offset: const Offset(0, -AppSpacing.s), child: IconButton.filled(onPressed: onEdit, icon: const Icon(Icons.edit))),
+          Transform.translate(
+            offset: const Offset(AppSpacing.s, -AppSpacing.s),
+            child: IconButton.filled(onPressed: onEdit, icon: const Icon(Icons.edit)),
+          ),
       ],
     ).animate().fade(delay: Duration(milliseconds: min(150 * (position + 1), 500)));
   }

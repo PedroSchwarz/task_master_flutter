@@ -131,6 +131,7 @@ class Locators extends BaseServiceLocators {
           usersRepository: getIt(),
           dashboardRepository: getIt(),
           groupsRepository: getIt(),
+          tasksRepository: getIt(),
           invitesRepository: getIt(),
           progressRepository: getIt(),
           getTasksProgressionForWeeksUseCase: getIt(),

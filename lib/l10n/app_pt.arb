@@ -216,5 +216,15 @@
     "overdue_tasks": "Vencidas",
     "@overdue_tasks": {},
     "total_tasks": "Total",
-    "@total_tasks": {}
+    "@total_tasks": {},
+    "dashboard_upcoming_tasks": "Tarefas a Vencer",
+    "@dashboard_upcoming_tasks": {},
+    "dashboard_overdue_tasks": "Tarefas Vencidas",
+    "@dashboard_overdue_tasks": {},
+    "dashboard_highlights": "Destaques",
+    "@dashboard_highlights": {},
+    "dashboard_showing_progression": "Mostrar Resumos",
+    "@dashboard_showing_progression": {},
+    "dashboard_showing_highlights": "Mostrar Destaques",
+    "@dashboard_showing_highlights": {}
 }

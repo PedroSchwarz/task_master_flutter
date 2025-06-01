@@ -324,4 +324,19 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get total_tasks => 'Total';
+
+  @override
+  String get dashboard_upcoming_tasks => 'Tarefas a Vencer';
+
+  @override
+  String get dashboard_overdue_tasks => 'Tarefas Vencidas';
+
+  @override
+  String get dashboard_highlights => 'Destaques';
+
+  @override
+  String get dashboard_showing_progression => 'Mostrar Resumos';
+
+  @override
+  String get dashboard_showing_highlights => 'Mostrar Destaques';
 }

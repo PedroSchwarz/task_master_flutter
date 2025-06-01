@@ -324,4 +324,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get total_tasks => 'Total';
+
+  @override
+  String get dashboard_upcoming_tasks => 'Upcoming Tasks';
+
+  @override
+  String get dashboard_overdue_tasks => 'Overdue Tasks';
+
+  @override
+  String get dashboard_highlights => 'Highlights';
+
+  @override
+  String get dashboard_showing_progression => 'Show Summaries';
+
+  @override
+  String get dashboard_showing_highlights => 'Show Highlights';
 }

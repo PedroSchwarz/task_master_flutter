@@ -20,6 +20,14 @@ class TasksRepository {
     return tasksRemoteDataSource.fetchAllOwned();
   }
 
+  Future<List<TaskResponse>> getUpcoming() async {
+    return tasksRemoteDataSource.fetchUpcoming();
+  }
+
+  Future<List<TaskResponse>> getOverdue() async {
+    return tasksRemoteDataSource.fetchOverdue();
+  }
+
   Future<TaskResponse> getById(String id) async {
     return tasksRemoteDataSource.fetchById(id);
   }

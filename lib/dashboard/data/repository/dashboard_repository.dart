@@ -13,7 +13,7 @@ class DashboardRepository {
 
   Future<GroupsListType> getGroupsListType({GroupsListType defaultValue = GroupsListType.list}) async {
     try {
-      final type = await dashboardLocalDataSource.load();
+      final type = await dashboardLocalDataSource.loadGroupsListType();
       return type ?? defaultValue;
     } catch (e) {
       _log.severe('Error getting groups list type: $e', e);
@@ -23,9 +23,43 @@ class DashboardRepository {
 
   Future<void> setGroupsListType(GroupsListType type) async {
     try {
-      await dashboardLocalDataSource.save(type);
+      await dashboardLocalDataSource.saveGroupsListType(type);
     } catch (e) {
       _log.severe('Error saving groups list type: $e', e);
+    }
+  }
+
+  Future<bool> getShowingProgression() async {
+    try {
+      return await dashboardLocalDataSource.loadShowingProgression();
+    } catch (e) {
+      _log.severe('Error getting showing progression: $e', e);
+      return true;
+    }
+  }
+
+  Future<void> setShowingProgression(bool value) async {
+    try {
+      await dashboardLocalDataSource.saveShowingProgression(value);
+    } catch (e) {
+      _log.severe('Error saving showing progression: $e', e);
+    }
+  }
+
+  Future<bool> getShowingHighlights() async {
+    try {
+      return await dashboardLocalDataSource.loadShowingHighlights();
+    } catch (e) {
+      _log.severe('Error getting showing highlights: $e', e);
+      return true;
+    }
+  }
+
+  Future<void> setShowingHighlights(bool value) async {
+    try {
+      await dashboardLocalDataSource.saveShowingHighlights(value);
+    } catch (e) {
+      _log.severe('Error saving showing highlights: $e', e);
     }
   }
 }

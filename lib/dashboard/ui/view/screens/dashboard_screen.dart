@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
-import 'package:task_master/dashboard/ui/cubit/dashboard_cubit.dart';
-import 'package:task_master/dashboard/ui/view/drawer/dashboard_drawer.dart';
+import 'package:task_master/dashboard/dashboard.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
 import 'package:task_master/progress/progress.dart';
@@ -32,11 +30,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final localization = context.localization;
 
     return Scaffold(
-      drawer: DashboardDrawer(
-        initials: bloc.currentUser.initials,
-        title: bloc.currentUser.completeName,
-        subtitle: bloc.currentUser.email,
-        onSignOut: bloc.signOut,
+      drawer: BlocBuilder<DashboardCubit, DashboardState>(
+        bloc: bloc,
+        buildWhen:
+            (previous, current) =>
+                previous.showingProgression != current.showingProgression || //
+                previous.showingHighlights != current.showingHighlights,
+        builder: (context, state) {
+          return DashboardDrawer(
+            initials: bloc.currentUser.initials,
+            title: bloc.currentUser.completeName,
+            subtitle: bloc.currentUser.email,
+            showingProgression: state.showingProgression,
+            showingHighlights: state.showingHighlights,
+            onProgressionPressed: (value) => bloc.updateShowingProgression(value: value),
+            onHighlightsPressed: (value) => bloc.updateShowingHighlight(value: value),
+            onSignOut: bloc.signOut,
+          );
+        },
       ),
       body: NestedScrollView(
         headerSliverBuilder:
@@ -44,23 +55,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
               SliverAppBar.medium(
                 title: const Text('Dashboard'),
                 actions: [
+                  IconButton(
+                    onPressed: () {
+                      context.pushNamed(ProgressionScreen.routeName);
+                    },
+                    icon: const Icon(Icons.pie_chart_outline),
+                  ),
                   BlocSelector<DashboardCubit, DashboardState, List<InviteResponse>>(
                     bloc: bloc,
                     selector: (state) => state.invites,
                     builder: (context, invites) {
-                      return Badge.count(
-                        textStyle: Theme.of(context).textTheme.labelLarge,
-                        offset: const Offset(-5, 0),
+                      return DashboardInvitesButton(
                         count: invites.length,
-                        child: IconButton(
-                          onPressed: () async {
-                            if (context.mounted) {
-                              await context.pushNamed(InvitesScreen.routeName);
-                              await Future.wait([bloc.loadGroups(), bloc.loadInvites()]);
-                            }
-                          },
-                          icon: const Icon(Icons.mail_outline),
-                        ),
+                        onPressed: () async {
+                          if (context.mounted) {
+                            await context.pushNamed(InvitesScreen.routeName);
+                            await Future.wait([bloc.loadGroups(), bloc.loadInvites()]);
+                          }
+                        },
                       );
                     },
                   ),
@@ -75,39 +87,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
-                  child: BlocBuilder<DashboardCubit, DashboardState>(
-                    bloc: bloc,
-                    buildWhen:
-                        (previous, current) =>
-                            previous.isLoading != current.isLoading || //
-                            previous.selection != current.selection,
-                    builder: (context, state) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                        child: AppSkeleton(
-                          isLoading: state.isLoading,
-                          child: Row(
-                            spacing: AppSpacing.s,
-                            children:
-                                TaskProgressionSelection.values.map((progression) {
-                                  return ChoiceChip(
-                                    onSelected: (_) {
-                                      bloc.updateSelection(progression);
-                                    },
-                                    label: Text(switch (progression) {
-                                      TaskProgressionSelection.assigned => localization.filter_assigned,
-                                      TaskProgressionSelection.owned => localization.filter_owned,
-                                    }),
-                                    selected: state.selection == progression,
-                                  );
-                                }).toList(),
-                          ),
-                        ).animate().fade(delay: 100.ms),
-                      );
-                    },
-                  ),
+                child: BlocBuilder<DashboardCubit, DashboardState>(
+                  bloc: bloc,
+                  buildWhen:
+                      (previous, current) =>
+                          previous.isLoading != current.isLoading || //
+                          previous.selection != current.selection || //
+                          previous.showingProgression != current.showingProgression,
+                  builder: (context, state) {
+                    if (state.showingProgression) {
+                      return DashboardProgressionFilters(isLoading: state.isLoading, selection: state.selection, onSelection: bloc.updateSelection);
+                    }
+
+                    return const SizedBox.shrink();
+                  },
                 ),
               ),
               SliverToBoxAdapter(
@@ -116,28 +109,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   buildWhen:
                       (previous, current) =>
                           previous.progression != current.progression || //
-                          previous.isLoading != current.isLoading,
+                          previous.isLoading != current.isLoading || //
+                          previous.showingProgression != current.showingProgression,
                   builder: (context, state) {
-                    if (state.isLoading) {
-                      return const Padding(padding: EdgeInsets.all(AppSpacing.s), child: AppSkeleton(isLoading: true, child: SizedBox(height: 150)));
+                    if (state.showingProgression) {
+                      return DashboardProgression(isLoading: state.isLoading, progression: state.progression);
                     }
 
-                    return ProgressionCarousel(
-                      height: 150,
-                      progression: state.progression,
-                      onCompletionPressed: () {
-                        context.pushNamed(ProgressionScreen.routeName);
-                      },
-                      onOverduePressed: () {
-                        context.pushNamed(ProgressionScreen.routeName);
-                      },
-                      onPriorityPressed: () {
-                        context.pushNamed(ProgressionScreen.routeName);
-                      },
-                      onStatusPressed: () {
-                        context.pushNamed(ProgressionScreen.routeName);
-                      },
-                    ).animate().fade(delay: 100.ms);
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: BlocBuilder<DashboardCubit, DashboardState>(
+                  bloc: bloc,
+                  buildWhen:
+                      (previous, current) =>
+                          previous.isLoading != current.isLoading || //
+                          previous.showingHighlights != current.showingHighlights || //
+                          previous.upcomingTasks != current.upcomingTasks || //
+                          previous.overdueTasks != current.overdueTasks,
+                  builder: (context, state) {
+                    if (state.showingHighlights) {
+                      return DashboardHighlights(isLoading: state.isLoading, upcomingTasks: state.upcomingTasks, overdueTasks: state.overdueTasks);
+                    }
+
+                    return const SizedBox.shrink();
                   },
                 ),
               ),

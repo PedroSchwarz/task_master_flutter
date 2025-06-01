@@ -23,6 +23,14 @@ abstract class TasksRemoteDataSource {
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future<List<SimplifiedTaskResponse>> fetchAllOwned();
 
+  @GET('/upcoming')
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<List<TaskResponse>> fetchUpcoming();
+
+  @GET('/overdue')
+  @Headers(<String, dynamic>{'Content-Type': 'application/json'})
+  Future<List<TaskResponse>> fetchOverdue();
+
   @GET('/{id}')
   @Headers(<String, dynamic>{'Content-Type': 'application/json'})
   Future<TaskResponse> fetchById(@Path('id') String id);

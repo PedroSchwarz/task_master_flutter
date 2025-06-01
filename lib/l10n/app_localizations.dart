@@ -724,6 +724,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total'**
   String get total_tasks;
+
+  /// No description provided for @dashboard_upcoming_tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming Tasks'**
+  String get dashboard_upcoming_tasks;
+
+  /// No description provided for @dashboard_overdue_tasks.
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue Tasks'**
+  String get dashboard_overdue_tasks;
+
+  /// No description provided for @dashboard_highlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Highlights'**
+  String get dashboard_highlights;
+
+  /// No description provided for @dashboard_showing_progression.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Summaries'**
+  String get dashboard_showing_progression;
+
+  /// No description provided for @dashboard_showing_highlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Show Highlights'**
+  String get dashboard_showing_highlights;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
