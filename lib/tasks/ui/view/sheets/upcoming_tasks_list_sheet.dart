@@ -72,9 +72,11 @@ class _UpcomingTasksListSheetState extends State<UpcomingTasksListSheet> with Si
       style: ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.primaryContainer,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.s)),
+        textStyle: theme.textTheme.titleMedium,
+        foregroundColor: theme.colorScheme.onPrimaryContainer,
         padding: const EdgeInsets.all(AppSpacing.m),
       ),
-      child: Text(localization.dashboard_upcoming_tasks, style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onPrimaryContainer)),
+      child: Text(localization.dashboard_upcoming_tasks),
     ).animate().fade(delay: 200.ms);
   }
 }

@@ -72,9 +72,11 @@ class _OverdueTasksListSheetState extends State<OverdueTasksListSheet> with Sing
       style: ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.primary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.s)),
+        textStyle: theme.textTheme.titleMedium,
+        foregroundColor: theme.colorScheme.onPrimary,
         padding: const EdgeInsets.all(AppSpacing.m),
       ),
-      child: Text(localization.dashboard_overdue_tasks, style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onPrimary)),
+      child: Text(localization.dashboard_overdue_tasks),
     ).animate().fade(delay: 200.ms);
   }
 }
