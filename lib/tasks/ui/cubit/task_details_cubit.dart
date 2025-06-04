@@ -126,6 +126,10 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
           status: updatedTask.status,
           completed: updatedTask.completed,
           assignedTo: updatedTask.assignedTo.map((user) => user.id).toList(),
+          checklist:
+              updatedTask.checklist.map((item) {
+                return UpdateTaskChecklistItem(title: item.title, status: item.status, order: item.order);
+              }).toList(),
         ),
       );
 
@@ -154,6 +158,10 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
           status: task.status,
           group: task.group,
           assignedTo: task.assignedTo.map((user) => user.id).toList(),
+          checklist:
+              task.checklist.map((item) {
+                return CreateTaskChecklistItem(title: item.title, order: item.order);
+              }).toList(),
         ),
       );
       updateGroupForMember();
@@ -184,6 +192,69 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
       _log.severe('Error deleting task: $e', e);
     } finally {
       emit(state.copyWith(isRefreshing: false));
+    }
+  }
+
+  Future<void> updateChecklistItemStatus({required TaskChecklistItem item, required int position, required TaskChecklistItemStatus status}) async {
+    final task = state.task;
+
+    if (task == null) {
+      return;
+    }
+
+    final checklist = List<TaskChecklistItem>.from(task.checklist);
+
+    checklist[position] = item.copyWith(status: status);
+
+    await updateChecklist(task: task, checklist: checklist);
+  }
+
+  Future<void> reorderChecklistItemOrder(int oldIndex, int newIndex) async {
+    final task = state.task;
+
+    if (task == null) {
+      return;
+    }
+
+    final checklist = List<TaskChecklistItem>.from(task.checklist);
+
+    if (newIndex > oldIndex) newIndex -= 1;
+
+    final item = checklist.removeAt(oldIndex);
+    checklist.insert(newIndex, item);
+
+    final updatedChecklist =
+        checklist.indexed.map((item) {
+          final index = item.$1;
+          final value = item.$2;
+
+          return value.copyWith(order: index);
+        }).toList();
+
+    await updateChecklist(task: task, checklist: updatedChecklist);
+  }
+
+  Future<void> updateChecklist({required TaskResponse task, required List<TaskChecklistItem> checklist}) async {
+    try {
+      await tasksRepository.update(
+        UpdateTaskRequest(
+          title: task.title,
+          dueDate: task.dueDate,
+          priority: task.priority,
+          status: task.status,
+          completed: task.completed,
+          assignedTo: task.assignedTo.map((assignee) => assignee.id).toList(),
+          checklist:
+              checklist.map((item) {
+                return UpdateTaskChecklistItem(title: item.title, status: item.status, order: item.order);
+              }).toList(),
+        ),
+        id: task.id,
+      );
+
+      updateTaskForMember();
+    } catch (e) {
+      _log.severe('Error while updating checklist item status: $e', e);
     }
   }
 

@@ -9,15 +9,17 @@ import 'package:task_master/tasks/data/models/task_values.dart';
 import 'package:task_master/tasks/data/models/update_task_request.dart';
 import 'package:task_master/tasks/tasks.dart';
 import 'package:task_master/users/users.dart';
+import 'package:uuid/uuid.dart';
 
 part 'create_task_cubit.freezed.dart';
 
 class CreateTaskCubit extends Cubit<CreateTaskState> {
-  CreateTaskCubit({required this.groupsRepository, required this.tasksRepository})
+  CreateTaskCubit({required this.groupsRepository, required this.tasksRepository, required this.uuid})
     : super(
         CreateTaskState(
           isLoading: false,
           title: '',
+          checklist: [],
           priority: TaskPriority.medium,
           status: TaskStatus.todo,
           date: DateTime.now().add(const Duration(days: 1)),
@@ -35,6 +37,9 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
 
   @visibleForTesting
   final TasksRepository tasksRepository;
+
+  @visibleForTesting
+  final Uuid uuid;
 
   Future<void> load({required String groupId, String? taskId}) async {
     await Future.wait([loadGroup(groupId), if (taskId != null) loadTask(taskId)]);
@@ -64,6 +69,7 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
           priority: task.priority,
           status: task.status,
           assignedIds: task.assignedTo.map((assignee) => assignee.id).toSet(),
+          checklist: task.checklist,
         ),
       );
     } catch (e) {
@@ -75,6 +81,63 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
 
   void updateTitle(String title) {
     emit(state.copyWith(title: title));
+  }
+
+  void addChecklistItem() {
+    final checklist = List<TaskChecklistItem>.from(state.checklist);
+
+    emit(
+      state.copyWith(checklist: [...checklist, TaskChecklistItem(id: uuid.v4(), status: TaskChecklistItemStatus.incomplete, title: '', order: 0)]),
+    );
+
+    updateChecklistItemsOrder();
+  }
+
+  void updateChecklistItem({required int index, required String value}) {
+    final checklist = List<TaskChecklistItem>.from(state.checklist);
+
+    if (index >= 0 && index < checklist.length) {
+      checklist[index] = checklist[index].copyWith(title: value);
+
+      emit(state.copyWith(checklist: checklist));
+    }
+  }
+
+  void reorderChecklistItem(int oldIndex, int newIndex) {
+    final checklist = List<TaskChecklistItem>.from(state.checklist);
+
+    if (newIndex > oldIndex) newIndex -= 1;
+
+    final item = checklist.removeAt(oldIndex);
+    checklist.insert(newIndex, item);
+
+    emit(state.copyWith(checklist: checklist));
+
+    updateChecklistItemsOrder();
+  }
+
+  void removeChecklistItem({required int index}) {
+    final checklist = List<TaskChecklistItem>.from(state.checklist);
+
+    if (index >= 0 && index < checklist.length) {
+      checklist.removeAt(index);
+      emit(state.copyWith(checklist: checklist));
+      updateChecklistItemsOrder();
+    }
+  }
+
+  void updateChecklistItemsOrder() {
+    final checklist = List<TaskChecklistItem>.from(state.checklist);
+
+    final updatedChecklist =
+        checklist.indexed.map((item) {
+          final index = item.$1;
+          final value = item.$2;
+
+          return value.copyWith(order: index);
+        }).toList();
+
+    emit(state.copyWith(checklist: updatedChecklist));
   }
 
   void updateDescription(String description) {
@@ -152,6 +215,10 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
           dueDate: DateTime(state.date.year, state.date.month, state.date.day, state.time.hour, state.time.minute).toUtc(),
           group: group.id,
           assignedTo: state.assignedIds.toList(),
+          checklist:
+              state.checklist.map((item) {
+                return CreateTaskChecklistItem(title: item.title, order: item.order);
+              }).toList(),
         ),
       );
 
@@ -180,6 +247,10 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
           dueDate: DateTime(state.date.year, state.date.month, state.date.day, state.time.hour, state.time.minute).toUtc(),
           assignedTo: state.assignedIds.toList(),
           completed: task.completed,
+          checklist:
+              state.checklist.map((item) {
+                return UpdateTaskChecklistItem(title: item.title, status: item.status, order: item.order);
+              }).toList(),
         ),
       );
 
@@ -195,6 +266,7 @@ sealed class CreateTaskState with _$CreateTaskState {
   const factory CreateTaskState({
     required bool isLoading,
     required String title,
+    required List<TaskChecklistItem> checklist,
     required TaskPriority priority,
     required TaskStatus status,
     required DateTime date,
