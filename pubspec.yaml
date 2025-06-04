@@ -1,6 +1,6 @@
 name: task_master
 description: "A new Flutter project."
-version: 1.0.6+3
+version: 1.0.7+1
 publish_to: "none"
 
 environment:
