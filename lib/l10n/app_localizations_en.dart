@@ -339,4 +339,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dashboard_showing_highlights => 'Show Highlights';
+
+  @override
+  String get checklist => 'Checklist';
 }
