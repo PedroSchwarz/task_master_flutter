@@ -10,6 +10,10 @@ _TaskResponse _$TaskResponseFromJson(Map<String, dynamic> json) =>
     _TaskResponse(
       id: json['_id'] as String,
       title: json['title'] as String,
+      checklist:
+          (json['checklist'] as List<dynamic>)
+              .map((e) => TaskChecklistItem.fromJson(e as Map<String, dynamic>))
+              .toList(),
       priority: $enumDecode(_$TaskPriorityEnumMap, json['priority']),
       status: $enumDecode(_$TaskStatusEnumMap, json['status']),
       dueDate: DateTime.parse(json['dueDate'] as String),
@@ -29,6 +33,7 @@ Map<String, dynamic> _$TaskResponseToJson(_TaskResponse instance) =>
     <String, dynamic>{
       '_id': instance.id,
       'title': instance.title,
+      'checklist': instance.checklist,
       'priority': _$TaskPriorityEnumMap[instance.priority]!,
       'status': _$TaskStatusEnumMap[instance.status]!,
       'dueDate': instance.dueDate.toIso8601String(),
@@ -51,4 +56,26 @@ const _$TaskStatusEnumMap = {
   TaskStatus.todo: 'todo',
   TaskStatus.inProgress: 'in_progress',
   TaskStatus.done: 'done',
+};
+
+_TaskChecklistItem _$TaskChecklistItemFromJson(Map<String, dynamic> json) =>
+    _TaskChecklistItem(
+      id: json['_id'] as String,
+      title: json['title'] as String,
+      status: $enumDecode(_$TaskChecklistItemStatusEnumMap, json['status']),
+      order: (json['order'] as num).toInt(),
+    );
+
+Map<String, dynamic> _$TaskChecklistItemToJson(_TaskChecklistItem instance) =>
+    <String, dynamic>{
+      '_id': instance.id,
+      'title': instance.title,
+      'status': _$TaskChecklistItemStatusEnumMap[instance.status]!,
+      'order': instance.order,
+    };
+
+const _$TaskChecklistItemStatusEnumMap = {
+  TaskChecklistItemStatus.incomplete: 'incomplete',
+  TaskChecklistItemStatus.completed: 'completed',
+  TaskChecklistItemStatus.blocked: 'blocked',
 };

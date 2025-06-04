@@ -11,6 +11,7 @@ abstract class TaskResponse with _$TaskResponse {
   const factory TaskResponse({
     @JsonKey(name: '_id') required String id,
     required String title,
+    required List<TaskChecklistItem> checklist,
     required TaskPriority priority,
     required TaskStatus status,
     required DateTime dueDate,
@@ -49,4 +50,34 @@ abstract class TaskResponse with _$TaskResponse {
 
     return formatter.format(localDate.toLocal());
   }
+
+  int get blockedChecklistItemsCount => checklist.where((item) => item.status == TaskChecklistItemStatus.blocked).length;
+
+  int get completedChecklistItemsCount =>
+      checklist.where((item) => item.status == TaskChecklistItemStatus.completed).length + blockedChecklistItemsCount;
+
+  double get checklistProgression => checklist.isEmpty ? 0 : completedChecklistItemsCount / checklist.length;
+}
+
+@freezed
+abstract class TaskChecklistItem with _$TaskChecklistItem {
+  const factory TaskChecklistItem({
+    @JsonKey(name: '_id') required String id,
+    required String title,
+    required TaskChecklistItemStatus status,
+    required int order,
+  }) = _TaskChecklistItem;
+
+  const TaskChecklistItem._();
+
+  factory TaskChecklistItem.fromJson(Map<String, dynamic> json) => _$TaskChecklistItemFromJson(json);
+}
+
+enum TaskChecklistItemStatus {
+  @JsonValue('incomplete')
+  incomplete,
+  @JsonValue('completed')
+  completed,
+  @JsonValue('blocked')
+  blocked,
 }

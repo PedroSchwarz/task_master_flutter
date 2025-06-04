@@ -10,6 +10,7 @@ abstract class CreateTaskRequest with _$CreateTaskRequest {
     required String title,
     required DateTime dueDate,
     required String group,
+    required List<CreateTaskChecklistItem> checklist,
     @JsonKey(includeIfNull: false) String? description,
     @JsonKey(includeIfNull: false) TaskPriority? priority,
     @JsonKey(includeIfNull: false) TaskStatus? status,
@@ -17,4 +18,11 @@ abstract class CreateTaskRequest with _$CreateTaskRequest {
   }) = _CreateTaskRequest;
 
   factory CreateTaskRequest.fromJson(Map<String, dynamic> json) => _$CreateTaskRequestFromJson(json);
+}
+
+@freezed
+abstract class CreateTaskChecklistItem with _$CreateTaskChecklistItem {
+  const factory CreateTaskChecklistItem({required String title, required int order}) = _CreateTaskChecklistItem;
+
+  factory CreateTaskChecklistItem.fromJson(Map<String, dynamic> json) => _$CreateTaskChecklistItemFromJson(json);
 }
