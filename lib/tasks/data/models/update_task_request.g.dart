@@ -6,19 +6,24 @@ part of 'update_task_request.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_UpdateTaskRequest _$UpdateTaskRequestFromJson(Map<String, dynamic> json) =>
-    _UpdateTaskRequest(
-      title: json['title'] as String,
-      dueDate: DateTime.parse(json['dueDate'] as String),
-      priority: $enumDecode(_$TaskPriorityEnumMap, json['priority']),
-      status: $enumDecode(_$TaskStatusEnumMap, json['status']),
-      completed: json['completed'] as bool,
-      assignedTo:
-          (json['assignedTo'] as List<dynamic>)
-              .map((e) => e as String)
-              .toList(),
-      description: json['description'] as String?,
-    );
+_UpdateTaskRequest _$UpdateTaskRequestFromJson(
+  Map<String, dynamic> json,
+) => _UpdateTaskRequest(
+  title: json['title'] as String,
+  dueDate: DateTime.parse(json['dueDate'] as String),
+  priority: $enumDecode(_$TaskPriorityEnumMap, json['priority']),
+  status: $enumDecode(_$TaskStatusEnumMap, json['status']),
+  completed: json['completed'] as bool,
+  assignedTo:
+      (json['assignedTo'] as List<dynamic>).map((e) => e as String).toList(),
+  checklist:
+      (json['checklist'] as List<dynamic>)
+          .map(
+            (e) => UpdateTaskChecklistItem.fromJson(e as Map<String, dynamic>),
+          )
+          .toList(),
+  description: json['description'] as String?,
+);
 
 Map<String, dynamic> _$UpdateTaskRequestToJson(_UpdateTaskRequest instance) =>
     <String, dynamic>{
@@ -28,6 +33,7 @@ Map<String, dynamic> _$UpdateTaskRequestToJson(_UpdateTaskRequest instance) =>
       'status': _$TaskStatusEnumMap[instance.status]!,
       'completed': instance.completed,
       'assignedTo': instance.assignedTo,
+      'checklist': instance.checklist,
       if (instance.description case final value?) 'description': value,
     };
 
@@ -41,4 +47,26 @@ const _$TaskStatusEnumMap = {
   TaskStatus.todo: 'todo',
   TaskStatus.inProgress: 'in_progress',
   TaskStatus.done: 'done',
+};
+
+_UpdateTaskChecklistItem _$UpdateTaskChecklistItemFromJson(
+  Map<String, dynamic> json,
+) => _UpdateTaskChecklistItem(
+  title: json['title'] as String,
+  status: $enumDecode(_$TaskChecklistItemStatusEnumMap, json['status']),
+  order: (json['order'] as num).toInt(),
+);
+
+Map<String, dynamic> _$UpdateTaskChecklistItemToJson(
+  _UpdateTaskChecklistItem instance,
+) => <String, dynamic>{
+  'title': instance.title,
+  'status': _$TaskChecklistItemStatusEnumMap[instance.status]!,
+  'order': instance.order,
+};
+
+const _$TaskChecklistItemStatusEnumMap = {
+  TaskChecklistItemStatus.incomplete: 'incomplete',
+  TaskChecklistItemStatus.completed: 'completed',
+  TaskChecklistItemStatus.blocked: 'blocked',
 };

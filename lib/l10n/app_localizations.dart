@@ -754,6 +754,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Show Highlights'**
   String get dashboard_showing_highlights;
+
+  /// No description provided for @checklist.
+  ///
+  /// In en, this message translates to:
+  /// **'Checklist'**
+  String get checklist;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

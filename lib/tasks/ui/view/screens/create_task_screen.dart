@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -108,7 +109,70 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           );
                         },
                       ),
-                      const Gap(AppSpacing.xs),
+                      BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                        bloc: bloc,
+                        buildWhen:
+                            (previous, current) =>
+                                previous.isLoading != current.isLoading || //
+                                previous.checklist != current.checklist,
+                        builder: (context, state) {
+                          return AppSkeleton(
+                            isLoading: state.isLoading,
+                            child: ReorderableListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                              header: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(localization.checklist, style: theme.textTheme.bodyLarge),
+                                  IconButton(onPressed: bloc.addChecklistItem, color: theme.colorScheme.primary, icon: const Icon(Icons.add)),
+                                ],
+                              ),
+                              footer: state.checklist.isNotEmpty ? const Gap(AppSpacing.s) : null,
+                              proxyDecorator: (child, index, animation) {
+                                return Material(
+                                  elevation: AppSpacing.xxs,
+                                  color: theme.colorScheme.surfaceContainer,
+                                  shadowColor: Colors.black45,
+                                  borderRadius: BorderRadius.circular(AppSpacing.s),
+                                  child: child,
+                                );
+                              },
+                              shrinkWrap: true,
+                              itemCount: state.checklist.length,
+                              onReorder: bloc.reorderChecklistItem,
+                              itemBuilder: (context, position) {
+                                final item = state.checklist[position];
+
+                                return Container(
+                                  key: ValueKey(item.id),
+                                  padding: const EdgeInsets.all(AppSpacing.xs),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: AppTextField(
+                                          label: 'Item ${item.order + 1}',
+                                          initialValue: item.title,
+                                          onChanged: (value) {
+                                            bloc.updateChecklistItem(index: position, value: value);
+                                          },
+                                        ),
+                                      ),
+                                      IconButton(
+                                        color: Colors.red,
+                                        onPressed: () {
+                                          bloc.removeChecklistItem(index: position);
+                                        },
+                                        icon: const Icon(Icons.delete),
+                                      ),
+                                      const Icon(Icons.drag_handle),
+                                    ],
+                                  ).animate().fade(delay: 100.ms),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
                       Row(
                         spacing: AppSpacing.s,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

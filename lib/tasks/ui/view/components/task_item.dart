@@ -106,7 +106,6 @@ class TaskItem extends StatelessWidget {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
-
                       if (!task.completed) ...[
                         const Gap(AppSpacing.xs),
                         Row(
@@ -153,20 +152,31 @@ class TaskItem extends StatelessWidget {
                     ],
                   ),
                 ),
-                Stack(
-                  children:
-                      assignees.map((item) {
-                        final index = item.$1;
-                        final assignee = item.$2;
+                Column(
+                  spacing: AppSpacing.s,
+                  children: [
+                    if (task.checklist.isNotEmpty)
+                      SizedBox(
+                        height: 32,
+                        width: 32,
+                        child: AnimatedCircularProgressIndicator(value: task.checklistProgression, color: theme.colorScheme.primary),
+                      ),
+                    Stack(
+                      children:
+                          assignees.map((item) {
+                            final index = item.$1;
+                            final assignee = item.$2;
 
-                        return Transform.translate(
-                          offset: Offset(index * 10, 0),
-                          child: CircleAvatar(
-                            backgroundColor: assignees.length > 1 && index == 0 ? theme.colorScheme.surfaceContainer : null,
-                            child: Text(assignee.initials, style: theme.textTheme.titleMedium),
-                          ),
-                        );
-                      }).toList(),
+                            return Transform.translate(
+                              offset: Offset(index * 10, 0),
+                              child: CircleAvatar(
+                                backgroundColor: assignees.length > 1 && index == 0 ? theme.colorScheme.surfaceContainer : null,
+                                child: Text(assignee.initials, style: theme.textTheme.titleMedium),
+                              ),
+                            );
+                          }).toList(),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -226,5 +226,7 @@
     "dashboard_showing_progression": "Mostrar Resumos",
     "@dashboard_showing_progression": {},
     "dashboard_showing_highlights": "Mostrar Destaques",
-    "@dashboard_showing_highlights": {}
+    "@dashboard_showing_highlights": {},
+    "checklist": "Checklist",
+    "@checklist": {}
 }

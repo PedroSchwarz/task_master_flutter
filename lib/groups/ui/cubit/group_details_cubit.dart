@@ -241,6 +241,10 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
           status: updatedTask.status,
           completed: updatedTask.completed,
           assignedTo: updatedTask.assignedTo.map((user) => user.id).toList(),
+          checklist:
+              updatedTask.checklist.map((item) {
+                return UpdateTaskChecklistItem(title: item.title, status: item.status, order: item.order);
+              }).toList(),
         ),
       );
 

@@ -8,6 +8,7 @@ import 'package:task_master/app/app.dart';
 import 'package:task_master/comments/comments.dart';
 import 'package:task_master/tasks/data/models/task_values.dart';
 import 'package:task_master/tasks/tasks.dart';
+import 'package:task_master/tasks/ui/view/components/task_checklist.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   const TaskDetailsScreen({required this.id, super.key});
@@ -311,6 +312,13 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 return const AppSkeleton(isLoading: true, child: SizedBox(height: 40, width: double.infinity));
                               }
 
+                              if (task.assignedTo.isEmpty) {
+                                return const Wrap(
+                                  spacing: AppSpacing.xs,
+                                  children: [CircleAvatar(child: Icon(Icons.close))],
+                                ).animate().fade(delay: 200.ms);
+                              }
+
                               return Wrap(
                                 spacing: AppSpacing.xs,
                                 children: task.assignedTo.map((assignee) => CircleAvatar(child: Text(assignee.initials))).toList(),
@@ -335,6 +343,23 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 task.description ?? localization.no_description,
                                 style: theme.textTheme.bodyLarge,
                               ).animate().fade(delay: 250.ms);
+                            },
+                          ),
+                          BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
+                            bloc: bloc,
+                            buildWhen:
+                                (previous, current) =>
+                                    previous.isLoading != current.isLoading || //
+                                    previous.task?.checklist != current.task?.checklist,
+                            builder: (context, state) {
+                              return TaskChecklist(
+                                isLoading: state.isLoading,
+                                task: state.task,
+                                onReorder: bloc.reorderChecklistItemOrder,
+                                onStatusChanged: (item, position, status) async {
+                                  await bloc.updateChecklistItemStatus(item: item, position: position, status: status);
+                                },
+                              );
                             },
                           ),
                         ],

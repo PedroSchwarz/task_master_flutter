@@ -19,6 +19,7 @@ import 'package:task_master/progress/progress.dart';
 import 'package:task_master/splash/splash.dart';
 import 'package:task_master/tasks/tasks.dart';
 import 'package:task_master/users/users.dart';
+import 'package:uuid/uuid.dart';
 
 final getIt = GetIt.instance;
 
@@ -65,6 +66,7 @@ class Locators extends BaseServiceLocators {
     getIt
       ..registerSingleton(appStorage)
       ..registerSingleton(buildConfigurations)
+      ..registerSingleton(const Uuid())
       ..registerSingleton(CredentialsLocalDataSource(localStorage: getIt()))
       ..registerSingleton(UserLocalDataSource(localStorage: getIt()))
       ..registerSingleton(CredentialsRepository(credentialsLocalDataSource: getIt()))
@@ -108,7 +110,7 @@ class Locators extends BaseServiceLocators {
           tasksWebsocket: getIt(),
         ),
       )
-      ..registerFactory(() => CreateTaskCubit(groupsRepository: getIt(), tasksRepository: getIt()))
+      ..registerFactory(() => CreateTaskCubit(groupsRepository: getIt(), tasksRepository: getIt(), uuid: getIt()))
       ..registerFactory(
         () => TaskDetailsCubit(
           authRepository: getIt(),

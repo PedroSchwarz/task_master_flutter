@@ -226,5 +226,7 @@
     "dashboard_showing_progression": "Show Summaries",
     "@dashboard_showing_progression": {},
     "dashboard_showing_highlights": "Show Highlights",
-    "@dashboard_showing_highlights": {}
+    "@dashboard_showing_highlights": {},
+    "checklist": "Checklist",
+    "@checklist": {}
 }
