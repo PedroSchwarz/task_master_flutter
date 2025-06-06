@@ -58,7 +58,7 @@ class _OverdueTasksListSheetState extends State<OverdueTasksListSheet> with Sing
                               task: task,
                               position: position,
                               onTap: () {
-                                context.pushNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.group, 'taskId': task.id});
+                                context.goNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.group, 'taskId': task.id});
                               },
                             );
                           },

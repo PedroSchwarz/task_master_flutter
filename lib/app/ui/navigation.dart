@@ -32,12 +32,32 @@ GoRouter createRouter({required AuthRepository authRepository}) {
     },
     routes: [
       GoRoute(path: '/${SplashScreen.routeName}', name: SplashScreen.routeName, builder: (context, state) => const SplashScreen()),
-      GoRoute(path: '/${LoginScreen.routeName}', name: LoginScreen.routeName, builder: (context, state) => const LoginScreen()),
+      GoRoute(
+        path: '/${LoginScreen.routeName}',
+        name: LoginScreen.routeName,
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: const LoginScreen(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          );
+        },
+      ),
       GoRoute(path: '/${RegisterScreen.routeName}', name: RegisterScreen.routeName, builder: (context, state) => const RegisterScreen()),
       GoRoute(
         path: '/${DashboardScreen.routeName}',
         name: DashboardScreen.routeName,
-        builder: (context, state) => const DashboardScreen(),
+        pageBuilder: (context, state) {
+          return CustomTransitionPage(
+            key: state.pageKey,
+            child: const DashboardScreen(),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
+          );
+        },
         routes: [
           GoRoute(
             path: '/${CreateGroupScreen.routeName}',
@@ -58,7 +78,21 @@ GoRouter createRouter({required AuthRepository authRepository}) {
               GoRoute(
                 path: '/${TaskDetailsScreen.routeName}/:taskId',
                 name: TaskDetailsScreen.routeName,
-                builder: (context, state) => TaskDetailsScreen(id: state.pathParameters['taskId'] ?? ''),
+                pageBuilder: (context, state) {
+                  return CustomTransitionPage(
+                    key: state.pageKey,
+                    child: TaskDetailsScreen(id: state.pathParameters['taskId'] ?? ''),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      const begin = Offset(0.0, 1.0);
+                      const end = Offset.zero;
+                      const curve = Curves.decelerate;
+
+                      final tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+                      return SlideTransition(position: animation.drive(tween), child: child);
+                    },
+                  );
+                },
               ),
             ],
           ),
