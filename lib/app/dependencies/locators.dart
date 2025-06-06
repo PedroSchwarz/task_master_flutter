@@ -71,11 +71,11 @@ class Locators extends BaseServiceLocators {
       ..registerSingleton(UserLocalDataSource(localStorage: getIt()))
       ..registerSingleton(CredentialsRepository(credentialsLocalDataSource: getIt()))
       ..registerSingleton(UserRepository(userLocalDataSource: getIt()))
-      ..registerSingleton(createAuthenticatedDio(baseUrl: buildConfigurations.baseUrl, credentialsRepository: getIt()))
       ..registerSingleton(createDio(baseUrl: buildConfigurations.baseUrl), instanceName: BaseServiceLocators.noAuthDio)
       ..registerSingleton(WebsocketClient(configurations: getIt()))
       ..registerSingleton(AuthRemoteDataSource(getIt(instanceName: BaseServiceLocators.noAuthDio)))
       ..registerSingleton(AuthRepository(authRemoteDataSource: getIt(), userRepository: getIt(), credentialsRepository: getIt()))
+      ..registerSingleton(createAuthenticatedDio(baseUrl: buildConfigurations.baseUrl, authRepository: getIt(), credentialsRepository: getIt()))
       ..registerSingleton(createRouter(authRepository: getIt()))
       ..registerSingleton(notificationsRepository)
       ..registerSingleton(SplashRepository(authRepository: getIt()))
@@ -148,9 +148,13 @@ class Locators extends BaseServiceLocators {
     return Dio(BaseOptions(baseUrl: baseUrl));
   }
 
-  Dio createAuthenticatedDio({required String baseUrl, required CredentialsRepository credentialsRepository}) {
+  Dio createAuthenticatedDio({
+    required String baseUrl,
+    required AuthRepository authRepository,
+    required CredentialsRepository credentialsRepository,
+  }) {
     final dio = Dio(BaseOptions(baseUrl: baseUrl));
-    final authInterceptor = AuthInterceptor(credentialsRepository: credentialsRepository, dio: dio);
+    final authInterceptor = AuthInterceptor(authRepository: authRepository, credentialsRepository: credentialsRepository, dio: dio);
     dio.interceptors.add(authInterceptor);
     return dio;
   }
