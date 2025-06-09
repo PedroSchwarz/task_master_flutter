@@ -122,19 +122,8 @@ class TaskItem extends StatelessWidget {
                         ),
                         const Gap(AppSpacing.xs),
                         Row(
-                          spacing: AppSpacing.xs,
+                          spacing: AppSpacing.s,
                           children: [
-                            if (task.isOverdue)
-                              Chip(
-                                label: Text(
-                                  localization.overdue,
-                                  style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
-                                ),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-                                padding: const EdgeInsets.all(AppSpacing.xxs),
-                                backgroundColor: Colors.red,
-                                side: BorderSide.none,
-                              ),
                             Chip(
                               label: Text(switch (task.status) {
                                 TaskStatus.todo => localization.to_do,
@@ -146,6 +135,25 @@ class TaskItem extends StatelessWidget {
                               backgroundColor: task.status.color.withValues(alpha: 0.8),
                               side: BorderSide.none,
                             ),
+                            if (task.recurring)
+                              Chip(
+                                label: Text(
+                                  switch (task.recurrencePattern) {
+                                    TaskRecurrence.daily => localization.recurrence_daily,
+                                    TaskRecurrence.weekly => localization.recurrence_weekly,
+                                    TaskRecurrence.monthly => localization.recurrence_monthly,
+                                    _ => localization.never,
+                                  },
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: theme.colorScheme.onPrimaryContainer,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                padding: const EdgeInsets.all(AppSpacing.xs),
+                                backgroundColor: theme.scaffoldBackgroundColor,
+                                side: BorderSide(color: theme.colorScheme.primary, width: 2),
+                              ),
                           ],
                         ),
                       ],

@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UpdateTaskRequest {
 
- String get title; DateTime get dueDate; TaskPriority get priority; TaskStatus get status; bool get completed; List<String> get assignedTo; List<UpdateTaskChecklistItem> get checklist;@JsonKey(includeIfNull: false) String? get description;
+ String get title; DateTime get dueDate; TaskPriority get priority; TaskStatus get status; bool get completed; List<String> get assignedTo; List<UpdateTaskChecklistItem> get checklist; bool get recurring;@JsonKey(includeIfNull: false) String? get description;@JsonKey(includeIfNull: false) TaskRecurrence? get recurrencePattern;@JsonKey(includeIfNull: false) DateTime? get recurrenceEndDate;
 /// Create a copy of UpdateTaskRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $UpdateTaskRequestCopyWith<UpdateTaskRequest> get copyWith => _$UpdateTaskReques
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateTaskRequest&&(identical(other.title, title) || other.title == title)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.completed, completed) || other.completed == completed)&&const DeepCollectionEquality().equals(other.assignedTo, assignedTo)&&const DeepCollectionEquality().equals(other.checklist, checklist)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateTaskRequest&&(identical(other.title, title) || other.title == title)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.completed, completed) || other.completed == completed)&&const DeepCollectionEquality().equals(other.assignedTo, assignedTo)&&const DeepCollectionEquality().equals(other.checklist, checklist)&&(identical(other.recurring, recurring) || other.recurring == recurring)&&(identical(other.description, description) || other.description == description)&&(identical(other.recurrencePattern, recurrencePattern) || other.recurrencePattern == recurrencePattern)&&(identical(other.recurrenceEndDate, recurrenceEndDate) || other.recurrenceEndDate == recurrenceEndDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,dueDate,priority,status,completed,const DeepCollectionEquality().hash(assignedTo),const DeepCollectionEquality().hash(checklist),description);
+int get hashCode => Object.hash(runtimeType,title,dueDate,priority,status,completed,const DeepCollectionEquality().hash(assignedTo),const DeepCollectionEquality().hash(checklist),recurring,description,recurrencePattern,recurrenceEndDate);
 
 @override
 String toString() {
-  return 'UpdateTaskRequest(title: $title, dueDate: $dueDate, priority: $priority, status: $status, completed: $completed, assignedTo: $assignedTo, checklist: $checklist, description: $description)';
+  return 'UpdateTaskRequest(title: $title, dueDate: $dueDate, priority: $priority, status: $status, completed: $completed, assignedTo: $assignedTo, checklist: $checklist, recurring: $recurring, description: $description, recurrencePattern: $recurrencePattern, recurrenceEndDate: $recurrenceEndDate)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $UpdateTaskRequestCopyWith<$Res>  {
   factory $UpdateTaskRequestCopyWith(UpdateTaskRequest value, $Res Function(UpdateTaskRequest) _then) = _$UpdateTaskRequestCopyWithImpl;
 @useResult
 $Res call({
- String title, DateTime dueDate, TaskPriority priority, TaskStatus status, bool completed, List<String> assignedTo, List<UpdateTaskChecklistItem> checklist,@JsonKey(includeIfNull: false) String? description
+ String title, DateTime dueDate, TaskPriority priority, TaskStatus status, bool completed, List<String> assignedTo, List<UpdateTaskChecklistItem> checklist, bool recurring,@JsonKey(includeIfNull: false) String? description,@JsonKey(includeIfNull: false) TaskRecurrence? recurrencePattern,@JsonKey(includeIfNull: false) DateTime? recurrenceEndDate
 });
 
 
@@ -66,7 +66,7 @@ class _$UpdateTaskRequestCopyWithImpl<$Res>
 
 /// Create a copy of UpdateTaskRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? dueDate = null,Object? priority = null,Object? status = null,Object? completed = null,Object? assignedTo = null,Object? checklist = null,Object? description = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? dueDate = null,Object? priority = null,Object? status = null,Object? completed = null,Object? assignedTo = null,Object? checklist = null,Object? recurring = null,Object? description = freezed,Object? recurrencePattern = freezed,Object? recurrenceEndDate = freezed,}) {
   return _then(_self.copyWith(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,dueDate: null == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
@@ -75,8 +75,11 @@ as TaskPriority,status: null == status ? _self.status : status // ignore: cast_n
 as TaskStatus,completed: null == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
 as bool,assignedTo: null == assignedTo ? _self.assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
 as List<String>,checklist: null == checklist ? _self.checklist : checklist // ignore: cast_nullable_to_non_nullable
-as List<UpdateTaskChecklistItem>,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,
+as List<UpdateTaskChecklistItem>,recurring: null == recurring ? _self.recurring : recurring // ignore: cast_nullable_to_non_nullable
+as bool,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,recurrencePattern: freezed == recurrencePattern ? _self.recurrencePattern : recurrencePattern // ignore: cast_nullable_to_non_nullable
+as TaskRecurrence?,recurrenceEndDate: freezed == recurrenceEndDate ? _self.recurrenceEndDate : recurrenceEndDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -87,7 +90,7 @@ as String?,
 @JsonSerializable()
 
 class _UpdateTaskRequest implements UpdateTaskRequest {
-  const _UpdateTaskRequest({required this.title, required this.dueDate, required this.priority, required this.status, required this.completed, required final  List<String> assignedTo, required final  List<UpdateTaskChecklistItem> checklist, @JsonKey(includeIfNull: false) this.description}): _assignedTo = assignedTo,_checklist = checklist;
+  const _UpdateTaskRequest({required this.title, required this.dueDate, required this.priority, required this.status, required this.completed, required final  List<String> assignedTo, required final  List<UpdateTaskChecklistItem> checklist, required this.recurring, @JsonKey(includeIfNull: false) this.description, @JsonKey(includeIfNull: false) this.recurrencePattern, @JsonKey(includeIfNull: false) this.recurrenceEndDate}): _assignedTo = assignedTo,_checklist = checklist;
   factory _UpdateTaskRequest.fromJson(Map<String, dynamic> json) => _$UpdateTaskRequestFromJson(json);
 
 @override final  String title;
@@ -109,7 +112,10 @@ class _UpdateTaskRequest implements UpdateTaskRequest {
   return EqualUnmodifiableListView(_checklist);
 }
 
+@override final  bool recurring;
 @override@JsonKey(includeIfNull: false) final  String? description;
+@override@JsonKey(includeIfNull: false) final  TaskRecurrence? recurrencePattern;
+@override@JsonKey(includeIfNull: false) final  DateTime? recurrenceEndDate;
 
 /// Create a copy of UpdateTaskRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -124,16 +130,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateTaskRequest&&(identical(other.title, title) || other.title == title)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.completed, completed) || other.completed == completed)&&const DeepCollectionEquality().equals(other._assignedTo, _assignedTo)&&const DeepCollectionEquality().equals(other._checklist, _checklist)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateTaskRequest&&(identical(other.title, title) || other.title == title)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.completed, completed) || other.completed == completed)&&const DeepCollectionEquality().equals(other._assignedTo, _assignedTo)&&const DeepCollectionEquality().equals(other._checklist, _checklist)&&(identical(other.recurring, recurring) || other.recurring == recurring)&&(identical(other.description, description) || other.description == description)&&(identical(other.recurrencePattern, recurrencePattern) || other.recurrencePattern == recurrencePattern)&&(identical(other.recurrenceEndDate, recurrenceEndDate) || other.recurrenceEndDate == recurrenceEndDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,title,dueDate,priority,status,completed,const DeepCollectionEquality().hash(_assignedTo),const DeepCollectionEquality().hash(_checklist),description);
+int get hashCode => Object.hash(runtimeType,title,dueDate,priority,status,completed,const DeepCollectionEquality().hash(_assignedTo),const DeepCollectionEquality().hash(_checklist),recurring,description,recurrencePattern,recurrenceEndDate);
 
 @override
 String toString() {
-  return 'UpdateTaskRequest(title: $title, dueDate: $dueDate, priority: $priority, status: $status, completed: $completed, assignedTo: $assignedTo, checklist: $checklist, description: $description)';
+  return 'UpdateTaskRequest(title: $title, dueDate: $dueDate, priority: $priority, status: $status, completed: $completed, assignedTo: $assignedTo, checklist: $checklist, recurring: $recurring, description: $description, recurrencePattern: $recurrencePattern, recurrenceEndDate: $recurrenceEndDate)';
 }
 
 
@@ -144,7 +150,7 @@ abstract mixin class _$UpdateTaskRequestCopyWith<$Res> implements $UpdateTaskReq
   factory _$UpdateTaskRequestCopyWith(_UpdateTaskRequest value, $Res Function(_UpdateTaskRequest) _then) = __$UpdateTaskRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String title, DateTime dueDate, TaskPriority priority, TaskStatus status, bool completed, List<String> assignedTo, List<UpdateTaskChecklistItem> checklist,@JsonKey(includeIfNull: false) String? description
+ String title, DateTime dueDate, TaskPriority priority, TaskStatus status, bool completed, List<String> assignedTo, List<UpdateTaskChecklistItem> checklist, bool recurring,@JsonKey(includeIfNull: false) String? description,@JsonKey(includeIfNull: false) TaskRecurrence? recurrencePattern,@JsonKey(includeIfNull: false) DateTime? recurrenceEndDate
 });
 
 
@@ -161,7 +167,7 @@ class __$UpdateTaskRequestCopyWithImpl<$Res>
 
 /// Create a copy of UpdateTaskRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? dueDate = null,Object? priority = null,Object? status = null,Object? completed = null,Object? assignedTo = null,Object? checklist = null,Object? description = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? title = null,Object? dueDate = null,Object? priority = null,Object? status = null,Object? completed = null,Object? assignedTo = null,Object? checklist = null,Object? recurring = null,Object? description = freezed,Object? recurrencePattern = freezed,Object? recurrenceEndDate = freezed,}) {
   return _then(_UpdateTaskRequest(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,dueDate: null == dueDate ? _self.dueDate : dueDate // ignore: cast_nullable_to_non_nullable
@@ -170,8 +176,11 @@ as TaskPriority,status: null == status ? _self.status : status // ignore: cast_n
 as TaskStatus,completed: null == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
 as bool,assignedTo: null == assignedTo ? _self._assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
 as List<String>,checklist: null == checklist ? _self._checklist : checklist // ignore: cast_nullable_to_non_nullable
-as List<UpdateTaskChecklistItem>,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,
+as List<UpdateTaskChecklistItem>,recurring: null == recurring ? _self.recurring : recurring // ignore: cast_nullable_to_non_nullable
+as bool,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,recurrencePattern: freezed == recurrencePattern ? _self.recurrencePattern : recurrencePattern // ignore: cast_nullable_to_non_nullable
+as TaskRecurrence?,recurrenceEndDate: freezed == recurrenceEndDate ? _self.recurrenceEndDate : recurrenceEndDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

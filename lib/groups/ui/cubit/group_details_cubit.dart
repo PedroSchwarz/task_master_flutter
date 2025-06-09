@@ -245,6 +245,9 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
               updatedTask.checklist.map((item) {
                 return UpdateTaskChecklistItem(title: item.title, status: item.status, order: item.order);
               }).toList(),
+          recurring: updatedTask.recurring,
+          recurrencePattern: task.recurrencePattern,
+          recurrenceEndDate: task.recurrenceEndDate,
         ),
       );
 

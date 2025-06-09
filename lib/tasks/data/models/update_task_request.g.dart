@@ -22,7 +22,16 @@ _UpdateTaskRequest _$UpdateTaskRequestFromJson(
             (e) => UpdateTaskChecklistItem.fromJson(e as Map<String, dynamic>),
           )
           .toList(),
+  recurring: json['recurring'] as bool,
   description: json['description'] as String?,
+  recurrencePattern: $enumDecodeNullable(
+    _$TaskRecurrenceEnumMap,
+    json['recurrencePattern'],
+  ),
+  recurrenceEndDate:
+      json['recurrenceEndDate'] == null
+          ? null
+          : DateTime.parse(json['recurrenceEndDate'] as String),
 );
 
 Map<String, dynamic> _$UpdateTaskRequestToJson(_UpdateTaskRequest instance) =>
@@ -34,7 +43,12 @@ Map<String, dynamic> _$UpdateTaskRequestToJson(_UpdateTaskRequest instance) =>
       'completed': instance.completed,
       'assignedTo': instance.assignedTo,
       'checklist': instance.checklist,
+      'recurring': instance.recurring,
       if (instance.description case final value?) 'description': value,
+      if (_$TaskRecurrenceEnumMap[instance.recurrencePattern] case final value?)
+        'recurrencePattern': value,
+      if (instance.recurrenceEndDate?.toIso8601String() case final value?)
+        'recurrenceEndDate': value,
     };
 
 const _$TaskPriorityEnumMap = {
@@ -47,6 +61,12 @@ const _$TaskStatusEnumMap = {
   TaskStatus.todo: 'todo',
   TaskStatus.inProgress: 'in_progress',
   TaskStatus.done: 'done',
+};
+
+const _$TaskRecurrenceEnumMap = {
+  TaskRecurrence.daily: 'daily',
+  TaskRecurrence.weekly: 'weekly',
+  TaskRecurrence.monthly: 'monthly',
 };
 
 _UpdateTaskChecklistItem _$UpdateTaskChecklistItemFromJson(

@@ -91,8 +91,10 @@ class TaskChecklist extends StatelessWidget {
               title: Text(
                 item.title,
                 style: TextStyle(
-                  color: item.status == TaskChecklistItemStatus.blocked ? Colors.red : null,
+                  color: theme.colorScheme.onSurface.withValues(alpha: item.status == TaskChecklistItemStatus.blocked ? 0.5 : 1),
                   decoration: item.status == TaskChecklistItemStatus.blocked ? TextDecoration.lineThrough : null,
+                  decorationColor: Colors.orange.withValues(alpha: 0.5),
+                  decorationThickness: 4,
                 ),
               ),
               trailing: Row(

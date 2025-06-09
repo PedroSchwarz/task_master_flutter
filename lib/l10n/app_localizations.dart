@@ -760,6 +760,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Checklist'**
   String get checklist;
+
+  /// No description provided for @recurring.
+  ///
+  /// In en, this message translates to:
+  /// **'Recurring'**
+  String get recurring;
+
+  /// No description provided for @recurrence_daily.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily'**
+  String get recurrence_daily;
+
+  /// No description provided for @recurrence_weekly.
+  ///
+  /// In en, this message translates to:
+  /// **'Weekly'**
+  String get recurrence_weekly;
+
+  /// No description provided for @recurrence_monthly.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly'**
+  String get recurrence_monthly;
+
+  /// No description provided for @ending_on.
+  ///
+  /// In en, this message translates to:
+  /// **'Ending On'**
+  String get ending_on;
+
+  /// No description provided for @never.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get never;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

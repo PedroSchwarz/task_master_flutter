@@ -228,5 +228,17 @@
     "dashboard_showing_highlights": "Mostrar Destaques",
     "@dashboard_showing_highlights": {},
     "checklist": "Checklist",
-    "@checklist": {}
+    "@checklist": {},
+    "recurring": "Recorrente",
+    "@recurring": {},
+    "recurrence_daily": "Diariamente",
+    "@recurrence_daily": {},
+    "recurrence_weekly": "Semanalmente",
+    "@recurrence_weekly": {},
+    "recurrence_monthly": "Mensalmente",
+    "@recurrence_monthly": {},
+    "ending_on": "Termina em",
+    "@ending_on": {},
+    "never": "Nunca",
+    "@never": {}
 }

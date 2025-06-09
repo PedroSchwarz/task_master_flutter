@@ -342,4 +342,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get checklist => 'Checklist';
+
+  @override
+  String get recurring => 'Recurring';
+
+  @override
+  String get recurrence_daily => 'Daily';
+
+  @override
+  String get recurrence_weekly => 'Weekly';
+
+  @override
+  String get recurrence_monthly => 'Monthly';
+
+  @override
+  String get ending_on => 'Ending On';
+
+  @override
+  String get never => 'Never';
 }

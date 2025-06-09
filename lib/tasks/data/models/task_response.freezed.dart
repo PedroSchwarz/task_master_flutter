@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TaskResponse {
 
-@JsonKey(name: '_id') String get id; String get title; List<TaskChecklistItem> get checklist; TaskPriority get priority; TaskStatus get status; DateTime get dueDate; bool get completed; String get group; UserResponse get owner; List<UserResponse> get assignedTo; DateTime get createdAt; DateTime get updatedAt; String? get description;
+@JsonKey(name: '_id') String get id; String get title; List<TaskChecklistItem> get checklist; TaskPriority get priority; TaskStatus get status; DateTime get dueDate; bool get completed; String get group; UserResponse get owner; List<UserResponse> get assignedTo; bool get recurring; DateTime get createdAt; DateTime get updatedAt; String? get description; TaskRecurrence? get recurrencePattern; DateTime? get recurrenceEndDate;
 /// Create a copy of TaskResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $TaskResponseCopyWith<TaskResponse> get copyWith => _$TaskResponseCopyWithImpl<T
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.checklist, checklist)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.group, group) || other.group == group)&&(identical(other.owner, owner) || other.owner == owner)&&const DeepCollectionEquality().equals(other.assignedTo, assignedTo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.checklist, checklist)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.group, group) || other.group == group)&&(identical(other.owner, owner) || other.owner == owner)&&const DeepCollectionEquality().equals(other.assignedTo, assignedTo)&&(identical(other.recurring, recurring) || other.recurring == recurring)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.recurrencePattern, recurrencePattern) || other.recurrencePattern == recurrencePattern)&&(identical(other.recurrenceEndDate, recurrenceEndDate) || other.recurrenceEndDate == recurrenceEndDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,const DeepCollectionEquality().hash(checklist),priority,status,dueDate,completed,group,owner,const DeepCollectionEquality().hash(assignedTo),createdAt,updatedAt,description);
+int get hashCode => Object.hash(runtimeType,id,title,const DeepCollectionEquality().hash(checklist),priority,status,dueDate,completed,group,owner,const DeepCollectionEquality().hash(assignedTo),recurring,createdAt,updatedAt,description,recurrencePattern,recurrenceEndDate);
 
 @override
 String toString() {
-  return 'TaskResponse(id: $id, title: $title, checklist: $checklist, priority: $priority, status: $status, dueDate: $dueDate, completed: $completed, group: $group, owner: $owner, assignedTo: $assignedTo, createdAt: $createdAt, updatedAt: $updatedAt, description: $description)';
+  return 'TaskResponse(id: $id, title: $title, checklist: $checklist, priority: $priority, status: $status, dueDate: $dueDate, completed: $completed, group: $group, owner: $owner, assignedTo: $assignedTo, recurring: $recurring, createdAt: $createdAt, updatedAt: $updatedAt, description: $description, recurrencePattern: $recurrencePattern, recurrenceEndDate: $recurrenceEndDate)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $TaskResponseCopyWith<$Res>  {
   factory $TaskResponseCopyWith(TaskResponse value, $Res Function(TaskResponse) _then) = _$TaskResponseCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String title, List<TaskChecklistItem> checklist, TaskPriority priority, TaskStatus status, DateTime dueDate, bool completed, String group, UserResponse owner, List<UserResponse> assignedTo, DateTime createdAt, DateTime updatedAt, String? description
+@JsonKey(name: '_id') String id, String title, List<TaskChecklistItem> checklist, TaskPriority priority, TaskStatus status, DateTime dueDate, bool completed, String group, UserResponse owner, List<UserResponse> assignedTo, bool recurring, DateTime createdAt, DateTime updatedAt, String? description, TaskRecurrence? recurrencePattern, DateTime? recurrenceEndDate
 });
 
 
@@ -66,7 +66,7 @@ class _$TaskResponseCopyWithImpl<$Res>
 
 /// Create a copy of TaskResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? checklist = null,Object? priority = null,Object? status = null,Object? dueDate = null,Object? completed = null,Object? group = null,Object? owner = null,Object? assignedTo = null,Object? createdAt = null,Object? updatedAt = null,Object? description = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? checklist = null,Object? priority = null,Object? status = null,Object? dueDate = null,Object? completed = null,Object? group = null,Object? owner = null,Object? assignedTo = null,Object? recurring = null,Object? createdAt = null,Object? updatedAt = null,Object? description = freezed,Object? recurrencePattern = freezed,Object? recurrenceEndDate = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -78,10 +78,13 @@ as DateTime,completed: null == completed ? _self.completed : completed // ignore
 as bool,group: null == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
 as String,owner: null == owner ? _self.owner : owner // ignore: cast_nullable_to_non_nullable
 as UserResponse,assignedTo: null == assignedTo ? _self.assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
-as List<UserResponse>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as List<UserResponse>,recurring: null == recurring ? _self.recurring : recurring // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,recurrencePattern: freezed == recurrencePattern ? _self.recurrencePattern : recurrencePattern // ignore: cast_nullable_to_non_nullable
+as TaskRecurrence?,recurrenceEndDate: freezed == recurrenceEndDate ? _self.recurrenceEndDate : recurrenceEndDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 /// Create a copy of TaskResponse
@@ -101,7 +104,7 @@ $UserResponseCopyWith<$Res> get owner {
 @JsonSerializable()
 
 class _TaskResponse extends TaskResponse {
-  const _TaskResponse({@JsonKey(name: '_id') required this.id, required this.title, required final  List<TaskChecklistItem> checklist, required this.priority, required this.status, required this.dueDate, required this.completed, required this.group, required this.owner, required final  List<UserResponse> assignedTo, required this.createdAt, required this.updatedAt, this.description}): _checklist = checklist,_assignedTo = assignedTo,super._();
+  const _TaskResponse({@JsonKey(name: '_id') required this.id, required this.title, required final  List<TaskChecklistItem> checklist, required this.priority, required this.status, required this.dueDate, required this.completed, required this.group, required this.owner, required final  List<UserResponse> assignedTo, required this.recurring, required this.createdAt, required this.updatedAt, this.description, this.recurrencePattern, this.recurrenceEndDate}): _checklist = checklist,_assignedTo = assignedTo,super._();
   factory _TaskResponse.fromJson(Map<String, dynamic> json) => _$TaskResponseFromJson(json);
 
 @override@JsonKey(name: '_id') final  String id;
@@ -126,9 +129,12 @@ class _TaskResponse extends TaskResponse {
   return EqualUnmodifiableListView(_assignedTo);
 }
 
+@override final  bool recurring;
 @override final  DateTime createdAt;
 @override final  DateTime updatedAt;
 @override final  String? description;
+@override final  TaskRecurrence? recurrencePattern;
+@override final  DateTime? recurrenceEndDate;
 
 /// Create a copy of TaskResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -143,16 +149,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._checklist, _checklist)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.group, group) || other.group == group)&&(identical(other.owner, owner) || other.owner == owner)&&const DeepCollectionEquality().equals(other._assignedTo, _assignedTo)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._checklist, _checklist)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.dueDate, dueDate) || other.dueDate == dueDate)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.group, group) || other.group == group)&&(identical(other.owner, owner) || other.owner == owner)&&const DeepCollectionEquality().equals(other._assignedTo, _assignedTo)&&(identical(other.recurring, recurring) || other.recurring == recurring)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.description, description) || other.description == description)&&(identical(other.recurrencePattern, recurrencePattern) || other.recurrencePattern == recurrencePattern)&&(identical(other.recurrenceEndDate, recurrenceEndDate) || other.recurrenceEndDate == recurrenceEndDate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,const DeepCollectionEquality().hash(_checklist),priority,status,dueDate,completed,group,owner,const DeepCollectionEquality().hash(_assignedTo),createdAt,updatedAt,description);
+int get hashCode => Object.hash(runtimeType,id,title,const DeepCollectionEquality().hash(_checklist),priority,status,dueDate,completed,group,owner,const DeepCollectionEquality().hash(_assignedTo),recurring,createdAt,updatedAt,description,recurrencePattern,recurrenceEndDate);
 
 @override
 String toString() {
-  return 'TaskResponse(id: $id, title: $title, checklist: $checklist, priority: $priority, status: $status, dueDate: $dueDate, completed: $completed, group: $group, owner: $owner, assignedTo: $assignedTo, createdAt: $createdAt, updatedAt: $updatedAt, description: $description)';
+  return 'TaskResponse(id: $id, title: $title, checklist: $checklist, priority: $priority, status: $status, dueDate: $dueDate, completed: $completed, group: $group, owner: $owner, assignedTo: $assignedTo, recurring: $recurring, createdAt: $createdAt, updatedAt: $updatedAt, description: $description, recurrencePattern: $recurrencePattern, recurrenceEndDate: $recurrenceEndDate)';
 }
 
 
@@ -163,7 +169,7 @@ abstract mixin class _$TaskResponseCopyWith<$Res> implements $TaskResponseCopyWi
   factory _$TaskResponseCopyWith(_TaskResponse value, $Res Function(_TaskResponse) _then) = __$TaskResponseCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String title, List<TaskChecklistItem> checklist, TaskPriority priority, TaskStatus status, DateTime dueDate, bool completed, String group, UserResponse owner, List<UserResponse> assignedTo, DateTime createdAt, DateTime updatedAt, String? description
+@JsonKey(name: '_id') String id, String title, List<TaskChecklistItem> checklist, TaskPriority priority, TaskStatus status, DateTime dueDate, bool completed, String group, UserResponse owner, List<UserResponse> assignedTo, bool recurring, DateTime createdAt, DateTime updatedAt, String? description, TaskRecurrence? recurrencePattern, DateTime? recurrenceEndDate
 });
 
 
@@ -180,7 +186,7 @@ class __$TaskResponseCopyWithImpl<$Res>
 
 /// Create a copy of TaskResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? checklist = null,Object? priority = null,Object? status = null,Object? dueDate = null,Object? completed = null,Object? group = null,Object? owner = null,Object? assignedTo = null,Object? createdAt = null,Object? updatedAt = null,Object? description = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? checklist = null,Object? priority = null,Object? status = null,Object? dueDate = null,Object? completed = null,Object? group = null,Object? owner = null,Object? assignedTo = null,Object? recurring = null,Object? createdAt = null,Object? updatedAt = null,Object? description = freezed,Object? recurrencePattern = freezed,Object? recurrenceEndDate = freezed,}) {
   return _then(_TaskResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -192,10 +198,13 @@ as DateTime,completed: null == completed ? _self.completed : completed // ignore
 as bool,group: null == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
 as String,owner: null == owner ? _self.owner : owner // ignore: cast_nullable_to_non_nullable
 as UserResponse,assignedTo: null == assignedTo ? _self._assignedTo : assignedTo // ignore: cast_nullable_to_non_nullable
-as List<UserResponse>,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as List<UserResponse>,recurring: null == recurring ? _self.recurring : recurring // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,recurrencePattern: freezed == recurrencePattern ? _self.recurrencePattern : recurrencePattern // ignore: cast_nullable_to_non_nullable
+as TaskRecurrence?,recurrenceEndDate: freezed == recurrenceEndDate ? _self.recurrenceEndDate : recurrenceEndDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

@@ -28,3 +28,12 @@ enum TaskStatus {
   final IconData icon;
   final Color color;
 }
+
+enum TaskRecurrence {
+  @JsonValue('daily')
+  daily,
+  @JsonValue('weekly')
+  weekly,
+  @JsonValue('monthly')
+  monthly,
+}

@@ -123,7 +123,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               header: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(localization.checklist, style: theme.textTheme.bodyLarge),
+                                  Text(localization.checklist, style: theme.textTheme.titleMedium),
                                   IconButton(onPressed: bloc.addChecklistItem, color: theme.colorScheme.primary, icon: const Icon(Icons.add)),
                                 ],
                               ),
@@ -329,6 +329,103 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           ),
                         ],
                       ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                            bloc: bloc,
+                            buildWhen:
+                                (previous, current) =>
+                                    previous.isLoading != current.isLoading || //
+                                    previous.recurring != current.recurring,
+                            builder: (context, state) {
+                              return AppSkeleton(
+                                isLoading: state.isLoading,
+                                child: Row(
+                                  spacing: AppSpacing.s,
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(localization.recurring, style: theme.textTheme.titleMedium),
+                                    Switch(value: state.recurring, onChanged: bloc.updateRecurring),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                          BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                            bloc: bloc,
+                            buildWhen:
+                                (previous, current) =>
+                                    previous.isLoading != current.isLoading || //
+                                    previous.recurring != current.recurring || //
+                                    previous.recurrencePattern != current.recurrencePattern,
+                            builder: (context, state) {
+                              if (state.recurring) {
+                                return AppSkeleton(
+                                  isLoading: state.isLoading,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: AppSpacing.xs),
+                                    child: Wrap(
+                                      spacing: AppSpacing.xs,
+                                      runSpacing: AppSpacing.xs,
+                                      children:
+                                          TaskRecurrence.values.map((pattern) {
+                                            return ChoiceChip(
+                                              label: Text(switch (pattern) {
+                                                TaskRecurrence.daily => localization.recurrence_daily,
+                                                TaskRecurrence.weekly => localization.recurrence_weekly,
+                                                TaskRecurrence.monthly => localization.recurrence_monthly,
+                                              }, style: theme.textTheme.bodyLarge),
+                                              selected: state.recurrencePattern == pattern,
+                                              onSelected: (value) {
+                                                bloc.updatePattern(pattern);
+                                              },
+                                            );
+                                          }).toList(),
+                                    ),
+                                  ),
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
+                          ),
+                          BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                            bloc: bloc,
+                            buildWhen:
+                                (previous, current) =>
+                                    previous.isLoading != current.isLoading || //
+                                    previous.recurring != current.recurring || //
+                                    previous.recurrenceEndDate != current.recurrenceEndDate,
+                            builder: (context, state) {
+                              if (state.recurring) {
+                                return AppSkeleton(
+                                  isLoading: state.isLoading,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: AppSpacing.s),
+                                    child: OutlinedButton(
+                                      onPressed: () async {
+                                        final date = await showDatePicker(
+                                          context: context,
+                                          initialDate: DateTime.now(),
+                                          firstDate: DateTime.now(),
+                                          lastDate: DateTime.now().add(const Duration(days: 365)),
+                                        );
+                                        bloc.updateRecurrenceEndDate(date);
+                                      },
+                                      child: Text(
+                                        '${localization.ending_on}: ${state.formattedRecurrenceEndDate ?? localization.never}',
+                                        style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.primary),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
+                          ),
+                        ],
+                      ),
                       const Divider(),
                       Text(localization.assign_to, style: theme.textTheme.titleMedium),
                     ],
@@ -336,7 +433,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 ),
               ),
               SliverPadding(
-                padding: const EdgeInsets.all(AppSpacing.s),
+                padding: const EdgeInsets.only(top: AppSpacing.s, left: AppSpacing.s, right: AppSpacing.s, bottom: AppSpacing.l),
                 sliver: BlocBuilder<CreateTaskCubit, CreateTaskState>(
                   bloc: bloc,
                   buildWhen:

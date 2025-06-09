@@ -11,10 +11,13 @@ abstract class CreateTaskRequest with _$CreateTaskRequest {
     required DateTime dueDate,
     required String group,
     required List<CreateTaskChecklistItem> checklist,
+    required bool recurring,
     @JsonKey(includeIfNull: false) String? description,
     @JsonKey(includeIfNull: false) TaskPriority? priority,
     @JsonKey(includeIfNull: false) TaskStatus? status,
     @JsonKey(includeIfNull: false) List<String>? assignedTo,
+    @JsonKey(includeIfNull: false) TaskRecurrence? recurrencePattern,
+    @JsonKey(includeIfNull: false) DateTime? recurrenceEndDate,
   }) = _CreateTaskRequest;
 
   factory CreateTaskRequest.fromJson(Map<String, dynamic> json) => _$CreateTaskRequestFromJson(json);

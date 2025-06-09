@@ -15,7 +15,10 @@ abstract class UpdateTaskRequest with _$UpdateTaskRequest {
     required bool completed,
     required List<String> assignedTo,
     required List<UpdateTaskChecklistItem> checklist,
+    required bool recurring,
     @JsonKey(includeIfNull: false) String? description,
+    @JsonKey(includeIfNull: false) TaskRecurrence? recurrencePattern,
+    @JsonKey(includeIfNull: false) DateTime? recurrenceEndDate,
   }) = _UpdateTaskRequest;
 
   factory UpdateTaskRequest.fromJson(Map<String, dynamic> json) => _$UpdateTaskRequestFromJson(json);

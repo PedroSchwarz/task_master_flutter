@@ -227,48 +227,57 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 return const AppSkeleton(isLoading: true, child: SizedBox(height: 50, width: double.infinity));
                               }
 
-                              return Row(
-                                spacing: AppSpacing.xs,
+                              return Wrap(
+                                spacing: AppSpacing.s,
+                                runSpacing: AppSpacing.s,
+                                alignment: WrapAlignment.start,
                                 children: [
-                                  if (task.isOverdue)
-                                    Flexible(
+                                  Chip(
+                                    label: Text(switch (task.priority) {
+                                      TaskPriority.low => localization.low,
+                                      TaskPriority.medium => localization.medium,
+                                      TaskPriority.high => localization.high,
+                                    }, style: theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                    padding: const EdgeInsets.all(AppSpacing.xs),
+                                    backgroundColor: task.priority.color,
+                                    side: BorderSide.none,
+                                  ),
+                                  Chip(
+                                    label: Text(switch (task.status) {
+                                      TaskStatus.todo => localization.to_do,
+                                      TaskStatus.inProgress => localization.in_progress,
+                                      TaskStatus.done => localization.done,
+                                    }, style: theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                    padding: const EdgeInsets.all(AppSpacing.xs),
+                                    backgroundColor: task.status.color,
+                                    side: BorderSide.none,
+                                  ),
+                                  if (task.recurring) ...[
+                                    Tooltip(
+                                      message: '${localization.ending_on}: ${task.formatteRecurrenceEndDate ?? localization.never}',
                                       child: Chip(
+                                        avatar: const Icon(Icons.info_outline_rounded),
                                         label: Text(
-                                          localization.overdue,
-                                          style: theme.textTheme.bodyLarge?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+                                          switch (task.recurrencePattern) {
+                                            TaskRecurrence.daily => localization.recurrence_daily,
+                                            TaskRecurrence.weekly => localization.recurrence_weekly,
+                                            TaskRecurrence.monthly => localization.recurrence_monthly,
+                                            _ => localization.never,
+                                          },
+                                          style: theme.textTheme.titleMedium?.copyWith(
+                                            color: theme.colorScheme.onPrimaryContainer,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
                                         padding: const EdgeInsets.all(AppSpacing.xs),
-                                        backgroundColor: Colors.red,
+                                        backgroundColor: theme.colorScheme.primaryContainer,
                                         side: BorderSide.none,
                                       ),
                                     ),
-                                  Flexible(
-                                    child: Chip(
-                                      label: Text(switch (task.priority) {
-                                        TaskPriority.low => localization.low,
-                                        TaskPriority.medium => localization.medium,
-                                        TaskPriority.high => localization.high,
-                                      }, style: theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                                      padding: const EdgeInsets.all(AppSpacing.xs),
-                                      backgroundColor: task.priority.color,
-                                      side: BorderSide.none,
-                                    ),
-                                  ),
-                                  Flexible(
-                                    child: Chip(
-                                      label: Text(switch (task.status) {
-                                        TaskStatus.todo => localization.to_do,
-                                        TaskStatus.inProgress => localization.in_progress,
-                                        TaskStatus.done => localization.done,
-                                      }, style: theme.textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                                      padding: const EdgeInsets.all(AppSpacing.xs),
-                                      backgroundColor: task.status.color,
-                                      side: BorderSide.none,
-                                    ),
-                                  ),
+                                  ],
                                 ],
                               ).animate().fade(delay: 150.ms);
                             },
@@ -325,7 +334,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                               ).animate().fade(delay: 200.ms);
                             },
                           ),
-                          const Gap(AppSpacing.s),
+                          const Gap(AppSpacing.m),
                           BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
                             bloc: bloc,
                             buildWhen:

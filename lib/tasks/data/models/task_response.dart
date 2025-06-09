@@ -19,9 +19,12 @@ abstract class TaskResponse with _$TaskResponse {
     required String group,
     required UserResponse owner,
     required List<UserResponse> assignedTo,
+    required bool recurring,
     required DateTime createdAt,
     required DateTime updatedAt,
     String? description,
+    TaskRecurrence? recurrencePattern,
+    DateTime? recurrenceEndDate,
   }) = _TaskResponse;
 
   const TaskResponse._();
@@ -32,6 +35,18 @@ abstract class TaskResponse with _$TaskResponse {
 
   String get formattedDueDate {
     final localDate = dueDate;
+    final formatter = DateFormat('EEEE, d MMMM - hh:mm a');
+
+    return formatter.format(localDate.toLocal());
+  }
+
+  String? get formatteRecurrenceEndDate {
+    final localDate = recurrenceEndDate;
+
+    if (localDate == null) {
+      return null;
+    }
+
     final formatter = DateFormat('EEEE, d MMMM - hh:mm a');
 
     return formatter.format(localDate.toLocal());

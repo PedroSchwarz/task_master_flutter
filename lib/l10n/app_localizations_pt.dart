@@ -342,4 +342,22 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get checklist => 'Checklist';
+
+  @override
+  String get recurring => 'Recorrente';
+
+  @override
+  String get recurrence_daily => 'Diariamente';
+
+  @override
+  String get recurrence_weekly => 'Semanalmente';
+
+  @override
+  String get recurrence_monthly => 'Mensalmente';
+
+  @override
+  String get ending_on => 'Termina em';
+
+  @override
+  String get never => 'Nunca';
 }

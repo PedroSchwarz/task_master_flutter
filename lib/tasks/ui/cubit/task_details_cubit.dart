@@ -130,6 +130,9 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
               updatedTask.checklist.map((item) {
                 return UpdateTaskChecklistItem(title: item.title, status: item.status, order: item.order);
               }).toList(),
+          recurring: updatedTask.recurring,
+          recurrencePattern: updatedTask.recurrencePattern,
+          recurrenceEndDate: updatedTask.recurrenceEndDate,
         ),
       );
 
@@ -162,6 +165,9 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
               task.checklist.map((item) {
                 return CreateTaskChecklistItem(title: item.title, order: item.order);
               }).toList(),
+          recurring: task.recurring,
+          recurrencePattern: task.recurrencePattern,
+          recurrenceEndDate: task.recurrenceEndDate,
         ),
       );
       updateGroupForMember();
@@ -248,6 +254,9 @@ class TaskDetailsCubit extends Cubit<TaskDetailsState> {
               checklist.map((item) {
                 return UpdateTaskChecklistItem(title: item.title, status: item.status, order: item.order);
               }).toList(),
+          recurring: task.recurring,
+          recurrencePattern: task.recurrencePattern,
+          recurrenceEndDate: task.recurrenceEndDate,
         ),
         id: task.id,
       );

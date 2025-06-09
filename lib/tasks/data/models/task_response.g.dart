@@ -24,9 +24,18 @@ _TaskResponse _$TaskResponseFromJson(Map<String, dynamic> json) =>
           (json['assignedTo'] as List<dynamic>)
               .map((e) => UserResponse.fromJson(e as Map<String, dynamic>))
               .toList(),
+      recurring: json['recurring'] as bool,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       description: json['description'] as String?,
+      recurrencePattern: $enumDecodeNullable(
+        _$TaskRecurrenceEnumMap,
+        json['recurrencePattern'],
+      ),
+      recurrenceEndDate:
+          json['recurrenceEndDate'] == null
+              ? null
+              : DateTime.parse(json['recurrenceEndDate'] as String),
     );
 
 Map<String, dynamic> _$TaskResponseToJson(_TaskResponse instance) =>
@@ -41,9 +50,12 @@ Map<String, dynamic> _$TaskResponseToJson(_TaskResponse instance) =>
       'group': instance.group,
       'owner': instance.owner,
       'assignedTo': instance.assignedTo,
+      'recurring': instance.recurring,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       'description': instance.description,
+      'recurrencePattern': _$TaskRecurrenceEnumMap[instance.recurrencePattern],
+      'recurrenceEndDate': instance.recurrenceEndDate?.toIso8601String(),
     };
 
 const _$TaskPriorityEnumMap = {
@@ -56,6 +68,12 @@ const _$TaskStatusEnumMap = {
   TaskStatus.todo: 'todo',
   TaskStatus.inProgress: 'in_progress',
   TaskStatus.done: 'done',
+};
+
+const _$TaskRecurrenceEnumMap = {
+  TaskRecurrence.daily: 'daily',
+  TaskRecurrence.weekly: 'weekly',
+  TaskRecurrence.monthly: 'monthly',
 };
 
 _TaskChecklistItem _$TaskChecklistItemFromJson(Map<String, dynamic> json) =>
