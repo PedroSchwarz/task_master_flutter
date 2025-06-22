@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CreateGroupRequest {
 
- String get name; String get description;
+ String get name; String get description; int? get color;
 /// Create a copy of CreateGroupRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $CreateGroupRequestCopyWith<CreateGroupRequest> get copyWith => _$CreateGroupReq
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateGroupRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CreateGroupRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.color, color) || other.color == color));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,description);
+int get hashCode => Object.hash(runtimeType,name,description,color);
 
 @override
 String toString() {
-  return 'CreateGroupRequest(name: $name, description: $description)';
+  return 'CreateGroupRequest(name: $name, description: $description, color: $color)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $CreateGroupRequestCopyWith<$Res>  {
   factory $CreateGroupRequestCopyWith(CreateGroupRequest value, $Res Function(CreateGroupRequest) _then) = _$CreateGroupRequestCopyWithImpl;
 @useResult
 $Res call({
- String name, String description
+ String name, String description, int? color
 });
 
 
@@ -66,11 +66,12 @@ class _$CreateGroupRequestCopyWithImpl<$Res>
 
 /// Create a copy of CreateGroupRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? description = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? description = null,Object? color = freezed,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,
+as String,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -81,11 +82,12 @@ as String,
 @JsonSerializable()
 
 class _CreateGroupRequest implements CreateGroupRequest {
-  const _CreateGroupRequest({required this.name, required this.description});
+  const _CreateGroupRequest({required this.name, required this.description, required this.color});
   factory _CreateGroupRequest.fromJson(Map<String, dynamic> json) => _$CreateGroupRequestFromJson(json);
 
 @override final  String name;
 @override final  String description;
+@override final  int? color;
 
 /// Create a copy of CreateGroupRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -100,16 +102,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateGroupRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CreateGroupRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.color, color) || other.color == color));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,description);
+int get hashCode => Object.hash(runtimeType,name,description,color);
 
 @override
 String toString() {
-  return 'CreateGroupRequest(name: $name, description: $description)';
+  return 'CreateGroupRequest(name: $name, description: $description, color: $color)';
 }
 
 
@@ -120,7 +122,7 @@ abstract mixin class _$CreateGroupRequestCopyWith<$Res> implements $CreateGroupR
   factory _$CreateGroupRequestCopyWith(_CreateGroupRequest value, $Res Function(_CreateGroupRequest) _then) = __$CreateGroupRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String description
+ String name, String description, int? color
 });
 
 
@@ -137,11 +139,12 @@ class __$CreateGroupRequestCopyWithImpl<$Res>
 
 /// Create a copy of CreateGroupRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? description = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? description = null,Object? color = freezed,}) {
   return _then(_CreateGroupRequest(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String,
+as String,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

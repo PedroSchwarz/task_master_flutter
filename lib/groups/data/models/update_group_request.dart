@@ -5,7 +5,8 @@ part 'update_group_request.g.dart';
 
 @freezed
 abstract class UpdateGroupRequest with _$UpdateGroupRequest {
-  const factory UpdateGroupRequest({required String name, required String description, required List<String> members}) = _UpdateGroupRequest;
+  const factory UpdateGroupRequest({required String name, required String description, required List<String> members, required int? color}) =
+      _UpdateGroupRequest;
 
   factory UpdateGroupRequest.fromJson(Map<String, dynamic> json) => _$UpdateGroupRequestFromJson(json);
 }

@@ -240,5 +240,17 @@
     "ending_on": "Termina em",
     "@ending_on": {},
     "never": "Nunca",
-    "@never": {}
+    "@never": {},
+    "group_color": "Cor do Grupo",
+    "@group_color": {},
+    "group_color_red": "Vermelho",
+    "@group_color_red": {},
+    "group_color_green": "Verde",
+    "@group_color_green": {},
+    "group_color_blue": "Azul",
+    "@group_color_blue": {},
+    "remove_color": "Remover Cor",
+    "@remove_color": {},
+    "select_color": "Selecionar Cor",
+    "@select_color": {}
 }

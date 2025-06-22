@@ -18,42 +18,61 @@ class GroupItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final groupColor = group.color;
 
     return Stack(
       alignment: Alignment.topRight,
       children: [
-        Card(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
-          margin: EdgeInsets.zero,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(AppSpacing.xs),
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.s),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(group.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleLarge),
-                      Text(group.description, maxLines: 3, overflow: TextOverflow.ellipsis),
-                    ],
-                  ),
-                  const Gap(AppSpacing.s),
-                  SizedBox(
-                    height: 40,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: group.members.length,
-                      itemBuilder: (context, index) {
-                        final member = group.members[index];
-                        return CircleAvatar(child: Text(member.initials));
-                      },
-                      separatorBuilder: (context, index) => const Gap(AppSpacing.xs),
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSpacing.xxs),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                theme.colorScheme.surfaceContainer,
+                theme.colorScheme.surfaceContainer,
+                if (groupColor != null) Color(groupColor).withValues(alpha: 0.3) else theme.colorScheme.surfaceContainer,
+              ],
+              stops: const [0, 0.4, 1],
+            ),
+            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4, offset: const Offset(0, 2))],
+          ),
+          child: Card(
+            color: Colors.transparent,
+            elevation: 0,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.xs)),
+            margin: EdgeInsets.zero,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(AppSpacing.xs),
+              onTap: onTap,
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.s),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(group.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: theme.textTheme.titleLarge),
+                        Text(group.description, maxLines: 2, overflow: TextOverflow.ellipsis),
+                      ],
                     ),
-                  ),
-                ],
+                    const Gap(AppSpacing.s),
+                    SizedBox(
+                      height: 40,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: group.members.length,
+                        itemBuilder: (context, index) {
+                          final member = group.members[index];
+                          return CircleAvatar(child: Text(member.initials));
+                        },
+                        separatorBuilder: (context, index) => const Gap(AppSpacing.xs),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

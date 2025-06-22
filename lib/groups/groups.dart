@@ -13,3 +13,4 @@ export 'ui/view/components/groups_list.dart';
 export 'ui/view/drawer/group_details_filters_drawer.dart';
 export 'ui/view/screens/create_group_screen.dart';
 export 'ui/view/screens/group_details_screen.dart';
+export 'ui/view/sheets/group_color_picker_sheet.dart';

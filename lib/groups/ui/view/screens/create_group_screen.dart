@@ -4,7 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
-import 'package:task_master/groups/ui/cubit/create_group_cubit.dart';
+import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
 
 class CreateGroupScreen extends StatefulWidget {
@@ -29,6 +29,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final localization = context.localization;
 
     return BlocListener<CreateGroupCubit, CreateGroupState>(
@@ -66,6 +67,41 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                           );
                         },
                       ),
+                      actions: [
+                        BlocBuilder<CreateGroupCubit, CreateGroupState>(
+                          bloc: bloc,
+                          buildWhen:
+                              (previous, current) =>
+                                  previous.isLoading != current.isLoading || //
+                                  previous.group != current.group || //
+                                  previous.groupColor != current.groupColor,
+                          builder: (context, state) {
+                            final color = state.groupColor != null ? Color(state.groupColor!) : null;
+
+                            return IconButton.outlined(
+                              style: IconButton.styleFrom(side: BorderSide(color: theme.colorScheme.onSurface, width: 3), backgroundColor: color),
+                              onPressed: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  useSafeArea: true,
+                                  showDragHandle: true,
+                                  builder: (context) {
+                                    return GroupColorPickerSheet(
+                                      initialColor: state.groupColor,
+                                      onChanged: (color) {
+                                        bloc.updateGroupColor(color);
+                                        context.pop();
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                              icon: const Icon(Icons.color_lens),
+                            );
+                          },
+                        ),
+                      ],
                       bottom: PreferredSize(
                         preferredSize: const Size(0, AppSpacing.s),
                         child: BlocSelector<CreateGroupCubit, CreateGroupState, bool>(

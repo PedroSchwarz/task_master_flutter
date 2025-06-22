@@ -13,6 +13,7 @@ abstract class GroupResponse with _$GroupResponse {
     required DateTime createdAt,
     required UserResponse owner,
     required List<UserResponse> members,
+    required int? color,
   }) = _GroupResponse;
 
   factory GroupResponse.fromJson(Map<String, dynamic> json) => _$GroupResponseFromJson(json);

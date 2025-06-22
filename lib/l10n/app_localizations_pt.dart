@@ -360,4 +360,22 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get never => 'Nunca';
+
+  @override
+  String get group_color => 'Cor do Grupo';
+
+  @override
+  String get group_color_red => 'Vermelho';
+
+  @override
+  String get group_color_green => 'Verde';
+
+  @override
+  String get group_color_blue => 'Azul';
+
+  @override
+  String get remove_color => 'Remover Cor';
+
+  @override
+  String get select_color => 'Selecionar Cor';
 }

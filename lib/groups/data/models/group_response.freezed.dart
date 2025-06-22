@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GroupResponse {
 
-@JsonKey(name: '_id') String get id; String get name; String get description; DateTime get createdAt; UserResponse get owner; List<UserResponse> get members;
+@JsonKey(name: '_id') String get id; String get name; String get description; DateTime get createdAt; UserResponse get owner; List<UserResponse> get members; int? get color;
 /// Create a copy of GroupResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $GroupResponseCopyWith<GroupResponse> get copyWith => _$GroupResponseCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GroupResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.owner, owner) || other.owner == owner)&&const DeepCollectionEquality().equals(other.members, members));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GroupResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.owner, owner) || other.owner == owner)&&const DeepCollectionEquality().equals(other.members, members)&&(identical(other.color, color) || other.color == color));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,createdAt,owner,const DeepCollectionEquality().hash(members));
+int get hashCode => Object.hash(runtimeType,id,name,description,createdAt,owner,const DeepCollectionEquality().hash(members),color);
 
 @override
 String toString() {
-  return 'GroupResponse(id: $id, name: $name, description: $description, createdAt: $createdAt, owner: $owner, members: $members)';
+  return 'GroupResponse(id: $id, name: $name, description: $description, createdAt: $createdAt, owner: $owner, members: $members, color: $color)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $GroupResponseCopyWith<$Res>  {
   factory $GroupResponseCopyWith(GroupResponse value, $Res Function(GroupResponse) _then) = _$GroupResponseCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String name, String description, DateTime createdAt, UserResponse owner, List<UserResponse> members
+@JsonKey(name: '_id') String id, String name, String description, DateTime createdAt, UserResponse owner, List<UserResponse> members, int? color
 });
 
 
@@ -66,7 +66,7 @@ class _$GroupResponseCopyWithImpl<$Res>
 
 /// Create a copy of GroupResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? createdAt = null,Object? owner = null,Object? members = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? description = null,Object? createdAt = null,Object? owner = null,Object? members = null,Object? color = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as String,description: null == description ? _self.description : description // 
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,owner: null == owner ? _self.owner : owner // ignore: cast_nullable_to_non_nullable
 as UserResponse,members: null == members ? _self.members : members // ignore: cast_nullable_to_non_nullable
-as List<UserResponse>,
+as List<UserResponse>,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 /// Create a copy of GroupResponse
@@ -94,7 +95,7 @@ $UserResponseCopyWith<$Res> get owner {
 @JsonSerializable()
 
 class _GroupResponse implements GroupResponse {
-  const _GroupResponse({@JsonKey(name: '_id') required this.id, required this.name, required this.description, required this.createdAt, required this.owner, required final  List<UserResponse> members}): _members = members;
+  const _GroupResponse({@JsonKey(name: '_id') required this.id, required this.name, required this.description, required this.createdAt, required this.owner, required final  List<UserResponse> members, required this.color}): _members = members;
   factory _GroupResponse.fromJson(Map<String, dynamic> json) => _$GroupResponseFromJson(json);
 
 @override@JsonKey(name: '_id') final  String id;
@@ -109,6 +110,7 @@ class _GroupResponse implements GroupResponse {
   return EqualUnmodifiableListView(_members);
 }
 
+@override final  int? color;
 
 /// Create a copy of GroupResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -123,16 +125,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GroupResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.owner, owner) || other.owner == owner)&&const DeepCollectionEquality().equals(other._members, _members));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GroupResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.owner, owner) || other.owner == owner)&&const DeepCollectionEquality().equals(other._members, _members)&&(identical(other.color, color) || other.color == color));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,description,createdAt,owner,const DeepCollectionEquality().hash(_members));
+int get hashCode => Object.hash(runtimeType,id,name,description,createdAt,owner,const DeepCollectionEquality().hash(_members),color);
 
 @override
 String toString() {
-  return 'GroupResponse(id: $id, name: $name, description: $description, createdAt: $createdAt, owner: $owner, members: $members)';
+  return 'GroupResponse(id: $id, name: $name, description: $description, createdAt: $createdAt, owner: $owner, members: $members, color: $color)';
 }
 
 
@@ -143,7 +145,7 @@ abstract mixin class _$GroupResponseCopyWith<$Res> implements $GroupResponseCopy
   factory _$GroupResponseCopyWith(_GroupResponse value, $Res Function(_GroupResponse) _then) = __$GroupResponseCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String name, String description, DateTime createdAt, UserResponse owner, List<UserResponse> members
+@JsonKey(name: '_id') String id, String name, String description, DateTime createdAt, UserResponse owner, List<UserResponse> members, int? color
 });
 
 
@@ -160,7 +162,7 @@ class __$GroupResponseCopyWithImpl<$Res>
 
 /// Create a copy of GroupResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = null,Object? createdAt = null,Object? owner = null,Object? members = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? description = null,Object? createdAt = null,Object? owner = null,Object? members = null,Object? color = freezed,}) {
   return _then(_GroupResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -168,7 +170,8 @@ as String,description: null == description ? _self.description : description // 
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,owner: null == owner ? _self.owner : owner // ignore: cast_nullable_to_non_nullable
 as UserResponse,members: null == members ? _self._members : members // ignore: cast_nullable_to_non_nullable
-as List<UserResponse>,
+as List<UserResponse>,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

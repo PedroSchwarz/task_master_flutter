@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UpdateGroupRequest {
 
- String get name; String get description; List<String> get members;
+ String get name; String get description; List<String> get members; int? get color;
 /// Create a copy of UpdateGroupRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $UpdateGroupRequestCopyWith<UpdateGroupRequest> get copyWith => _$UpdateGroupReq
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateGroupRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.members, members));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateGroupRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.members, members)&&(identical(other.color, color) || other.color == color));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,description,const DeepCollectionEquality().hash(members));
+int get hashCode => Object.hash(runtimeType,name,description,const DeepCollectionEquality().hash(members),color);
 
 @override
 String toString() {
-  return 'UpdateGroupRequest(name: $name, description: $description, members: $members)';
+  return 'UpdateGroupRequest(name: $name, description: $description, members: $members, color: $color)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $UpdateGroupRequestCopyWith<$Res>  {
   factory $UpdateGroupRequestCopyWith(UpdateGroupRequest value, $Res Function(UpdateGroupRequest) _then) = _$UpdateGroupRequestCopyWithImpl;
 @useResult
 $Res call({
- String name, String description, List<String> members
+ String name, String description, List<String> members, int? color
 });
 
 
@@ -66,12 +66,13 @@ class _$UpdateGroupRequestCopyWithImpl<$Res>
 
 /// Create a copy of UpdateGroupRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? description = null,Object? members = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? description = null,Object? members = null,Object? color = freezed,}) {
   return _then(_self.copyWith(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,members: null == members ? _self.members : members // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -82,7 +83,7 @@ as List<String>,
 @JsonSerializable()
 
 class _UpdateGroupRequest implements UpdateGroupRequest {
-  const _UpdateGroupRequest({required this.name, required this.description, required final  List<String> members}): _members = members;
+  const _UpdateGroupRequest({required this.name, required this.description, required final  List<String> members, required this.color}): _members = members;
   factory _UpdateGroupRequest.fromJson(Map<String, dynamic> json) => _$UpdateGroupRequestFromJson(json);
 
 @override final  String name;
@@ -94,6 +95,7 @@ class _UpdateGroupRequest implements UpdateGroupRequest {
   return EqualUnmodifiableListView(_members);
 }
 
+@override final  int? color;
 
 /// Create a copy of UpdateGroupRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -108,16 +110,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateGroupRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._members, _members));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateGroupRequest&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._members, _members)&&(identical(other.color, color) || other.color == color));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,description,const DeepCollectionEquality().hash(_members));
+int get hashCode => Object.hash(runtimeType,name,description,const DeepCollectionEquality().hash(_members),color);
 
 @override
 String toString() {
-  return 'UpdateGroupRequest(name: $name, description: $description, members: $members)';
+  return 'UpdateGroupRequest(name: $name, description: $description, members: $members, color: $color)';
 }
 
 
@@ -128,7 +130,7 @@ abstract mixin class _$UpdateGroupRequestCopyWith<$Res> implements $UpdateGroupR
   factory _$UpdateGroupRequestCopyWith(_UpdateGroupRequest value, $Res Function(_UpdateGroupRequest) _then) = __$UpdateGroupRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String name, String description, List<String> members
+ String name, String description, List<String> members, int? color
 });
 
 
@@ -145,12 +147,13 @@ class __$UpdateGroupRequestCopyWithImpl<$Res>
 
 /// Create a copy of UpdateGroupRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? description = null,Object? members = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? name = null,Object? description = null,Object? members = null,Object? color = freezed,}) {
   return _then(_UpdateGroupRequest(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,members: null == members ? _self._members : members // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

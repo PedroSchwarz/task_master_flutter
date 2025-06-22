@@ -12,6 +12,7 @@ _UpdateGroupRequest _$UpdateGroupRequestFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String,
       members:
           (json['members'] as List<dynamic>).map((e) => e as String).toList(),
+      color: (json['color'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$UpdateGroupRequestToJson(_UpdateGroupRequest instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$UpdateGroupRequestToJson(_UpdateGroupRequest instance) =>
       'name': instance.name,
       'description': instance.description,
       'members': instance.members,
+      'color': instance.color,
     };

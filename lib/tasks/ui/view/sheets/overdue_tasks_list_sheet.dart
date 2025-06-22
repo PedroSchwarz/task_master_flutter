@@ -5,29 +5,10 @@ import 'package:task_master/app/design_system/theme/app_spacing.dart';
 import 'package:task_master/app/extensions/build_context_extensions.dart';
 import 'package:task_master/tasks/tasks.dart';
 
-class OverdueTasksListSheet extends StatefulWidget {
+class OverdueTasksListSheet extends StatelessWidget {
   const OverdueTasksListSheet({required this.tasks, super.key});
 
   final List<TaskResponse> tasks;
-
-  @override
-  State<OverdueTasksListSheet> createState() => _OverdueTasksListSheetState();
-}
-
-class _OverdueTasksListSheetState extends State<OverdueTasksListSheet> with SingleTickerProviderStateMixin {
-  late final AnimationController _animationController;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = BottomSheet.createAnimationController(this);
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,35 +17,32 @@ class _OverdueTasksListSheetState extends State<OverdueTasksListSheet> with Sing
 
     return ElevatedButton(
       onPressed:
-          widget.tasks.isEmpty
+          tasks.isEmpty
               ? null
               : () {
                 showModalBottomSheet(
                   context: context,
                   useSafeArea: true,
+                  showDragHandle: true,
                   scrollControlDisabledMaxHeightRatio: 0.9,
                   builder: (_) {
-                    return BottomSheet(
-                      clipBehavior: Clip.antiAlias,
-                      showDragHandle: true,
-                      animationController: _animationController,
-                      onClosing: () {},
-                      builder: (_) {
-                        return ListView.separated(
-                          itemCount: widget.tasks.length,
-                          itemBuilder: (_, position) {
-                            final task = widget.tasks[position];
-                            return SimplifiedTaskItem(
-                              task: task,
-                              position: position,
-                              onTap: () {
-                                context.goNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.group, 'taskId': task.id});
-                              },
-                            );
+                    if (tasks.isEmpty && context.canPop()) {
+                      context.pop();
+                    }
+
+                    return ListView.separated(
+                      itemCount: tasks.length,
+                      itemBuilder: (_, position) {
+                        final task = tasks[position];
+                        return SimplifiedTaskItem(
+                          task: task,
+                          position: position,
+                          onTap: () {
+                            context.goNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.group, 'taskId': task.id});
                           },
-                          separatorBuilder: (_, __) => const Divider(),
                         );
                       },
+                      separatorBuilder: (_, __) => const Divider(),
                     );
                   },
                 );
