@@ -59,11 +59,13 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
 
     try {
       final group = await groupsRepository.getGroupById(id);
+
       emit(
         state.copyWith(
           group: group,
           name: group.name,
           description: group.description,
+          groupColor: group.color,
           selectedUsersIds: group.members.where((member) => member.id != currentUser.id).map((member) => member.id).toList(),
         ),
       );
@@ -80,6 +82,10 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
 
   void updateDescription(String description) {
     emit(state.copyWith(description: description));
+  }
+
+  void updateGroupColor(int? groupColor) {
+    emit(state.copyWith(groupColor: groupColor));
   }
 
   void toggleInviteUsersSheet() {
@@ -104,7 +110,9 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
 
   Future<void> createGroup() async {
     try {
-      final groupId = await groupsRepository.createGroup(name: state.name, description: state.description);
+      final groupId = await groupsRepository.createGroup(
+        CreateGroupRequest(name: state.name, description: state.description, color: state.groupColor),
+      );
 
       await Future.wait([for (final id in state.selectedUsersIds) invitesRepository.create(groupId: groupId, userId: id)]);
 
@@ -131,7 +139,7 @@ class CreateGroupCubit extends Cubit<CreateGroupState> {
 
       await groupsRepository.updateGroup(
         id: group.id,
-        UpdateGroupRequest(name: state.name, description: state.description, members: updatedMemberIds),
+        UpdateGroupRequest(name: state.name, description: state.description, members: updatedMemberIds, color: state.groupColor),
       );
 
       final List<String> usersToInvite = selectedUserIds.difference(currentMemberIds).toList();
@@ -181,6 +189,7 @@ sealed class CreateGroupState with _$CreateGroupState {
     required bool showDeleteDialog,
     required bool shouldGoBack,
     GroupResponse? group,
+    int? groupColor,
   }) = _CreateGroupState;
 
   const CreateGroupState._();

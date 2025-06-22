@@ -360,4 +360,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get never => 'Never';
+
+  @override
+  String get group_color => 'Group Color';
+
+  @override
+  String get group_color_red => 'Red';
+
+  @override
+  String get group_color_green => 'Green';
+
+  @override
+  String get group_color_blue => 'Blue';
+
+  @override
+  String get remove_color => 'Remove Color';
+
+  @override
+  String get select_color => 'Select Color';
 }

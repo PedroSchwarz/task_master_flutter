@@ -26,8 +26,8 @@ class GroupsRepository {
     return groupsLocalDataSource.loadListView();
   }
 
-  Future<String> createGroup({required String name, required String description}) async {
-    return groupsRemoteDataSource.create(CreateGroupRequest(name: name, description: description));
+  Future<String> createGroup(CreateGroupRequest request) async {
+    return groupsRemoteDataSource.create(request);
   }
 
   Future<void> addMemberToGroup(String id) async {

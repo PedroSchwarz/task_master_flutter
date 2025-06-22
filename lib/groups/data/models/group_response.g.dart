@@ -17,6 +17,7 @@ _GroupResponse _$GroupResponseFromJson(Map<String, dynamic> json) =>
           (json['members'] as List<dynamic>)
               .map((e) => UserResponse.fromJson(e as Map<String, dynamic>))
               .toList(),
+      color: (json['color'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$GroupResponseToJson(_GroupResponse instance) =>
@@ -27,4 +28,5 @@ Map<String, dynamic> _$GroupResponseToJson(_GroupResponse instance) =>
       'createdAt': instance.createdAt.toIso8601String(),
       'owner': instance.owner,
       'members': instance.members,
+      'color': instance.color,
     };

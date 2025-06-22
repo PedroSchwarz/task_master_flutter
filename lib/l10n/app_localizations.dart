@@ -796,6 +796,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Never'**
   String get never;
+
+  /// No description provided for @group_color.
+  ///
+  /// In en, this message translates to:
+  /// **'Group Color'**
+  String get group_color;
+
+  /// No description provided for @group_color_red.
+  ///
+  /// In en, this message translates to:
+  /// **'Red'**
+  String get group_color_red;
+
+  /// No description provided for @group_color_green.
+  ///
+  /// In en, this message translates to:
+  /// **'Green'**
+  String get group_color_green;
+
+  /// No description provided for @group_color_blue.
+  ///
+  /// In en, this message translates to:
+  /// **'Blue'**
+  String get group_color_blue;
+
+  /// No description provided for @remove_color.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Color'**
+  String get remove_color;
+
+  /// No description provided for @select_color.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Color'**
+  String get select_color;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

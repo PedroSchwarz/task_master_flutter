@@ -240,5 +240,17 @@
     "ending_on": "Ending On",
     "@ending_on": {},
     "never": "Never",
-    "@never": {}
+    "@never": {},
+    "group_color": "Group Color",
+    "@group_color": {},
+    "group_color_red": "Red",
+    "@group_color_red": {},
+    "group_color_green": "Green",
+    "@group_color_green": {},
+    "group_color_blue": "Blue",
+    "@group_color_blue": {},
+    "remove_color": "Remove Color",
+    "@remove_color": {},
+    "select_color": "Select Color",
+    "@select_color": {}
 }
