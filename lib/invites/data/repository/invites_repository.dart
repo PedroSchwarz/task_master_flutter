@@ -14,14 +14,12 @@ class InvitesRepository {
   }
 
   Future<void> create({required String userId, required String groupId}) async {
-    return await invitesRemoteDataSource.create(CreateInviteRequest(to: userId, groupId: groupId));
+    return await invitesRemoteDataSource.create(
+      CreateInviteRequest(to: userId, groupId: groupId),
+    );
   }
 
-  Future<void> accept(String id) async {
-    return await invitesRemoteDataSource.accept(id);
-  }
-
-  Future<void> reject(String id) async {
-    return await invitesRemoteDataSource.reject(id);
+  Future<void> delete(String id) async {
+    return await invitesRemoteDataSource.delete(id);
   }
 }

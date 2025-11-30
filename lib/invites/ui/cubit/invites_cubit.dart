@@ -44,7 +44,7 @@ class InvitesCubit extends Cubit<InvitesState> {
     emit(state.copyWith(isRefreshing: true));
 
     try {
-      await invitesRepository.accept(invite.id);
+      await invitesRepository.delete(invite.id);
       await groupsRepository.addMemberToGroup(invite.group.id);
       groupsWebsocket.updateGroups(groupId: invite.group.id);
     } catch (e) {
@@ -69,7 +69,7 @@ class InvitesCubit extends Cubit<InvitesState> {
     emit(state.copyWith(isRefreshing: true));
 
     try {
-      await invitesRepository.reject(invite.id);
+      await invitesRepository.delete(invite.id);
     } catch (e) {
       _log.severe('Error rejecting invite: $e', e);
     } finally {
