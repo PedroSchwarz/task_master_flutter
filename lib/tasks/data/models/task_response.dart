@@ -29,9 +29,11 @@ abstract class TaskResponse with _$TaskResponse {
 
   const TaskResponse._();
 
-  factory TaskResponse.fromJson(Map<String, dynamic> json) => _$TaskResponseFromJson(json);
+  factory TaskResponse.fromJson(Map<String, dynamic> json) =>
+      _$TaskResponseFromJson(json);
 
-  bool get isOverdue => !completed && dueDate.toLocal().isBefore(DateTime.now());
+  bool get isOverdue =>
+      !completed && dueDate.toLocal().isBefore(DateTime.now());
 
   String get formattedDueDate {
     final localDate = dueDate;
@@ -66,12 +68,15 @@ abstract class TaskResponse with _$TaskResponse {
     return formatter.format(localDate.toLocal());
   }
 
-  int get blockedChecklistItemsCount => checklist.where((item) => item.status == TaskChecklistItemStatus.blocked).length;
+  int get blockedChecklistItemsCount =>
+      checklist.where((item) => item.status == .blocked).length;
 
   int get completedChecklistItemsCount =>
-      checklist.where((item) => item.status == TaskChecklistItemStatus.completed).length + blockedChecklistItemsCount;
+      checklist.where((item) => item.status == .completed).length +
+      blockedChecklistItemsCount;
 
-  double get checklistProgression => checklist.isEmpty ? 0 : completedChecklistItemsCount / checklist.length;
+  double get checklistProgression =>
+      checklist.isEmpty ? 0 : completedChecklistItemsCount / checklist.length;
 }
 
 @freezed
@@ -85,7 +90,8 @@ abstract class TaskChecklistItem with _$TaskChecklistItem {
 
   const TaskChecklistItem._();
 
-  factory TaskChecklistItem.fromJson(Map<String, dynamic> json) => _$TaskChecklistItemFromJson(json);
+  factory TaskChecklistItem.fromJson(Map<String, dynamic> json) =>
+      _$TaskChecklistItemFromJson(json);
 }
 
 enum TaskChecklistItemStatus {

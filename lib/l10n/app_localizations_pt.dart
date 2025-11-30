@@ -90,10 +90,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get empty_groups_title => 'Você não pertence a um grupo ainda.';
 
   @override
-  String get empty_groups_description_1 => 'Para criar um novo grupo basta apertar o botão';
+  String get empty_groups_description_1 =>
+      'Para criar um novo grupo basta apertar o botão';
 
   @override
-  String get empty_groups_description_2 => 'ou ser convidado para um já existente.';
+  String get empty_groups_description_2 =>
+      'ou ser convidado para um já existente.';
 
   @override
   String get invites => 'Convites';
@@ -236,13 +238,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get empty_tasks_title => 'Nenhuma tarefa criada ainda.';
 
   @override
-  String get empty_tasks_description_1 => 'Crie uma nova tarefa apertando o botão';
+  String get empty_tasks_description_1 =>
+      'Crie uma nova tarefa apertando o botão';
 
   @override
   String get empty_tasks_description_2 => '.';
 
   @override
-  String get empty_filtered_tasks_title => 'Nehuma tarefa encontrada para os filtros selecionados.';
+  String get empty_filtered_tasks_title =>
+      'Nehuma tarefa encontrada para os filtros selecionados.';
 
   @override
   String get update_task => 'Editar Tarefa';

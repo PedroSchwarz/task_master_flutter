@@ -2,11 +2,13 @@
 
 part of 'comments_remote_data_source.dart';
 
+// dart format off
+
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
 
 class _CommentsRemoteDataSource implements CommentsRemoteDataSource {
   _CommentsRemoteDataSource(this._dio, {this.baseUrl, this.errorLogger}) {
@@ -44,15 +46,13 @@ class _CommentsRemoteDataSource implements CommentsRemoteDataSource {
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<CommentResponse> _value;
     try {
-      _value =
-          _result.data!
-              .map(
-                (dynamic i) =>
-                    CommentResponse.fromJson(i as Map<String, dynamic>),
-              )
-              .toList();
+      _value = _result.data!
+          .map(
+            (dynamic i) => CommentResponse.fromJson(i as Map<String, dynamic>),
+          )
+          .toList();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -64,7 +64,8 @@ class _CommentsRemoteDataSource implements CommentsRemoteDataSource {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': 'application/json'};
     _headers.removeWhere((k, v) => v == null);
-    final _data = request;
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
     final _options = _setStreamType<void>(
       Options(
             method: 'POST',
@@ -135,3 +136,5 @@ class _CommentsRemoteDataSource implements CommentsRemoteDataSource {
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
+
+// dart format on

@@ -8,7 +8,11 @@ import 'package:task_master/progress/ui/view/components/progression_carousel.dar
 import 'package:task_master/progress/ui/view/screens/progression_screen.dart';
 
 class DashboardProgression extends StatelessWidget {
-  const DashboardProgression({required this.isLoading, required this.progression, super.key});
+  const DashboardProgression({
+    required this.isLoading,
+    required this.progression,
+    super.key,
+  });
 
   final bool isLoading;
   final List<WeeklyTaskProgression?> progression;
@@ -16,7 +20,10 @@ class DashboardProgression extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Padding(padding: EdgeInsets.all(AppSpacing.s), child: AppSkeleton(isLoading: true, child: SizedBox(height: 150)));
+      return const Padding(
+        padding: .all(AppSpacing.s),
+        child: AppSkeleton(isLoading: true, child: SizedBox(height: 150)),
+      );
     }
 
     return ProgressionCarousel(

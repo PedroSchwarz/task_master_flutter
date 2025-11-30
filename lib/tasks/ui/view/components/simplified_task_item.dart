@@ -7,7 +7,12 @@ import 'package:task_master/app/app.dart';
 import 'package:task_master/tasks/data/models/task_response.dart';
 
 class SimplifiedTaskItem extends StatelessWidget {
-  const SimplifiedTaskItem({required this.task, required this.position, required this.onTap, super.key});
+  const SimplifiedTaskItem({
+    required this.task,
+    required this.position,
+    required this.onTap,
+    super.key,
+  });
 
   final TaskResponse task;
   final int position;
@@ -21,19 +26,31 @@ class SimplifiedTaskItem extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        decoration: BoxDecoration(border: Border(left: BorderSide(color: task.priority.color, width: 5))),
+        decoration: BoxDecoration(
+          border: Border(
+            left: BorderSide(color: task.priority.color, width: 5),
+          ),
+        ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s, vertical: AppSpacing.xs),
+          padding: const .symmetric(
+            horizontal: AppSpacing.s,
+            vertical: AppSpacing.xs,
+          ),
           child: Row(
             spacing: AppSpacing.s,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: .center,
             children: [
               Flexible(
                 fit: FlexFit.tight,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: .start,
                   children: [
-                    Text(task.title, style: theme.textTheme.titleLarge?.copyWith(color: task.isOverdue ? Colors.red : null)),
+                    Text(
+                      task.title,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        color: task.isOverdue ? Colors.red : null,
+                      ),
+                    ),
                     Text(
                       task.description ?? localization.no_description,
                       style: theme.textTheme.bodyLarge,
@@ -41,7 +58,12 @@ class SimplifiedTaskItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const Gap(AppSpacing.xs),
-                    Text(task.formattedDueDate, style: theme.textTheme.labelLarge?.copyWith(color: task.isOverdue ? Colors.red : null)),
+                    Text(
+                      task.formattedDueDate,
+                      style: theme.textTheme.labelLarge?.copyWith(
+                        color: task.isOverdue ? Colors.red : null,
+                      ),
+                    ),
                   ],
                 ),
               ),

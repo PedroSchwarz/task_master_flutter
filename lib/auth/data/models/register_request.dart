@@ -5,8 +5,18 @@ part 'register_request.g.dart';
 
 @freezed
 abstract class RegisterRequest with _$RegisterRequest {
-  const factory RegisterRequest({required String firstName, required String lastName, required String email, required String password}) =
-      _RegisterRequest;
+  const factory RegisterRequest({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+  }) = _RegisterRequest;
 
-  factory RegisterRequest.fromJson(Map<String, dynamic> json) => _$RegisterRequestFromJson(json);
+  factory RegisterRequest.fromJson(Map<String, dynamic> json) =>
+      _$RegisterRequestFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => map(
+    (value) => _$RegisterRequestToJson(value),
+  );
 }

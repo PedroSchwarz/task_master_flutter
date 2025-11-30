@@ -10,21 +10,21 @@ class DashboardLocalDataSource {
   final AppLocalStorage localStorage;
 
   Future<GroupsListType?> loadGroupsListType() async {
-    final value = await localStorage.read(LocalStorageKey.groupsListType);
+    final value = await localStorage.read(.groupsListType);
 
     if (value == null) {
       return null;
     }
 
-    return GroupsListType.values.firstWhereOrNull((e) => e.name == value);
+    return .values.firstWhereOrNull((e) => e.name == value);
   }
 
   Future<void> saveGroupsListType(GroupsListType type) async {
-    await localStorage.write(LocalStorageKey.groupsListType, type.name);
+    await localStorage.write(.groupsListType, type.name);
   }
 
   Future<bool> loadShowingProgression() async {
-    final value = await localStorage.read(LocalStorageKey.showProgression);
+    final value = await localStorage.read(.showProgression);
 
     if (value == null) {
       return true;
@@ -34,11 +34,11 @@ class DashboardLocalDataSource {
   }
 
   Future<void> saveShowingProgression(bool value) async {
-    await localStorage.write(LocalStorageKey.showProgression, value.toString());
+    await localStorage.write(.showProgression, value.toString());
   }
 
   Future<bool> loadShowingHighlights() async {
-    final value = await localStorage.read(LocalStorageKey.showHighlights);
+    final value = await localStorage.read(.showHighlights);
 
     if (value == null) {
       return true;
@@ -48,6 +48,6 @@ class DashboardLocalDataSource {
   }
 
   Future<void> saveShowingHighlights(bool value) async {
-    await localStorage.write(LocalStorageKey.showHighlights, value.toString());
+    await localStorage.write(.showHighlights, value.toString());
   }
 }

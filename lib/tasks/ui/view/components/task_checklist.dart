@@ -5,12 +5,19 @@ import 'package:task_master/app/app.dart';
 import 'package:task_master/tasks/data/models/task_response.dart';
 
 class TaskChecklist extends StatelessWidget {
-  const TaskChecklist({required this.isLoading, required this.task, required this.onReorder, required this.onStatusChanged, super.key});
+  const TaskChecklist({
+    required this.isLoading,
+    required this.task,
+    required this.onReorder,
+    required this.onStatusChanged,
+    super.key,
+  });
 
   final bool isLoading;
   final TaskResponse? task;
   final void Function(int, int) onReorder;
-  final Future<void> Function(TaskChecklistItem, int, TaskChecklistItemStatus) onStatusChanged;
+  final Future<void> Function(TaskChecklistItem, int, TaskChecklistItemStatus)
+  onStatusChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +26,11 @@ class TaskChecklist extends StatelessWidget {
 
     if (isLoading || task == null) {
       return const Padding(
-        padding: EdgeInsets.only(top: AppSpacing.s),
-        child: AppSkeleton(isLoading: true, child: SizedBox(height: 150, width: double.infinity)),
+        padding: .only(top: AppSpacing.s),
+        child: AppSkeleton(
+          isLoading: true,
+          child: SizedBox(height: 150, width: .infinity),
+        ),
       );
     }
 
@@ -36,20 +46,23 @@ class TaskChecklist extends StatelessWidget {
         const Divider(),
         ReorderableListView.builder(
           physics: const NeverScrollableScrollPhysics(),
-          padding: const EdgeInsets.only(top: AppSpacing.s, bottom: 0),
+          padding: const .only(top: AppSpacing.s, bottom: 0),
           shrinkWrap: true,
           itemCount: checklist.length,
           onReorder: onReorder,
           header: Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.s),
+            padding: const .only(bottom: AppSpacing.s),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: .spaceBetween,
               children: [
                 Text(localization.checklist, style: theme.textTheme.bodyLarge),
                 SizedBox(
                   width: 24,
                   height: 24,
-                  child: AnimatedCircularProgressIndicator(value: task!.checklistProgression, color: theme.colorScheme.primary),
+                  child: AnimatedCircularProgressIndicator(
+                    value: task!.checklistProgression,
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
               ],
             ),
@@ -59,7 +72,7 @@ class TaskChecklist extends StatelessWidget {
               elevation: AppSpacing.xxs,
               color: theme.colorScheme.surfaceContainer,
               shadowColor: Colors.black45,
-              borderRadius: BorderRadius.circular(AppSpacing.s),
+              borderRadius: .circular(AppSpacing.s),
               child: child,
             );
           },
@@ -67,32 +80,37 @@ class TaskChecklist extends StatelessWidget {
             final item = checklist[position];
             return ListTile(
               key: ValueKey(item.id),
-              contentPadding: EdgeInsets.zero,
+              contentPadding: .zero,
               leading: SizedBox(
                 height: 24,
                 width: 24,
                 child: Checkbox(
-                  value: item.status == TaskChecklistItemStatus.completed,
-                  onChanged:
-                      item.status == TaskChecklistItemStatus.blocked
-                          ? null
-                          : (_) {
-                            onStatusChanged(
-                              item,
-                              position,
-                              item.status == TaskChecklistItemStatus.completed
-                                  ? TaskChecklistItemStatus.incomplete
-                                  : TaskChecklistItemStatus.completed,
-                            );
-                          },
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                  value: item.status == .completed,
+                  onChanged: item.status == .blocked
+                      ? null
+                      : (_) {
+                          onStatusChanged(
+                            item,
+                            position,
+                            item.status == .completed
+                                ? .incomplete
+                                : .completed,
+                          );
+                        },
+                  shape: RoundedRectangleBorder(
+                    borderRadius: .circular(100),
+                  ),
                 ),
               ),
               title: Text(
                 item.title,
                 style: TextStyle(
-                  color: theme.colorScheme.onSurface.withValues(alpha: item.status == TaskChecklistItemStatus.blocked ? 0.5 : 1),
-                  decoration: item.status == TaskChecklistItemStatus.blocked ? TextDecoration.lineThrough : null,
+                  color: theme.colorScheme.onSurface.withValues(
+                    alpha: item.status == .blocked ? 0.5 : 1,
+                  ),
+                  decoration: item.status == .blocked
+                      ? TextDecoration.lineThrough
+                      : null,
                   decorationColor: Colors.orange.withValues(alpha: 0.5),
                   decorationThickness: 4,
                 ),
@@ -102,17 +120,20 @@ class TaskChecklist extends StatelessWidget {
                 children: [
                   IconButton(
                     color: Colors.orange,
-                    onPressed:
-                        item.status == TaskChecklistItemStatus.completed
-                            ? null
-                            : () {
-                              onStatusChanged(
-                                item,
-                                position,
-                                item.status == TaskChecklistItemStatus.blocked ? TaskChecklistItemStatus.incomplete : TaskChecklistItemStatus.blocked,
-                              );
-                            },
-                    icon: Icon(item.status == TaskChecklistItemStatus.blocked ? Icons.lock_open_outlined : Icons.lock_outline),
+                    onPressed: item.status == .completed
+                        ? null
+                        : () {
+                            onStatusChanged(
+                              item,
+                              position,
+                              item.status == .blocked ? .incomplete : .blocked,
+                            );
+                          },
+                    icon: Icon(
+                      item.status == .blocked
+                          ? Icons.lock_open_outlined
+                          : Icons.lock_outline,
+                    ),
                   ),
                   const Icon(Icons.drag_handle),
                 ],

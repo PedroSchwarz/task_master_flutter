@@ -24,7 +24,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     return BlocListener<RegisterCubit, RegisterState>(
       bloc: bloc,
-      listenWhen: (previous, current) => previous.isAuthenticated != current.isAuthenticated,
+      listenWhen: (previous, current) =>
+          previous.isAuthenticated != current.isAuthenticated,
       listener: _listenNavigationFlow,
       child: GestureDetector(
         onTap: () {
@@ -42,7 +43,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               child: BlocSelector<RegisterCubit, RegisterState, bool>(
                 bloc: bloc,
                 selector: (state) => state.isSubmitting,
-                builder: (context, isSubmitting) => isSubmitting ? const LinearProgressIndicator() : const SizedBox.shrink(),
+                builder: (context, isSubmitting) => isSubmitting
+                    ? const LinearProgressIndicator()
+                    : const SizedBox.shrink(),
               ),
             ),
           ),
@@ -52,85 +55,123 @@ class _RegisterScreenState extends State<RegisterScreen> {
               builder: (context, constraints) {
                 return SingleChildScrollView(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
+                      padding: const .fromLTRB(
+                        AppSpacing.s,
+                        AppSpacing.s,
+                        AppSpacing.s,
+                        0,
+                      ),
                       child: Column(
                         spacing: AppSpacing.s,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: .spaceBetween,
+                        crossAxisAlignment: .stretch,
                         children: [
                           const Gap(AppSpacing.s),
                           Column(
                             spacing: AppSpacing.s,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            crossAxisAlignment: .stretch,
                             children: [
                               AppTextField(
                                 label: localization.first_name,
                                 onChanged: bloc.updateFirstName,
-                                textCapitalization: TextCapitalization.words,
+                                textCapitalization: .words,
                               ),
                               AppTextField(
                                 label: localization.last_name,
                                 onChanged: bloc.updateLastName,
-                                textCapitalization: TextCapitalization.words,
+                                textCapitalization: .words,
                               ),
-                              BlocSelector<RegisterCubit, RegisterState, String?>(
+                              BlocSelector<
+                                RegisterCubit,
+                                RegisterState,
+                                String?
+                              >(
                                 bloc: bloc,
-                                selector: (state) => state.emailError ? localization.invalid_email : null,
-                                builder:
-                                    (context, emailError) => AppTextField(
-                                      label: localization.email,
-                                      onChanged: bloc.updateEmail,
-                                      keyboardType: TextInputType.emailAddress,
-                                      error: emailError,
-                                      textCapitalization: TextCapitalization.none,
-                                    ),
+                                selector: (state) => state.emailError
+                                    ? localization.invalid_email
+                                    : null,
+                                builder: (context, emailError) => AppTextField(
+                                  label: localization.email,
+                                  onChanged: bloc.updateEmail,
+                                  keyboardType: TextInputType.emailAddress,
+                                  error: emailError,
+                                  textCapitalization: .none,
+                                ),
                               ),
                               BlocBuilder<RegisterCubit, RegisterState>(
                                 bloc: bloc,
-                                builder:
-                                    (context, state) => Column(
-                                      spacing: AppSpacing.s,
-                                      children: [
-                                        AppTextField(
-                                          label: localization.password,
-                                          onChanged: bloc.updatePassword,
-                                          obscureText: state.hidePassword,
-                                          error: state.passwordError ? localization.invalid_password : null,
-                                          suffixIcon: TogglePasswordButton(onPressed: bloc.togglePasswordVisibility, value: state.hidePassword),
-                                        ),
-                                        AnimatedLinearProgressIndicator(value: state.passwordStrength, color: state.passwordStrengthColor),
-                                        AppTextField(
-                                          label: localization.confirm_password,
-                                          onChanged: bloc.updateConfirmPassword,
-                                          obscureText: state.hidePassword,
-                                          error: state.confirmPasswordError ? localization.invalid_confirm_password : null,
-                                          suffixIcon: TogglePasswordButton(onPressed: bloc.togglePasswordVisibility, value: state.hidePassword),
-                                        ),
-                                      ],
+                                builder: (context, state) => Column(
+                                  spacing: AppSpacing.s,
+                                  children: [
+                                    AppTextField(
+                                      label: localization.password,
+                                      onChanged: bloc.updatePassword,
+                                      obscureText: state.hidePassword,
+                                      error: state.passwordError
+                                          ? localization.invalid_password
+                                          : null,
+                                      suffixIcon: TogglePasswordButton(
+                                        onPressed:
+                                            bloc.togglePasswordVisibility,
+                                        value: state.hidePassword,
+                                      ),
                                     ),
+                                    AnimatedLinearProgressIndicator(
+                                      value: state.passwordStrength,
+                                      color: state.passwordStrengthColor,
+                                    ),
+                                    AppTextField(
+                                      label: localization.confirm_password,
+                                      onChanged: bloc.updateConfirmPassword,
+                                      obscureText: state.hidePassword,
+                                      error: state.confirmPasswordError
+                                          ? localization
+                                                .invalid_confirm_password
+                                          : null,
+                                      suffixIcon: TogglePasswordButton(
+                                        onPressed:
+                                            bloc.togglePasswordVisibility,
+                                        value: state.hidePassword,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                              BlocSelector<RegisterCubit, RegisterState, String?>(
+                              BlocSelector<
+                                RegisterCubit,
+                                RegisterState,
+                                String?
+                              >(
                                 bloc: bloc,
-                                selector:
-                                    (state) => switch (state.error) {
-                                      RegisterResult.emailConflict => localization.register_email_conflict_error,
-                                      RegisterResult.networkError => localization.register_generic_error,
-                                      _ => null,
-                                    },
-                                builder: (context, errorMessage) => errorMessage != null ? Text(errorMessage) : const SizedBox.shrink(),
+                                selector: (state) => switch (state.error) {
+                                  .emailConflict =>
+                                    localization.register_email_conflict_error,
+                                  .networkError =>
+                                    localization.register_generic_error,
+                                  _ => null,
+                                },
+                                builder: (context, errorMessage) =>
+                                    errorMessage != null
+                                    ? Text(errorMessage)
+                                    : const SizedBox.shrink(),
                               ),
                             ],
                           ),
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            crossAxisAlignment: .stretch,
                             children: [
                               BlocSelector<RegisterCubit, RegisterState, bool>(
                                 bloc: bloc,
                                 selector: (state) => state.canSubmit,
                                 builder: (context, canSubmit) {
-                                  return FilledButton(onPressed: canSubmit ? bloc.register : null, child: Text(localization.register));
+                                  return FilledButton(
+                                    onPressed: canSubmit ? bloc.register : null,
+                                    child: Text(localization.register),
+                                  );
                                 },
                               ),
                               BlocSelector<RegisterCubit, RegisterState, bool>(
@@ -138,8 +179,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 selector: (state) => state.isSubmitting,
                                 builder: (context, isSubmitting) {
                                   return TextButton(
-                                    onPressed: isSubmitting ? null : context.pop,
-                                    child: Text(localization.access_account, textAlign: TextAlign.start),
+                                    onPressed: isSubmitting
+                                        ? null
+                                        : context.pop,
+                                    child: Text(
+                                      localization.access_account,
+                                      textAlign: .start,
+                                    ),
                                   );
                                 },
                               ),

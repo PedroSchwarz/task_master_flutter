@@ -39,8 +39,12 @@ class ProgressionCarousel extends StatelessWidget {
             progression: progression,
             builder: (item) {
               return Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.xxxs),
-                child: CircularProgressIndicator(value: item.completionPercentage, color: item.completionColor, strokeWidth: 5),
+                padding: const .only(top: AppSpacing.xxxs),
+                child: CircularProgressIndicator(
+                  value: item.completionPercentage,
+                  color: item.completionColor,
+                  strokeWidth: 5,
+                ),
               );
             },
           ),
@@ -50,8 +54,12 @@ class ProgressionCarousel extends StatelessWidget {
             progression: progression,
             builder: (item) {
               return Padding(
-                padding: const EdgeInsets.only(top: AppSpacing.xxxs),
-                child: CircularProgressIndicator(value: item.overduePercentage, color: Colors.red, strokeWidth: 5),
+                padding: const .only(top: AppSpacing.xxxs),
+                child: CircularProgressIndicator(
+                  value: item.overduePercentage,
+                  color: Colors.red,
+                  strokeWidth: 5,
+                ),
               );
             },
           ),
@@ -68,7 +76,10 @@ class ProgressionCarousel extends StatelessWidget {
                   return PieChartSectionData(
                     color: priority.color.withValues(alpha: 0.4),
                     borderSide: BorderSide(color: priority.color, width: 2),
-                    value: item.tasks.where((item) => item.priority == priority).length.toDouble(),
+                    value: item.tasks
+                        .where((item) => item.priority == priority)
+                        .length
+                        .toDouble(),
                     radius: 15,
                     title: '',
                   );
@@ -89,7 +100,10 @@ class ProgressionCarousel extends StatelessWidget {
                   return PieChartSectionData(
                     color: status.color.withValues(alpha: 0.4),
                     borderSide: BorderSide(color: status.color, width: 2),
-                    value: item.tasks.where((item) => item.status == status).length.toDouble(),
+                    value: item.tasks
+                        .where((item) => item.status == status)
+                        .length
+                        .toDouble(),
                     radius: 15,
                     titlePositionPercentageOffset: 0.55,
                     title: '',

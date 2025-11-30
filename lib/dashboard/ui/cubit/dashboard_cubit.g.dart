@@ -13,31 +13,25 @@ _DashboardState _$DashboardStateFromJson(
   showingProgression: json['showingProgression'] as bool,
   showingHighlights: json['showingHighlights'] as bool,
   groupsListType: $enumDecode(_$GroupsListTypeEnumMap, json['groupsListType']),
-  groups:
-      (json['groups'] as List<dynamic>)
-          .map((e) => GroupResponse.fromJson(e as Map<String, dynamic>))
-          .toList(),
-  upcomingTasks:
-      (json['upcomingTasks'] as List<dynamic>)
-          .map((e) => TaskResponse.fromJson(e as Map<String, dynamic>))
-          .toList(),
-  overdueTasks:
-      (json['overdueTasks'] as List<dynamic>)
-          .map((e) => TaskResponse.fromJson(e as Map<String, dynamic>))
-          .toList(),
-  invites:
-      (json['invites'] as List<dynamic>)
-          .map((e) => InviteResponse.fromJson(e as Map<String, dynamic>))
-          .toList(),
-  progression:
-      (json['progression'] as List<dynamic>)
-          .map(
-            (e) =>
-                e == null
-                    ? null
-                    : WeeklyTaskProgression.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
+  groups: (json['groups'] as List<dynamic>)
+      .map((e) => GroupResponse.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  upcomingTasks: (json['upcomingTasks'] as List<dynamic>)
+      .map((e) => TaskResponse.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  overdueTasks: (json['overdueTasks'] as List<dynamic>)
+      .map((e) => TaskResponse.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  invites: (json['invites'] as List<dynamic>)
+      .map((e) => InviteResponse.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  progression: (json['progression'] as List<dynamic>)
+      .map(
+        (e) => e == null
+            ? null
+            : WeeklyTaskProgression.fromJson(e as Map<String, dynamic>),
+      )
+      .toList(),
   selection: $enumDecode(_$TaskProgressionSelectionEnumMap, json['selection']),
   isRefreshing: json['isRefreshing'] as bool,
 );

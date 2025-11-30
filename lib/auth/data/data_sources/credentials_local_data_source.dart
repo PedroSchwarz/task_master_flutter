@@ -11,7 +11,7 @@ class CredentialsLocalDataSource {
   final AppLocalStorage localStorage;
 
   Future<CredentialsData?> load() async {
-    final value = await localStorage.read(LocalStorageKey.credentials);
+    final value = await localStorage.read(.credentials);
 
     if (value == null) {
       return null;
@@ -21,10 +21,10 @@ class CredentialsLocalDataSource {
   }
 
   Future<void> save(CredentialsData value) async {
-    await localStorage.write(LocalStorageKey.credentials, jsonEncode(value.toJson()));
+    await localStorage.write(.credentials, jsonEncode(value.toJson()));
   }
 
   Future<void> delete() async {
-    await localStorage.delete(LocalStorageKey.credentials);
+    await localStorage.delete(.credentials);
   }
 }

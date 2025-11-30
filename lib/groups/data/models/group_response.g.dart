@@ -13,10 +13,9 @@ _GroupResponse _$GroupResponseFromJson(Map<String, dynamic> json) =>
       description: json['description'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       owner: UserResponse.fromJson(json['owner'] as Map<String, dynamic>),
-      members:
-          (json['members'] as List<dynamic>)
-              .map((e) => UserResponse.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      members: (json['members'] as List<dynamic>)
+          .map((e) => UserResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
       color: (json['color'] as num?)?.toInt(),
     );
 

@@ -20,12 +20,22 @@ abstract class CreateTaskRequest with _$CreateTaskRequest {
     @JsonKey(includeIfNull: false) DateTime? recurrenceEndDate,
   }) = _CreateTaskRequest;
 
-  factory CreateTaskRequest.fromJson(Map<String, dynamic> json) => _$CreateTaskRequestFromJson(json);
+  factory CreateTaskRequest.fromJson(Map<String, dynamic> json) =>
+      _$CreateTaskRequestFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => map(
+    (value) => _$CreateTaskRequestToJson(value),
+  );
 }
 
 @freezed
 abstract class CreateTaskChecklistItem with _$CreateTaskChecklistItem {
-  const factory CreateTaskChecklistItem({required String title, required int order}) = _CreateTaskChecklistItem;
+  const factory CreateTaskChecklistItem({
+    required String title,
+    required int order,
+  }) = _CreateTaskChecklistItem;
 
-  factory CreateTaskChecklistItem.fromJson(Map<String, dynamic> json) => _$CreateTaskChecklistItemFromJson(json);
+  factory CreateTaskChecklistItem.fromJson(Map<String, dynamic> json) =>
+      _$CreateTaskChecklistItemFromJson(json);
 }

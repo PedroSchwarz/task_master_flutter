@@ -7,7 +7,7 @@ class GroupsWebsocket {
   GroupsWebsocket._({required Socket socket}) : _socket = socket;
 
   factory GroupsWebsocket({required WebsocketClient client}) {
-    final connection = client.buildSocket(topic: WebsocketTopic.groups);
+    final connection = client.buildSocket(topic: .groups);
     return GroupsWebsocket._(socket: connection);
   }
 

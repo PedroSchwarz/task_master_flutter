@@ -28,7 +28,7 @@ class TasksList extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: onRefresh,
       child: ListView.separated(
-        padding: const EdgeInsets.only(top: AppSpacing.s, bottom: AppSpacing.max),
+        padding: const .only(top: AppSpacing.s, bottom: AppSpacing.max),
         itemCount: tasks.length,
         itemBuilder: (context, position) {
           final task = tasks[position];
@@ -36,7 +36,9 @@ class TasksList extends StatelessWidget {
           return TaskItem(
             task: task,
             position: position,
-            canDelete: task.owner.id == currentUserId || task.assignedTo.any((assignee) => assignee.id == currentUserId),
+            canDelete:
+                task.owner.id == currentUserId ||
+                task.assignedTo.any((assignee) => assignee.id == currentUserId),
             onTap: () async => await onPressed(task),
             onComplete: onComplete,
             onPending: onPending,

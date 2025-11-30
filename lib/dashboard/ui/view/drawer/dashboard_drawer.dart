@@ -31,42 +31,63 @@ class DashboardDrawer extends StatelessWidget {
     return Drawer(
       child: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
+          padding: const .fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
           child: Column(
             spacing: AppSpacing.s,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+            crossAxisAlignment: .stretch,
             children: [
               const AppLogo(size: AppSpacing.xm),
               Row(
                 spacing: AppSpacing.s,
                 children: [
-                  CircleAvatar(radius: 30, child: Text(initials, style: theme.textTheme.headlineSmall)),
+                  CircleAvatar(
+                    radius: 30,
+                    child: Text(initials, style: theme.textTheme.headlineSmall),
+                  ),
                   Flexible(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [Text(title, style: theme.textTheme.headlineSmall), Text(subtitle, style: theme.textTheme.labelSmall)],
+                      crossAxisAlignment: .start,
+                      children: [
+                        Text(title, style: theme.textTheme.headlineSmall),
+                        Text(subtitle, style: theme.textTheme.labelSmall),
+                      ],
                     ),
                   ),
                 ],
               ),
               const Divider(),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: .spaceBetween,
                 children: [
-                  Text(localization.dashboard_showing_progression, style: theme.textTheme.bodyLarge),
-                  Switch(value: showingProgression, onChanged: onProgressionPressed),
+                  Text(
+                    localization.dashboard_showing_progression,
+                    style: theme.textTheme.bodyLarge,
+                  ),
+                  Switch(
+                    value: showingProgression,
+                    onChanged: onProgressionPressed,
+                  ),
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: .spaceBetween,
                 children: [
-                  Text(localization.dashboard_showing_highlights, style: theme.textTheme.bodyLarge),
-                  Switch(value: showingHighlights, onChanged: onHighlightsPressed),
+                  Text(
+                    localization.dashboard_showing_highlights,
+                    style: theme.textTheme.bodyLarge,
+                  ),
+                  Switch(
+                    value: showingHighlights,
+                    onChanged: onHighlightsPressed,
+                  ),
                 ],
               ),
               const Spacer(),
               const Divider(),
-              FilledButton.tonal(onPressed: onSignOut, child: Text(localization.sign_out)),
+              FilledButton.tonal(
+                onPressed: onSignOut,
+                child: Text(localization.sign_out),
+              ),
             ],
           ),
         ),

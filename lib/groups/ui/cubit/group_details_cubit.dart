@@ -8,7 +8,6 @@ import 'package:logging/logging.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/invites/invites.dart';
-import 'package:task_master/tasks/data/models/task_values.dart';
 import 'package:task_master/tasks/data/models/update_task_request.dart';
 import 'package:task_master/tasks/tasks.dart';
 import 'package:task_master/users/users.dart';
@@ -29,13 +28,13 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
            tasks: [],
            invites: [],
            selectedDate: DateTime.now(),
-           listView: TaskListView.calendar,
-           userFilter: TaskUserFilter.all,
-           completionFilter: TaskCompletionFilter.all,
-           statusFilter: TaskStatusFilter.all,
-           priorityFilter: TaskPriorityFilter.all,
-           dateSort: TaskDateSort.newest,
-           prioritySort: TaskPrioritySort.none,
+           listView: .calendar,
+           userFilter: .all,
+           completionFilter: .all,
+           statusFilter: .all,
+           priorityFilter: .all,
+           dateSort: .newest,
+           prioritySort: .none,
            showLeaveDialog: false,
            isRefreshing: false,
            shouldGoBack: false,
@@ -69,7 +68,12 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   StreamSubscription<String>? _tasksSubscription;
 
   Future<void> load({required String groupId}) async {
-    emit(state.copyWith(isLoading: true, currentUser: authRepository.currentUser.value));
+    emit(
+      state.copyWith(
+        isLoading: true,
+        currentUser: authRepository.currentUser.value,
+      ),
+    );
 
     _groupsSubscription = groupsWebsocket.groupsUpdatedStream.listen((id) {
       if (groupId == id) {
@@ -83,13 +87,20 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
       }
     });
 
-    await Future.wait([loadGroup(groupId: groupId), loadTasks(groupId: groupId), loadTasksListView()]);
+    await Future.wait([
+      loadGroup(groupId: groupId),
+      loadTasks(groupId: groupId),
+      loadTasksListView(),
+    ]);
     emit(state.copyWith(isLoading: false));
   }
 
   Future<void> refresh({required String groupId}) async {
     emit(state.copyWith(isRefreshing: true));
-    await Future.wait([loadGroup(groupId: groupId), loadTasks(groupId: groupId)]);
+    await Future.wait([
+      loadGroup(groupId: groupId),
+      loadTasks(groupId: groupId),
+    ]);
     emit(state.copyWith(isRefreshing: false));
   }
 
@@ -126,7 +137,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   }
 
   Future<void> toggleListView() async {
-    final listView = state.isCalendarView ? TaskListView.list : TaskListView.calendar;
+    final TaskListView listView = state.isCalendarView ? .list : .calendar;
 
     try {
       await groupsRepository.saveTasksListView(listView);
@@ -141,19 +152,22 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     if (value) {
       emit(state.copyWith(userFilter: filter));
     } else {
-      emit(state.copyWith(userFilter: TaskUserFilter.all));
+      emit(state.copyWith(userFilter: .all));
     }
 
-    if (state.userFilter != TaskUserFilter.others) {
+    if (state.userFilter != .others) {
       emit(state.copyWith(userToFilterBy: null));
     }
   }
 
-  void updateCompletionFilter(TaskCompletionFilter filter, {required bool value}) {
+  void updateCompletionFilter(
+    TaskCompletionFilter filter, {
+    required bool value,
+  }) {
     if (value) {
       emit(state.copyWith(completionFilter: filter));
     } else {
-      emit(state.copyWith(completionFilter: TaskCompletionFilter.all));
+      emit(state.copyWith(completionFilter: .all));
     }
   }
 
@@ -161,7 +175,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     if (value) {
       emit(state.copyWith(statusFilter: filter));
     } else {
-      emit(state.copyWith(statusFilter: TaskStatusFilter.all));
+      emit(state.copyWith(statusFilter: .all));
     }
   }
 
@@ -169,7 +183,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     if (value) {
       emit(state.copyWith(priorityFilter: filter));
     } else {
-      emit(state.copyWith(priorityFilter: TaskPriorityFilter.all));
+      emit(state.copyWith(priorityFilter: .all));
     }
   }
 
@@ -185,7 +199,7 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     if (value) {
       emit(state.copyWith(dateSort: sort));
     } else {
-      emit(state.copyWith(dateSort: TaskDateSort.newest));
+      emit(state.copyWith(dateSort: .newest));
     }
   }
 
@@ -193,20 +207,20 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     if (value) {
       emit(state.copyWith(prioritySort: sort));
     } else {
-      emit(state.copyWith(prioritySort: TaskPrioritySort.none));
+      emit(state.copyWith(prioritySort: .none));
     }
   }
 
   void resetFiltersAndSort() {
     emit(
       state.copyWith(
-        statusFilter: TaskStatusFilter.all,
-        userFilter: TaskUserFilter.all,
+        statusFilter: .all,
+        userFilter: .all,
         userToFilterBy: null,
-        priorityFilter: TaskPriorityFilter.all,
-        completionFilter: TaskCompletionFilter.all,
-        dateSort: TaskDateSort.newest,
-        prioritySort: TaskPrioritySort.none,
+        priorityFilter: .all,
+        completionFilter: .all,
+        dateSort: .newest,
+        prioritySort: .none,
       ),
     );
   }
@@ -241,10 +255,13 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
           status: updatedTask.status,
           completed: updatedTask.completed,
           assignedTo: updatedTask.assignedTo.map((user) => user.id).toList(),
-          checklist:
-              updatedTask.checklist.map((item) {
-                return UpdateTaskChecklistItem(title: item.title, status: item.status, order: item.order);
-              }).toList(),
+          checklist: updatedTask.checklist.map((item) {
+            return UpdateTaskChecklistItem(
+              title: item.title,
+              status: item.status,
+              order: item.order,
+            );
+          }).toList(),
           recurring: updatedTask.recurring,
           recurrencePattern: task.recurrencePattern,
           recurrenceEndDate: task.recurrenceEndDate,
@@ -319,99 +336,103 @@ sealed class GroupDetailsState with _$GroupDetailsState {
 
   const GroupDetailsState._();
 
-  Set<UserResponse> get assignedUsers => group?.members.where((member) => member.id != currentUser?.id).toSet() ?? {};
+  Set<UserResponse> get assignedUsers =>
+      group?.members.where((member) => member.id != currentUser?.id).toSet() ??
+      {};
 
-  List<String> get assignedUsersIds => assignedUsers.map((user) => user.id).toList();
+  List<String> get assignedUsersIds =>
+      assignedUsers.map((user) => user.id).toList();
 
-  bool get isCalendarView => listView == TaskListView.calendar;
+  bool get isCalendarView => listView == .calendar;
 
-  List<TaskResponse> get filteredTasks =>
-      tasks
-          .where((task) {
-            switch (listView) {
-              case TaskListView.calendar:
-                return DateUtils.isSameDay(task.dueDate.toLocal(), selectedDate);
-              case TaskListView.list:
+  List<TaskResponse> get filteredTasks => tasks
+      .where((task) {
+        switch (listView) {
+          case .calendar:
+            return DateUtils.isSameDay(task.dueDate.toLocal(), selectedDate);
+          case .list:
+            return true;
+        }
+      })
+      .where((task) {
+        switch (userFilter) {
+          case .all:
+            return true;
+          case .myself:
+            return task.assignedTo.any((user) => user.id == currentUser!.id);
+          case .others:
+            return task.assignedTo.any((user) {
+              if (userToFilterBy != null) {
+                return user.id == userToFilterBy!.id;
+              } else {
                 return true;
-            }
-          })
-          .where((task) {
-            switch (userFilter) {
-              case TaskUserFilter.all:
-                return true;
-              case TaskUserFilter.myself:
-                return task.assignedTo.any((user) => user.id == currentUser!.id);
-              case TaskUserFilter.others:
-                return task.assignedTo.any((user) {
-                  if (userToFilterBy != null) {
-                    return user.id == userToFilterBy!.id;
-                  } else {
-                    return true;
-                  }
-                });
-            }
-          })
-          .where((task) {
-            switch (completionFilter) {
-              case TaskCompletionFilter.all:
-                return true;
-              case TaskCompletionFilter.pending:
-                return !task.completed;
-              case TaskCompletionFilter.completed:
-                return task.completed;
-            }
-          })
-          .where((task) {
-            switch (statusFilter) {
-              case TaskStatusFilter.all:
-                return true;
-              case TaskStatusFilter.todo:
-                return task.status == TaskStatus.todo;
-              case TaskStatusFilter.inProgress:
-                return task.status == TaskStatus.inProgress;
-              case TaskStatusFilter.done:
-                return task.status == TaskStatus.done;
-            }
-          })
-          .where((task) {
-            switch (priorityFilter) {
-              case TaskPriorityFilter.all:
-                return true;
-              case TaskPriorityFilter.low:
-                return task.priority == TaskPriority.low;
-              case TaskPriorityFilter.medium:
-                return task.priority == TaskPriority.medium;
-              case TaskPriorityFilter.high:
-                return task.priority == TaskPriority.high;
-            }
-          })
-          .sorted((a, b) {
-            final completedCompare = a.completed.toString().compareTo(b.completed.toString());
-            if (completedCompare != 0) return completedCompare;
+              }
+            });
+        }
+      })
+      .where((task) {
+        switch (completionFilter) {
+          case .all:
+            return true;
+          case .pending:
+            return !task.completed;
+          case .completed:
+            return task.completed;
+        }
+      })
+      .where((task) {
+        switch (statusFilter) {
+          case .all:
+            return true;
+          case .todo:
+            return task.status == .todo;
+          case .inProgress:
+            return task.status == .inProgress;
+          case .done:
+            return task.status == .done;
+        }
+      })
+      .where((task) {
+        switch (priorityFilter) {
+          case .all:
+            return true;
+          case .low:
+            return task.priority == .low;
+          case .medium:
+            return task.priority == .medium;
+          case .high:
+            return task.priority == .high;
+        }
+      })
+      .sorted((a, b) {
+        final completedCompare = a.completed.toString().compareTo(
+          b.completed.toString(),
+        );
+        if (completedCompare != 0) return completedCompare;
 
-            int priorityCompare = 0;
+        int priorityCompare = 0;
 
-            switch (prioritySort) {
-              case TaskPrioritySort.lowest:
-                priorityCompare = a.priority.index.compareTo(b.priority.index);
-                break;
-              case TaskPrioritySort.highest:
-                priorityCompare = b.priority.index.compareTo(a.priority.index);
-                break;
-              case TaskPrioritySort.none:
-                break;
-            }
+        switch (prioritySort) {
+          case .lowest:
+            priorityCompare = a.priority.index.compareTo(b.priority.index);
+            break;
+          case .highest:
+            priorityCompare = b.priority.index.compareTo(a.priority.index);
+            break;
+          case .none:
+            break;
+        }
 
-            if (priorityCompare != 0) return priorityCompare;
+        if (priorityCompare != 0) return priorityCompare;
 
-            switch (dateSort) {
-              case TaskDateSort.newest:
-                return b.createdAt.compareTo(a.createdAt);
-              case TaskDateSort.oldest:
-                return a.createdAt.compareTo(b.createdAt);
-            }
-          })
-          .toList();
+        switch (dateSort) {
+          case .newest:
+            return b.createdAt.compareTo(a.createdAt);
+          case .oldest:
+            return a.createdAt.compareTo(b.createdAt);
+        }
+      })
+      .toList();
 }
 
 enum TaskListView { calendar, list }

@@ -5,7 +5,16 @@ part 'login_request.g.dart';
 
 @freezed
 abstract class LoginRequest with _$LoginRequest {
-  const factory LoginRequest({required String email, required String password}) = _LoginRequest;
+  const factory LoginRequest({
+    required String email,
+    required String password,
+  }) = _LoginRequest;
 
-  factory LoginRequest.fromJson(Map<String, dynamic> json) => _$LoginRequestFromJson(json);
+  factory LoginRequest.fromJson(Map<String, dynamic> json) =>
+      _$LoginRequestFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => map(
+    (value) => _$LoginRequestToJson(value),
+  );
 }

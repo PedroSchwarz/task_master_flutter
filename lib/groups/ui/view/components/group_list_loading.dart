@@ -12,27 +12,33 @@ class GroupListLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (listType) {
-      GroupsListType.list => ListView.separated(
-        padding: const EdgeInsets.all(AppSpacing.s),
+      .list => ListView.separated(
+        padding: const .all(AppSpacing.s),
         itemCount: 5,
-        itemBuilder: (_, __) {
-          return const AppSkeleton(isLoading: true, child: SizedBox(height: 150, width: double.infinity));
+        itemBuilder: (_, _) {
+          return const AppSkeleton(
+            isLoading: true,
+            child: SizedBox(height: 150, width: .infinity),
+          );
         },
-        separatorBuilder: (_, __) {
+        separatorBuilder: (_, _) {
           return const Gap(AppSpacing.s);
         },
       ),
-      GroupsListType.grid => GridView.builder(
+      .grid => GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           mainAxisSpacing: AppSpacing.s,
           crossAxisSpacing: AppSpacing.s,
           childAspectRatio: 1.1,
         ),
-        padding: const EdgeInsets.all(AppSpacing.s),
+        padding: const .all(AppSpacing.s),
         itemCount: 5,
-        itemBuilder: (_, __) {
-          return const AppSkeleton(isLoading: true, child: SizedBox(height: 150, width: double.infinity));
+        itemBuilder: (_, _) {
+          return const AppSkeleton(
+            isLoading: true,
+            child: SizedBox(height: 150, width: .infinity),
+          );
         },
       ),
     };

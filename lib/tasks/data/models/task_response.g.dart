@@ -10,20 +10,18 @@ _TaskResponse _$TaskResponseFromJson(Map<String, dynamic> json) =>
     _TaskResponse(
       id: json['_id'] as String,
       title: json['title'] as String,
-      checklist:
-          (json['checklist'] as List<dynamic>)
-              .map((e) => TaskChecklistItem.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      checklist: (json['checklist'] as List<dynamic>)
+          .map((e) => TaskChecklistItem.fromJson(e as Map<String, dynamic>))
+          .toList(),
       priority: $enumDecode(_$TaskPriorityEnumMap, json['priority']),
       status: $enumDecode(_$TaskStatusEnumMap, json['status']),
       dueDate: DateTime.parse(json['dueDate'] as String),
       completed: json['completed'] as bool,
       group: json['group'] as String,
       owner: UserResponse.fromJson(json['owner'] as Map<String, dynamic>),
-      assignedTo:
-          (json['assignedTo'] as List<dynamic>)
-              .map((e) => UserResponse.fromJson(e as Map<String, dynamic>))
-              .toList(),
+      assignedTo: (json['assignedTo'] as List<dynamic>)
+          .map((e) => UserResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
       recurring: json['recurring'] as bool,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
@@ -32,10 +30,9 @@ _TaskResponse _$TaskResponseFromJson(Map<String, dynamic> json) =>
         _$TaskRecurrenceEnumMap,
         json['recurrencePattern'],
       ),
-      recurrenceEndDate:
-          json['recurrenceEndDate'] == null
-              ? null
-              : DateTime.parse(json['recurrenceEndDate'] as String),
+      recurrenceEndDate: json['recurrenceEndDate'] == null
+          ? null
+          : DateTime.parse(json['recurrenceEndDate'] as String),
     );
 
 Map<String, dynamic> _$TaskResponseToJson(_TaskResponse instance) =>

@@ -1,6 +1,5 @@
-// dart format width=80
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -85,6 +84,136 @@ as DateTime?,
 
 }
 
+
+/// Adds pattern-matching-related methods to [CreateTaskRequest].
+extension CreateTaskRequestPatterns on CreateTaskRequest {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CreateTaskRequest value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CreateTaskRequest() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CreateTaskRequest value)  $default,){
+final _that = this;
+switch (_that) {
+case _CreateTaskRequest():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CreateTaskRequest value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CreateTaskRequest() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  DateTime dueDate,  String group,  List<CreateTaskChecklistItem> checklist,  bool recurring, @JsonKey(includeIfNull: false)  String? description, @JsonKey(includeIfNull: false)  TaskPriority? priority, @JsonKey(includeIfNull: false)  TaskStatus? status, @JsonKey(includeIfNull: false)  List<String>? assignedTo, @JsonKey(includeIfNull: false)  TaskRecurrence? recurrencePattern, @JsonKey(includeIfNull: false)  DateTime? recurrenceEndDate)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CreateTaskRequest() when $default != null:
+return $default(_that.title,_that.dueDate,_that.group,_that.checklist,_that.recurring,_that.description,_that.priority,_that.status,_that.assignedTo,_that.recurrencePattern,_that.recurrenceEndDate);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  DateTime dueDate,  String group,  List<CreateTaskChecklistItem> checklist,  bool recurring, @JsonKey(includeIfNull: false)  String? description, @JsonKey(includeIfNull: false)  TaskPriority? priority, @JsonKey(includeIfNull: false)  TaskStatus? status, @JsonKey(includeIfNull: false)  List<String>? assignedTo, @JsonKey(includeIfNull: false)  TaskRecurrence? recurrencePattern, @JsonKey(includeIfNull: false)  DateTime? recurrenceEndDate)  $default,) {final _that = this;
+switch (_that) {
+case _CreateTaskRequest():
+return $default(_that.title,_that.dueDate,_that.group,_that.checklist,_that.recurring,_that.description,_that.priority,_that.status,_that.assignedTo,_that.recurrencePattern,_that.recurrenceEndDate);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  DateTime dueDate,  String group,  List<CreateTaskChecklistItem> checklist,  bool recurring, @JsonKey(includeIfNull: false)  String? description, @JsonKey(includeIfNull: false)  TaskPriority? priority, @JsonKey(includeIfNull: false)  TaskStatus? status, @JsonKey(includeIfNull: false)  List<String>? assignedTo, @JsonKey(includeIfNull: false)  TaskRecurrence? recurrencePattern, @JsonKey(includeIfNull: false)  DateTime? recurrenceEndDate)?  $default,) {final _that = this;
+switch (_that) {
+case _CreateTaskRequest() when $default != null:
+return $default(_that.title,_that.dueDate,_that.group,_that.checklist,_that.recurring,_that.description,_that.priority,_that.status,_that.assignedTo,_that.recurrencePattern,_that.recurrenceEndDate);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()
@@ -253,6 +382,136 @@ as int,
 
 }
 
+
+/// Adds pattern-matching-related methods to [CreateTaskChecklistItem].
+extension CreateTaskChecklistItemPatterns on CreateTaskChecklistItem {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CreateTaskChecklistItem value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CreateTaskChecklistItem() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CreateTaskChecklistItem value)  $default,){
+final _that = this;
+switch (_that) {
+case _CreateTaskChecklistItem():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CreateTaskChecklistItem value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CreateTaskChecklistItem() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String title,  int order)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CreateTaskChecklistItem() when $default != null:
+return $default(_that.title,_that.order);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String title,  int order)  $default,) {final _that = this;
+switch (_that) {
+case _CreateTaskChecklistItem():
+return $default(_that.title,_that.order);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String title,  int order)?  $default,) {final _that = this;
+switch (_that) {
+case _CreateTaskChecklistItem() when $default != null:
+return $default(_that.title,_that.order);case _:
+  return null;
+
+}
+}
+
+}
 
 /// @nodoc
 @JsonSerializable()

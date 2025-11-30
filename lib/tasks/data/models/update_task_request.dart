@@ -21,13 +21,23 @@ abstract class UpdateTaskRequest with _$UpdateTaskRequest {
     @JsonKey(includeIfNull: false) DateTime? recurrenceEndDate,
   }) = _UpdateTaskRequest;
 
-  factory UpdateTaskRequest.fromJson(Map<String, dynamic> json) => _$UpdateTaskRequestFromJson(json);
+  factory UpdateTaskRequest.fromJson(Map<String, dynamic> json) =>
+      _$UpdateTaskRequestFromJson(json);
+
+  @override
+  Map<String, dynamic> toJson() => map(
+    (value) => _$UpdateTaskRequestToJson(value),
+  );
 }
 
 @freezed
 abstract class UpdateTaskChecklistItem with _$UpdateTaskChecklistItem {
-  const factory UpdateTaskChecklistItem({required String title, required TaskChecklistItemStatus status, required int order}) =
-      _UpdateTaskChecklistItem;
+  const factory UpdateTaskChecklistItem({
+    required String title,
+    required TaskChecklistItemStatus status,
+    required int order,
+  }) = _UpdateTaskChecklistItem;
 
-  factory UpdateTaskChecklistItem.fromJson(Map<String, dynamic> json) => _$UpdateTaskChecklistItemFromJson(json);
+  factory UpdateTaskChecklistItem.fromJson(Map<String, dynamic> json) =>
+      _$UpdateTaskChecklistItemFromJson(json);
 }

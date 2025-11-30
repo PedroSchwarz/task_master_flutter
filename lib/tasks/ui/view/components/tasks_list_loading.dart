@@ -9,12 +9,15 @@ class TasksListLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: const EdgeInsets.all(AppSpacing.s),
+      padding: const .all(AppSpacing.s),
       itemCount: 5,
-      itemBuilder: (_, __) {
-        return const AppSkeleton(isLoading: true, child: SizedBox(height: 150, width: double.infinity));
+      itemBuilder: (_, _) {
+        return const AppSkeleton(
+          isLoading: true,
+          child: SizedBox(height: 150, width: .infinity),
+        );
       },
-      separatorBuilder: (_, __) {
+      separatorBuilder: (_, _) {
         return const Gap(AppSpacing.s);
       },
     );

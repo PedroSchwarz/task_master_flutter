@@ -15,9 +15,9 @@ class SplashCubit extends Cubit<SplashState> {
     await Future.delayed(const Duration(seconds: 1));
 
     if (splashRepository.authRepository.currentUser.value == null) {
-      emit(state.copyWith(navigation: SplashNavigation.login));
+      emit(state.copyWith(navigation: .login));
     } else {
-      emit(state.copyWith(navigation: SplashNavigation.home));
+      emit(state.copyWith(navigation: .home));
     }
   }
 

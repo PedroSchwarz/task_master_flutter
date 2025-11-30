@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:task_master/app/app.dart';
 
 class AppSkeleton extends StatefulWidget {
-  const AppSkeleton({required this.isLoading, required this.child, this.radius, super.key});
+  const AppSkeleton({
+    required this.isLoading,
+    required this.child,
+    this.radius,
+    super.key,
+  });
 
   final bool isLoading;
   final Widget child;
@@ -12,14 +17,18 @@ class AppSkeleton extends StatefulWidget {
   State<AppSkeleton> createState() => _AppSkeletonState();
 }
 
-class _AppSkeletonState extends State<AppSkeleton> with SingleTickerProviderStateMixin {
+class _AppSkeletonState extends State<AppSkeleton>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
 
-    _controller = AnimationController(duration: const Duration(seconds: 2), vsync: this)..repeat();
+    _controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat();
   }
 
   @override
@@ -39,13 +48,21 @@ class _AppSkeletonState extends State<AppSkeleton> with SingleTickerProviderStat
         widget.child,
         Positioned.fill(
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(widget.radius ?? AppSpacing.xs),
+            borderRadius: .circular(widget.radius ?? AppSpacing.xs),
             child: AnimatedBuilder(
               animation: _controller,
               builder: (context, _) {
                 return CustomPaint(
-                  painter: _ShimmerPainter(animationValue: _controller.value, brightness: brightness),
-                  child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(12), color: Colors.transparent)),
+                  painter: _ShimmerPainter(
+                    animationValue: _controller.value,
+                    brightness: brightness,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: .circular(12),
+                      color: Colors.transparent,
+                    ),
+                  ),
                 );
               },
             ),
@@ -57,36 +74,51 @@ class _AppSkeletonState extends State<AppSkeleton> with SingleTickerProviderStat
 }
 
 class _ShimmerPainter extends CustomPainter {
-  const _ShimmerPainter({required this.animationValue, required this.brightness});
+  const _ShimmerPainter({
+    required this.animationValue,
+    required this.brightness,
+  });
 
   final double animationValue;
   final Brightness brightness;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final baseColor = brightness == Brightness.light ? Colors.grey.shade300 : Colors.grey.shade800;
-    final highlightColor = brightness == Brightness.light ? Colors.grey.shade100 : Colors.grey.shade700;
+    final baseColor = brightness == .light
+        ? Colors.grey.shade300
+        : Colors.grey.shade800;
+    final highlightColor = brightness == .light
+        ? Colors.grey.shade100
+        : Colors.grey.shade700;
 
     final shimmerWidth = size.width * 0.5;
-    final shimmerPosition = animationValue * (size.width + shimmerWidth) - shimmerWidth;
+    final shimmerPosition =
+        animationValue * (size.width + shimmerWidth) - shimmerWidth;
 
     final gradient = LinearGradient(
       colors: [baseColor, highlightColor, baseColor],
       stops: const [0.3, 0.5, 0.7],
-      begin: Alignment.centerLeft,
-      end: Alignment.centerRight,
+      begin: .centerLeft,
+      end: .centerRight,
       transform: _SlidingGradientTransform(translationX: shimmerPosition),
     );
 
-    final paint = Paint()..shader = gradient.createShader(Rect.fromLTWH(0, 0, size.width, size.height));
+    final paint = Paint()
+      ..shader = gradient.createShader(
+        Rect.fromLTWH(0, 0, size.width, size.height),
+      );
 
-    final rrect = RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(12));
+    final rrect = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      const Radius.circular(12),
+    );
 
     canvas.drawRRect(rrect, paint);
   }
 
   @override
-  bool shouldRepaint(_ShimmerPainter oldDelegate) => oldDelegate.animationValue != animationValue;
+  bool shouldRepaint(_ShimmerPainter oldDelegate) =>
+      oldDelegate.animationValue != animationValue;
 }
 
 class _SlidingGradientTransform extends GradientTransform {

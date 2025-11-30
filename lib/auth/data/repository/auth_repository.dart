@@ -10,7 +10,11 @@ import 'package:task_master/auth/data/repository/credentials_repository.dart';
 import 'package:task_master/auth/data/repository/user_repository.dart';
 
 class AuthRepository {
-  const AuthRepository({required this.authRemoteDataSource, required this.userRepository, required this.credentialsRepository});
+  const AuthRepository({
+    required this.authRemoteDataSource,
+    required this.userRepository,
+    required this.credentialsRepository,
+  });
 
   @visibleForTesting
   final AuthRemoteDataSource authRemoteDataSource;
@@ -29,49 +33,77 @@ class AuthRepository {
 
   Future<LoginResult> login(String email, String password) async {
     try {
-      final response = await authRemoteDataSource.login(LoginRequest(email: email, password: password));
-
-      await credentialsRepository.updateCredentials(CredentialsData(accessToken: response.accessToken));
-
-      await userRepository.updateUser(
-        UserData(id: response.id, firstName: response.firstName, lastName: response.lastName, email: response.email, createdAt: response.createdAt),
+      final response = await authRemoteDataSource.login(
+        LoginRequest(email: email, password: password),
       );
 
-      return LoginResult.success;
+      await credentialsRepository.updateCredentials(
+        CredentialsData(accessToken: response.accessToken),
+      );
+
+      await userRepository.updateUser(
+        UserData(
+          id: response.id,
+          firstName: response.firstName,
+          lastName: response.lastName,
+          email: response.email,
+          createdAt: response.createdAt,
+        ),
+      );
+
+      return .success;
     } on DioException catch (e) {
       final code = e.response?.statusCode ?? 500;
       if (code == 404) {
-        return LoginResult.userNotFound;
+        return .userNotFound;
       } else {
-        return LoginResult.networkError;
+        return .networkError;
       }
     } catch (e) {
-      return LoginResult.networkError;
+      return .networkError;
     }
   }
 
-  Future<RegisterResult> register({required String firstName, required String lastName, required String email, required String password}) async {
+  Future<RegisterResult> register({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+  }) async {
     try {
       final response = await authRemoteDataSource.register(
-        RegisterRequest(firstName: firstName, lastName: lastName, email: email, password: password),
+        RegisterRequest(
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          password: password,
+        ),
       );
 
-      await credentialsRepository.updateCredentials(CredentialsData(accessToken: response.accessToken));
+      await credentialsRepository.updateCredentials(
+        CredentialsData(accessToken: response.accessToken),
+      );
 
       await userRepository.updateUser(
-        UserData(id: response.id, firstName: response.firstName, lastName: response.lastName, email: response.email, createdAt: response.createdAt),
+        UserData(
+          id: response.id,
+          firstName: response.firstName,
+          lastName: response.lastName,
+          email: response.email,
+          createdAt: response.createdAt,
+        ),
       );
 
-      return RegisterResult.success;
+      return .success;
     } on DioException catch (e) {
       final code = e.response?.statusCode ?? 500;
       if (code == 409) {
-        return RegisterResult.emailConflict;
+        return .emailConflict;
       } else {
-        return RegisterResult.networkError;
+        return .networkError;
       }
     } catch (e) {
-      return RegisterResult.networkError;
+      return .networkError;
     }
   }
 

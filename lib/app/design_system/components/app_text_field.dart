@@ -5,7 +5,7 @@ class AppTextField extends StatefulWidget {
     required this.label,
     required this.onChanged,
     this.keyboardType = TextInputType.text,
-    this.textCapitalization = TextCapitalization.sentences,
+    this.textCapitalization = .sentences,
     this.initialValue,
     this.error,
     this.maxLines = 1,
@@ -54,19 +54,30 @@ class _AppTextFieldState extends State<AppTextField> {
       keyboardType: widget.keyboardType,
       textCapitalization: widget.textCapitalization,
       maxLines: widget.maxLines,
-      decoration: InputDecoration(label: Text(widget.label), error: widget.error != null ? Text(widget.error!) : null, suffixIcon: widget.suffixIcon),
+      decoration: InputDecoration(
+        label: Text(widget.label),
+        error: widget.error != null ? Text(widget.error!) : null,
+        suffixIcon: widget.suffixIcon,
+      ),
     );
   }
 }
 
 class TogglePasswordButton extends StatelessWidget {
-  const TogglePasswordButton({required this.onPressed, required this.value, super.key});
+  const TogglePasswordButton({
+    required this.onPressed,
+    required this.value,
+    super.key,
+  });
 
   final VoidCallback onPressed;
   final bool value;
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(onPressed: onPressed, icon: Icon(value ? Icons.visibility : Icons.visibility_off));
+    return IconButton(
+      onPressed: onPressed,
+      icon: Icon(value ? Icons.visibility : Icons.visibility_off),
+    );
   }
 }

@@ -8,7 +8,12 @@ import 'package:task_master/tasks/ui/view/sheets/overdue_tasks_list_sheet.dart';
 import 'package:task_master/tasks/ui/view/sheets/upcoming_tasks_list_sheet.dart';
 
 class DashboardHighlights extends StatelessWidget {
-  const DashboardHighlights({required this.isLoading, required this.upcomingTasks, required this.overdueTasks, super.key});
+  const DashboardHighlights({
+    required this.isLoading,
+    required this.upcomingTasks,
+    required this.overdueTasks,
+    super.key,
+  });
 
   final bool isLoading;
   final List<TaskResponse> upcomingTasks;
@@ -20,20 +25,33 @@ class DashboardHighlights extends StatelessWidget {
     final localization = context.localization;
 
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.s),
+      padding: const .all(AppSpacing.s),
       child: Column(
         spacing: AppSpacing.s,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           AppSkeleton(
             isLoading: isLoading,
-            child: Text(localization.dashboard_highlights, style: theme.textTheme.titleLarge).animate().fade(delay: 150.ms),
+            child: Text(
+              localization.dashboard_highlights,
+              style: theme.textTheme.titleLarge,
+            ).animate().fade(delay: 150.ms),
           ),
           Row(
             spacing: AppSpacing.s,
             children: [
-              Expanded(child: AppSkeleton(isLoading: isLoading, child: UpcomingTasksListSheet(tasks: upcomingTasks))),
-              Expanded(child: AppSkeleton(isLoading: isLoading, child: OverdueTasksListSheet(tasks: overdueTasks))),
+              Expanded(
+                child: AppSkeleton(
+                  isLoading: isLoading,
+                  child: UpcomingTasksListSheet(tasks: upcomingTasks),
+                ),
+              ),
+              Expanded(
+                child: AppSkeleton(
+                  isLoading: isLoading,
+                  child: OverdueTasksListSheet(tasks: overdueTasks),
+                ),
+              ),
             ],
           ),
         ],

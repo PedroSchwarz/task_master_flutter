@@ -7,7 +7,7 @@ class TasksWebsocket {
   TasksWebsocket._({required Socket socket}) : _socket = socket;
 
   factory TasksWebsocket({required WebsocketClient client}) {
-    final connection = client.buildSocket(topic: WebsocketTopic.tasks);
+    final connection = client.buildSocket(topic: .tasks);
     return TasksWebsocket._(socket: connection);
   }
 

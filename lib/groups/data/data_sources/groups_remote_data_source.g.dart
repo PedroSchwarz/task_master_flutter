@@ -2,11 +2,13 @@
 
 part of 'groups_remote_data_source.dart';
 
+// dart format off
+
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
 
 class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
   _GroupsRemoteDataSource(this._dio, {this.baseUrl, this.errorLogger}) {
@@ -44,15 +46,11 @@ class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<GroupResponse> _value;
     try {
-      _value =
-          _result.data!
-              .map(
-                (dynamic i) =>
-                    GroupResponse.fromJson(i as Map<String, dynamic>),
-              )
-              .toList();
+      _value = _result.data!
+          .map((dynamic i) => GroupResponse.fromJson(i as Map<String, dynamic>))
+          .toList();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -85,7 +83,7 @@ class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
     try {
       _value = GroupResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -118,7 +116,7 @@ class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
     try {
       _value = _result.data!;
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -251,3 +249,5 @@ class _GroupsRemoteDataSource implements GroupsRemoteDataSource {
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
+
+// dart format on

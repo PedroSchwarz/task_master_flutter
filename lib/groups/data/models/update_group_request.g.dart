@@ -10,8 +10,9 @@ _UpdateGroupRequest _$UpdateGroupRequestFromJson(Map<String, dynamic> json) =>
     _UpdateGroupRequest(
       name: json['name'] as String,
       description: json['description'] as String,
-      members:
-          (json['members'] as List<dynamic>).map((e) => e as String).toList(),
+      members: (json['members'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
       color: (json['color'] as num?)?.toInt(),
     );
 

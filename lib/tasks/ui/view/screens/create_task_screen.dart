@@ -34,7 +34,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
     return BlocListener<CreateTaskCubit, CreateTaskState>(
       bloc: bloc,
-      listenWhen: (previous, current) => previous.shouldGoBack != current.shouldGoBack,
+      listenWhen: (previous, current) =>
+          previous.shouldGoBack != current.shouldGoBack,
       listener: _listenNavigationFlow,
       child: GestureDetector(
         onTap: () {
@@ -49,11 +50,17 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
               SliverAppBar.medium(
                 title: BlocBuilder<CreateTaskCubit, CreateTaskState>(
                   bloc: bloc,
-                  buildWhen: (previous, current) => previous.isUpdating != current.isUpdating || previous.isLoading != current.isLoading,
+                  buildWhen: (previous, current) =>
+                      previous.isUpdating != current.isUpdating ||
+                      previous.isLoading != current.isLoading,
                   builder: (context, state) {
                     return AppSkeleton(
                       isLoading: state.isLoading,
-                      child: Text(state.isUpdating ? localization.update_task : localization.create_task),
+                      child: Text(
+                        state.isUpdating
+                            ? localization.update_task
+                            : localization.create_task,
+                      ),
                     );
                   },
                 ),
@@ -62,23 +69,29 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   child: BlocSelector<CreateTaskCubit, CreateTaskState, bool>(
                     bloc: bloc,
                     selector: (state) => state.isLoading || state.isSubmitting,
-                    builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
+                    builder: (context, isLoading) => isLoading
+                        ? const LinearProgressIndicator()
+                        : const SizedBox.shrink(),
                   ),
                 ),
               ),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
+                  padding: const .fromLTRB(
+                    AppSpacing.s,
+                    AppSpacing.s,
+                    AppSpacing.s,
+                    0,
+                  ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    crossAxisAlignment: .stretch,
                     spacing: AppSpacing.s,
                     children: [
                       BlocBuilder<CreateTaskCubit, CreateTaskState>(
                         bloc: bloc,
-                        buildWhen:
-                            (previous, current) =>
-                                previous.isLoading != current.isLoading || //
-                                previous.title != current.title,
+                        buildWhen: (previous, current) =>
+                            previous.isLoading != current.isLoading || //
+                            previous.title != current.title,
                         builder: (context, state) {
                           return AppSkeleton(
                             isLoading: state.isLoading,
@@ -86,17 +99,16 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               label: localization.title,
                               initialValue: state.title,
                               onChanged: bloc.updateTitle,
-                              textCapitalization: TextCapitalization.words,
+                              textCapitalization: .words,
                             ),
                           );
                         },
                       ),
                       BlocBuilder<CreateTaskCubit, CreateTaskState>(
                         bloc: bloc,
-                        buildWhen:
-                            (previous, current) =>
-                                previous.isLoading != current.isLoading || //
-                                previous.description != current.description,
+                        buildWhen: (previous, current) =>
+                            previous.isLoading != current.isLoading || //
+                            previous.description != current.description,
                         builder: (context, state) {
                           return AppSkeleton(
                             isLoading: state.isLoading,
@@ -111,29 +123,39 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       BlocBuilder<CreateTaskCubit, CreateTaskState>(
                         bloc: bloc,
-                        buildWhen:
-                            (previous, current) =>
-                                previous.isLoading != current.isLoading || //
-                                previous.checklist != current.checklist,
+                        buildWhen: (previous, current) =>
+                            previous.isLoading != current.isLoading || //
+                            previous.checklist != current.checklist,
                         builder: (context, state) {
                           return AppSkeleton(
                             isLoading: state.isLoading,
                             child: ReorderableListView.builder(
                               physics: const NeverScrollableScrollPhysics(),
                               header: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: .spaceBetween,
                                 children: [
-                                  Text(localization.checklist, style: theme.textTheme.titleMedium),
-                                  IconButton(onPressed: bloc.addChecklistItem, color: theme.colorScheme.primary, icon: const Icon(Icons.add)),
+                                  Text(
+                                    localization.checklist,
+                                    style: theme.textTheme.titleMedium,
+                                  ),
+                                  IconButton(
+                                    onPressed: bloc.addChecklistItem,
+                                    color: theme.colorScheme.primary,
+                                    icon: const Icon(Icons.add),
+                                  ),
                                 ],
                               ),
-                              footer: state.checklist.isNotEmpty ? const Gap(AppSpacing.s) : null,
+                              footer: state.checklist.isNotEmpty
+                                  ? const Gap(AppSpacing.s)
+                                  : null,
                               proxyDecorator: (child, index, animation) {
                                 return Material(
                                   elevation: AppSpacing.xxs,
                                   color: theme.colorScheme.surfaceContainer,
                                   shadowColor: Colors.black45,
-                                  borderRadius: BorderRadius.circular(AppSpacing.s),
+                                  borderRadius: .circular(
+                                    AppSpacing.s,
+                                  ),
                                   child: child,
                                 );
                               },
@@ -145,7 +167,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
                                 return Container(
                                   key: ValueKey(item.id),
-                                  padding: const EdgeInsets.all(AppSpacing.xs),
+                                  padding: const .all(AppSpacing.xs),
                                   child: Row(
                                     children: [
                                       Expanded(
@@ -153,14 +175,19 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                           label: 'Item ${item.order + 1}',
                                           initialValue: item.title,
                                           onChanged: (value) {
-                                            bloc.updateChecklistItem(index: position, value: value);
+                                            bloc.updateChecklistItem(
+                                              index: position,
+                                              value: value,
+                                            );
                                           },
                                         ),
                                       ),
                                       IconButton(
                                         color: Colors.red,
                                         onPressed: () {
-                                          bloc.removeChecklistItem(index: position);
+                                          bloc.removeChecklistItem(
+                                            index: position,
+                                          );
                                         },
                                         icon: const Icon(Icons.delete),
                                       ),
@@ -175,179 +202,255 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                       ),
                       Row(
                         spacing: AppSpacing.s,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: .spaceBetween,
                         children: [
                           Flexible(
-                            child: BlocBuilder<CreateTaskCubit, CreateTaskState>(
-                              bloc: bloc,
-                              buildWhen:
-                                  (previous, current) =>
-                                      previous.isLoading != current.isLoading || //
+                            child:
+                                BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                                  bloc: bloc,
+                                  buildWhen: (previous, current) =>
+                                      previous.isLoading !=
+                                          current.isLoading || //
                                       previous.priority != current.priority,
-                              builder: (context, state) {
-                                return AppSkeleton(
-                                  isLoading: state.isLoading,
-                                  child: DropdownMenu(
-                                    label: Row(
-                                      spacing: AppSpacing.xs,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [Icon(state.priority.icon, color: state.priority.color), Text(localization.priority)],
-                                    ),
-                                    initialSelection: state.priority,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
-                                      isCollapsed: true,
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-                                    ),
-                                    menuStyle: MenuStyle(
-                                      backgroundColor: WidgetStateProperty.all(theme.scaffoldBackgroundColor),
-                                      shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                                    ),
-                                    onSelected: bloc.updatePriority,
-                                    dropdownMenuEntries:
-                                        TaskPriority.values
+                                  builder: (context, state) {
+                                    return AppSkeleton(
+                                      isLoading: state.isLoading,
+                                      child: DropdownMenu(
+                                        label: Row(
+                                          spacing: AppSpacing.xs,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              state.priority.icon,
+                                              color: state.priority.color,
+                                            ),
+                                            Text(localization.priority),
+                                          ],
+                                        ),
+                                        initialSelection: state.priority,
+                                        inputDecorationTheme:
+                                            InputDecorationTheme(
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius: .circular(100),
+                                              ),
+                                              isCollapsed: true,
+                                              contentPadding: const .symmetric(
+                                                horizontal: AppSpacing.s,
+                                              ),
+                                            ),
+                                        menuStyle: MenuStyle(
+                                          backgroundColor:
+                                              WidgetStateProperty.all(
+                                                theme.scaffoldBackgroundColor,
+                                              ),
+                                          shape: WidgetStateProperty.all(
+                                            RoundedRectangleBorder(
+                                              borderRadius: .circular(20),
+                                            ),
+                                          ),
+                                        ),
+                                        onSelected: bloc.updatePriority,
+                                        dropdownMenuEntries: TaskPriority.values
                                             .map(
                                               (priority) => DropdownMenuEntry(
                                                 value: priority,
                                                 label: switch (priority) {
-                                                  TaskPriority.low => localization.low,
-                                                  TaskPriority.medium => localization.medium,
-                                                  TaskPriority.high => localization.high,
+                                                  .low => localization.low,
+                                                  .medium =>
+                                                    localization.medium,
+                                                  .high => localization.high,
                                                 },
-                                                leadingIcon: Icon(priority.icon, color: priority.color),
+                                                leadingIcon: Icon(
+                                                  priority.icon,
+                                                  color: priority.color,
+                                                ),
                                               ),
                                             )
                                             .toList(),
-                                  ),
-                                );
-                              },
-                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
                           ),
                           Flexible(
-                            child: BlocBuilder<CreateTaskCubit, CreateTaskState>(
-                              bloc: bloc,
-                              buildWhen:
-                                  (previous, current) =>
-                                      previous.isLoading != current.isLoading || //
+                            child:
+                                BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                                  bloc: bloc,
+                                  buildWhen: (previous, current) =>
+                                      previous.isLoading !=
+                                          current.isLoading || //
                                       previous.status != current.status,
-                              builder: (context, state) {
-                                return AppSkeleton(
-                                  isLoading: state.isLoading,
-                                  child: DropdownMenu(
-                                    label: Row(
-                                      spacing: AppSpacing.xs,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [Icon(state.status.icon, color: state.status.color), const Text('Status')],
-                                    ),
-                                    initialSelection: state.status,
-                                    inputDecorationTheme: InputDecorationTheme(
-                                      enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(100)),
-                                      isCollapsed: true,
-                                      contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
-                                    ),
-                                    menuStyle: MenuStyle(
-                                      backgroundColor: WidgetStateProperty.all(theme.scaffoldBackgroundColor),
-                                      shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))),
-                                    ),
-                                    onSelected: bloc.updateStatus,
-                                    dropdownMenuEntries:
-                                        TaskStatus.values
+                                  builder: (context, state) {
+                                    return AppSkeleton(
+                                      isLoading: state.isLoading,
+                                      child: DropdownMenu(
+                                        label: Row(
+                                          spacing: AppSpacing.xs,
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(
+                                              state.status.icon,
+                                              color: state.status.color,
+                                            ),
+                                            const Text('Status'),
+                                          ],
+                                        ),
+                                        initialSelection: state.status,
+                                        inputDecorationTheme:
+                                            InputDecorationTheme(
+                                              enabledBorder: OutlineInputBorder(
+                                                borderRadius: .circular(100),
+                                              ),
+                                              isCollapsed: true,
+                                              contentPadding: const .symmetric(
+                                                horizontal: AppSpacing.s,
+                                              ),
+                                            ),
+                                        menuStyle: MenuStyle(
+                                          backgroundColor:
+                                              WidgetStateProperty.all(
+                                                theme.scaffoldBackgroundColor,
+                                              ),
+                                          shape: WidgetStateProperty.all(
+                                            RoundedRectangleBorder(
+                                              borderRadius: .circular(20),
+                                            ),
+                                          ),
+                                        ),
+                                        onSelected: bloc.updateStatus,
+                                        dropdownMenuEntries: TaskStatus.values
                                             .map(
                                               (status) => DropdownMenuEntry(
                                                 value: status,
                                                 label: switch (status) {
-                                                  TaskStatus.todo => localization.to_do,
-                                                  TaskStatus.inProgress => localization.in_progress,
-                                                  TaskStatus.done => localization.done,
+                                                  .todo => localization.to_do,
+                                                  .inProgress =>
+                                                    localization.in_progress,
+                                                  .done => localization.done,
                                                 },
-                                                leadingIcon: Icon(status.icon, color: status.color),
+                                                leadingIcon: Icon(
+                                                  status.icon,
+                                                  color: status.color,
+                                                ),
                                               ),
                                             )
                                             .toList(),
-                                  ),
-                                );
-                              },
-                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
                           ),
                         ],
                       ),
-                      Text(localization.due_date_time, style: theme.textTheme.titleMedium),
+                      Text(
+                        localization.due_date_time,
+                        style: theme.textTheme.titleMedium,
+                      ),
                       Row(
                         spacing: AppSpacing.s,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: .spaceBetween,
                         children: [
                           Expanded(
-                            child: BlocBuilder<CreateTaskCubit, CreateTaskState>(
-                              bloc: bloc,
-                              buildWhen:
-                                  (previous, current) =>
-                                      previous.isLoading != current.isLoading || //
+                            child:
+                                BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                                  bloc: bloc,
+                                  buildWhen: (previous, current) =>
+                                      previous.isLoading !=
+                                          current.isLoading || //
                                       previous.date != current.date,
-                              builder: (context, state) {
-                                return AppSkeleton(
-                                  isLoading: state.isLoading,
-                                  child: FilledButton(
-                                    onPressed: () async {
-                                      final date = await showDatePicker(
-                                        context: context,
-                                        initialDate: state.date,
-                                        firstDate: DateTime.now().isAfter(state.date) ? state.date : DateTime.now(),
-                                        lastDate: DateTime.now().add(const Duration(days: 365)),
-                                      );
-                                      bloc.updateDate(date);
-                                    },
-                                    child: Row(
-                                      children: [const Icon(Icons.calendar_month_outlined), const Gap(AppSpacing.xs), Text(state.formattedDate)],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
+                                  builder: (context, state) {
+                                    return AppSkeleton(
+                                      isLoading: state.isLoading,
+                                      child: FilledButton(
+                                        onPressed: () async {
+                                          final date = await showDatePicker(
+                                            context: context,
+                                            initialDate: state.date,
+                                            firstDate:
+                                                DateTime.now().isAfter(
+                                                  state.date,
+                                                )
+                                                ? state.date
+                                                : DateTime.now(),
+                                            lastDate: DateTime.now().add(
+                                              const Duration(days: 365),
+                                            ),
+                                          );
+                                          bloc.updateDate(date);
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.calendar_month_outlined,
+                                            ),
+                                            const Gap(AppSpacing.xs),
+                                            Text(state.formattedDate),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                           ),
                           Expanded(
-                            child: BlocBuilder<CreateTaskCubit, CreateTaskState>(
-                              bloc: bloc,
-                              buildWhen:
-                                  (previous, current) =>
-                                      previous.isLoading != current.isLoading || //
+                            child:
+                                BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                                  bloc: bloc,
+                                  buildWhen: (previous, current) =>
+                                      previous.isLoading !=
+                                          current.isLoading || //
                                       previous.time != current.time,
-                              builder: (context, state) {
-                                return AppSkeleton(
-                                  isLoading: state.isLoading,
-                                  child: FilledButton.tonal(
-                                    onPressed: () async {
-                                      final time = await showTimePicker(context: context, initialTime: state.time);
-                                      bloc.updateTime(time);
-                                    },
-                                    child: Row(
-                                      children: [const Icon(Icons.watch_later_outlined), const Gap(AppSpacing.xs), Text(state.formattedTime)],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
+                                  builder: (context, state) {
+                                    return AppSkeleton(
+                                      isLoading: state.isLoading,
+                                      child: FilledButton.tonal(
+                                        onPressed: () async {
+                                          final time = await showTimePicker(
+                                            context: context,
+                                            initialTime: state.time,
+                                          );
+                                          bloc.updateTime(time);
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.watch_later_outlined,
+                                            ),
+                                            const Gap(AppSpacing.xs),
+                                            Text(state.formattedTime),
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                           ),
                         ],
                       ),
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        crossAxisAlignment: .stretch,
                         children: [
                           BlocBuilder<CreateTaskCubit, CreateTaskState>(
                             bloc: bloc,
-                            buildWhen:
-                                (previous, current) =>
-                                    previous.isLoading != current.isLoading || //
-                                    previous.recurring != current.recurring,
+                            buildWhen: (previous, current) =>
+                                previous.isLoading != current.isLoading || //
+                                previous.recurring != current.recurring,
                             builder: (context, state) {
                               return AppSkeleton(
                                 isLoading: state.isLoading,
                                 child: Row(
                                   spacing: AppSpacing.s,
                                   mainAxisSize: MainAxisSize.max,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: .spaceBetween,
                                   children: [
-                                    Text(localization.recurring, style: theme.textTheme.titleMedium),
-                                    Switch(value: state.recurring, onChanged: bloc.updateRecurring),
+                                    Text(
+                                      localization.recurring,
+                                      style: theme.textTheme.titleMedium,
+                                    ),
+                                    Switch(
+                                      value: state.recurring,
+                                      onChanged: bloc.updateRecurring,
+                                    ),
                                   ],
                                 ),
                               );
@@ -355,34 +458,42 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           ),
                           BlocBuilder<CreateTaskCubit, CreateTaskState>(
                             bloc: bloc,
-                            buildWhen:
-                                (previous, current) =>
-                                    previous.isLoading != current.isLoading || //
-                                    previous.recurring != current.recurring || //
-                                    previous.recurrencePattern != current.recurrencePattern,
+                            buildWhen: (previous, current) =>
+                                previous.isLoading != current.isLoading || //
+                                previous.recurring != current.recurring || //
+                                previous.recurrencePattern !=
+                                    current.recurrencePattern,
                             builder: (context, state) {
                               if (state.recurring) {
                                 return AppSkeleton(
                                   isLoading: state.isLoading,
                                   child: Padding(
-                                    padding: const EdgeInsets.only(top: AppSpacing.xs),
+                                    padding: const .only(
+                                      top: AppSpacing.xs,
+                                    ),
                                     child: Wrap(
                                       spacing: AppSpacing.xs,
                                       runSpacing: AppSpacing.xs,
-                                      children:
-                                          TaskRecurrence.values.map((pattern) {
-                                            return ChoiceChip(
-                                              label: Text(switch (pattern) {
-                                                TaskRecurrence.daily => localization.recurrence_daily,
-                                                TaskRecurrence.weekly => localization.recurrence_weekly,
-                                                TaskRecurrence.monthly => localization.recurrence_monthly,
-                                              }, style: theme.textTheme.bodyLarge),
-                                              selected: state.recurrencePattern == pattern,
-                                              onSelected: (value) {
-                                                bloc.updatePattern(pattern);
-                                              },
-                                            );
-                                          }).toList(),
+                                      children: TaskRecurrence.values.map((
+                                        pattern,
+                                      ) {
+                                        return ChoiceChip(
+                                          label: Text(switch (pattern) {
+                                            .daily =>
+                                              localization.recurrence_daily,
+                                            .weekly =>
+                                              localization.recurrence_weekly,
+                                            .monthly =>
+                                              localization.recurrence_monthly,
+                                          }, style: theme.textTheme.bodyLarge),
+                                          selected:
+                                              state.recurrencePattern ==
+                                              pattern,
+                                          onSelected: (value) {
+                                            bloc.updatePattern(pattern);
+                                          },
+                                        );
+                                      }).toList(),
                                     ),
                                   ),
                                 );
@@ -392,30 +503,37 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           ),
                           BlocBuilder<CreateTaskCubit, CreateTaskState>(
                             bloc: bloc,
-                            buildWhen:
-                                (previous, current) =>
-                                    previous.isLoading != current.isLoading || //
-                                    previous.recurring != current.recurring || //
-                                    previous.recurrenceEndDate != current.recurrenceEndDate,
+                            buildWhen: (previous, current) =>
+                                previous.isLoading != current.isLoading || //
+                                previous.recurring != current.recurring || //
+                                previous.recurrenceEndDate !=
+                                    current.recurrenceEndDate,
                             builder: (context, state) {
                               if (state.recurring) {
                                 return AppSkeleton(
                                   isLoading: state.isLoading,
                                   child: Padding(
-                                    padding: const EdgeInsets.only(top: AppSpacing.s),
+                                    padding: const .only(
+                                      top: AppSpacing.s,
+                                    ),
                                     child: OutlinedButton(
                                       onPressed: () async {
                                         final date = await showDatePicker(
                                           context: context,
                                           initialDate: DateTime.now(),
                                           firstDate: DateTime.now(),
-                                          lastDate: DateTime.now().add(const Duration(days: 365)),
+                                          lastDate: DateTime.now().add(
+                                            const Duration(days: 365),
+                                          ),
                                         );
                                         bloc.updateRecurrenceEndDate(date);
                                       },
                                       child: Text(
                                         '${localization.ending_on}: ${state.formattedRecurrenceEndDate ?? localization.never}',
-                                        style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.primary),
+                                        style: theme.textTheme.bodyLarge
+                                            ?.copyWith(
+                                              color: theme.colorScheme.primary,
+                                            ),
                                       ),
                                     ),
                                   ),
@@ -427,19 +545,26 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         ],
                       ),
                       const Divider(),
-                      Text(localization.assign_to, style: theme.textTheme.titleMedium),
+                      Text(
+                        localization.assign_to,
+                        style: theme.textTheme.titleMedium,
+                      ),
                     ],
                   ),
                 ),
               ),
               SliverPadding(
-                padding: const EdgeInsets.only(top: AppSpacing.s, left: AppSpacing.s, right: AppSpacing.s, bottom: AppSpacing.l),
+                padding: const .only(
+                  top: AppSpacing.s,
+                  left: AppSpacing.s,
+                  right: AppSpacing.s,
+                  bottom: AppSpacing.l,
+                ),
                 sliver: BlocBuilder<CreateTaskCubit, CreateTaskState>(
                   bloc: bloc,
-                  buildWhen:
-                      (previous, current) =>
-                          previous.assignableUsers != current.assignableUsers || //
-                          previous.assignedIds != current.assignedIds,
+                  buildWhen: (previous, current) =>
+                      previous.assignableUsers != current.assignableUsers || //
+                      previous.assignedIds != current.assignedIds,
                   builder: (context, state) {
                     final assignableUsers = state.assignableUsers;
                     final assignedIds = state.assignedIds;
@@ -447,14 +572,19 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
 
                     return SliverGrid.builder(
                       itemCount: isLoading ? 5 : assignableUsers.length,
-                      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                        maxCrossAxisExtent: 40,
-                        mainAxisSpacing: AppSpacing.s,
-                        crossAxisSpacing: AppSpacing.s,
-                      ),
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 40,
+                            mainAxisSpacing: AppSpacing.s,
+                            crossAxisSpacing: AppSpacing.s,
+                          ),
                       itemBuilder: (context, position) {
                         if (isLoading) {
-                          return const AppSkeleton(isLoading: true, radius: AppSpacing.max, child: CircleAvatar(child: Text('')));
+                          return const AppSkeleton(
+                            isLoading: true,
+                            radius: AppSpacing.max,
+                            child: CircleAvatar(child: Text('')),
+                          );
                         }
 
                         final member = assignableUsers[position];
@@ -465,11 +595,15 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                           child: AnimatedContainer(
                             duration: const Duration(milliseconds: 300),
                             decoration: BoxDecoration(
-                              border: isAssigned ? Border.all(color: theme.colorScheme.primary) : null,
+                              border: isAssigned
+                                  ? .all(color: theme.colorScheme.primary)
+                                  : null,
                               shape: BoxShape.circle,
                             ),
                             child: CircleAvatar(
-                              backgroundColor: isAssigned ? null : theme.colorScheme.surfaceContainer,
+                              backgroundColor: isAssigned
+                                  ? null
+                                  : theme.colorScheme.surfaceContainer,
                               child: Text(member.initials),
                             ),
                           ),
@@ -484,21 +618,26 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 child: SafeArea(
                   top: false,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+                    padding: const .symmetric(
+                      horizontal: AppSpacing.s,
+                    ),
                     child: BlocBuilder<CreateTaskCubit, CreateTaskState>(
                       bloc: bloc,
-                      buildWhen:
-                          (previous, current) =>
-                              previous.canSubmit != current.canSubmit || //
-                              previous.isUpdating != current.isUpdating,
+                      buildWhen: (previous, current) =>
+                          previous.canSubmit != current.canSubmit || //
+                          previous.isUpdating != current.isUpdating,
                       builder: (context, state) {
                         return Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: .stretch,
+                          mainAxisAlignment: .end,
                           children: [
                             FilledButton(
                               onPressed: state.canSubmit ? bloc.saveTask : null,
-                              child: Text(state.isUpdating ? localization.update : localization.create),
+                              child: Text(
+                                state.isUpdating
+                                    ? localization.update
+                                    : localization.create,
+                              ),
                             ),
                           ],
                         );
@@ -514,7 +653,10 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     );
   }
 
-  Future<void> _listenNavigationFlow(BuildContext context, CreateTaskState state) async {
+  Future<void> _listenNavigationFlow(
+    BuildContext context,
+    CreateTaskState state,
+  ) async {
     if (state.shouldGoBack) {
       context.pop(true);
     }

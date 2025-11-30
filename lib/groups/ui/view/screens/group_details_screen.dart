@@ -44,15 +44,18 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
 
     return BlocListener<GroupDetailsCubit, GroupDetailsState>(
       bloc: bloc,
-      listenWhen: (previous, current) => previous.shouldGoBack != current.shouldGoBack,
+      listenWhen: (previous, current) =>
+          previous.shouldGoBack != current.shouldGoBack,
       listener: _listenNavigationFlow,
       child: BlocListener<GroupDetailsCubit, GroupDetailsState>(
         bloc: bloc,
-        listenWhen: (previous, current) => previous.showLeaveDialog != current.showLeaveDialog,
+        listenWhen: (previous, current) =>
+            previous.showLeaveDialog != current.showLeaveDialog,
         listener: _listenLeaveDialog,
         child: BlocListener<GroupDetailsCubit, GroupDetailsState>(
           bloc: bloc,
-          listenWhen: (previous, current) => previous.taskToDelete != current.taskToDelete,
+          listenWhen: (previous, current) =>
+              previous.taskToDelete != current.taskToDelete,
           listener: _listenTaskToDelete,
           child: Scaffold(
             endDrawer: Drawer(
@@ -84,43 +87,66 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
             ),
             body: NestedScrollView(
               floatHeaderSlivers: true,
-              headerSliverBuilder: (_, __) {
+              headerSliverBuilder: (_, _) {
                 return [
                   SliverAppBar.medium(
-                    title: BlocSelector<GroupDetailsCubit, GroupDetailsState, String?>(
-                      bloc: bloc,
-                      selector: (state) => state.group?.name,
-                      builder: (context, name) {
-                        return Text(name ?? title);
-                      },
-                    ),
+                    title:
+                        BlocSelector<
+                          GroupDetailsCubit,
+                          GroupDetailsState,
+                          String?
+                        >(
+                          bloc: bloc,
+                          selector: (state) => state.group?.name,
+                          builder: (context, name) {
+                            return Text(name ?? title);
+                          },
+                        ),
                     bottom: PreferredSize(
                       preferredSize: const Size(0, AppSpacing.s),
-                      child: BlocSelector<GroupDetailsCubit, GroupDetailsState, bool>(
-                        bloc: bloc,
-                        selector: (state) => state.isLoading || state.isRefreshing,
-                        builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
-                      ),
+                      child:
+                          BlocSelector<
+                            GroupDetailsCubit,
+                            GroupDetailsState,
+                            bool
+                          >(
+                            bloc: bloc,
+                            selector: (state) =>
+                                state.isLoading || state.isRefreshing,
+                            builder: (context, isLoading) => isLoading
+                                ? const LinearProgressIndicator()
+                                : const SizedBox.shrink(),
+                          ),
                     ),
                   ),
                   SliverToBoxAdapter(
                     child: BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
                       bloc: bloc,
-                      buildWhen: (previous, current) => previous.group != current.group,
+                      buildWhen: (previous, current) =>
+                          previous.group != current.group,
                       builder: (context, state) {
                         final group = state.group;
                         final isOwner = group?.owner.id == bloc.currentUser.id;
 
                         return ExpansionTile(
-                          title: Text(localization.details, style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.secondary)),
+                          title: Text(
+                            localization.details,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: theme.colorScheme.secondary,
+                            ),
+                          ),
                           shape: const RoundedRectangleBorder(),
-                          tilePadding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+                          tilePadding: const .symmetric(
+                            horizontal: AppSpacing.s,
+                          ),
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+                              padding: const .symmetric(
+                                horizontal: AppSpacing.s,
+                              ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: .spaceBetween,
+                                crossAxisAlignment: .center,
                                 spacing: AppSpacing.xs,
                                 children: [
                                   AppSkeleton(
@@ -128,24 +154,33 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                                     child: Row(
                                       spacing: AppSpacing.xs,
                                       children: [
-                                        Text('${localization.actions}:').animate().fade(delay: 100.ms),
+                                        Text(
+                                          '${localization.actions}:',
+                                        ).animate().fade(delay: 100.ms),
                                         IconButton.filledTonal(
-                                          color: theme.colorScheme.onPrimaryContainer,
-                                          onPressed:
-                                              isOwner
-                                                  ? () async {
-                                                    if (context.mounted) {
-                                                      final result = await context.pushNamed<bool>(
-                                                        CreateGroupScreen.routeName,
-                                                        queryParameters: {'id': group!.id},
-                                                      );
+                                          color: theme
+                                              .colorScheme
+                                              .onPrimaryContainer,
+                                          onPressed: isOwner
+                                              ? () async {
+                                                  if (context.mounted) {
+                                                    final result = await context
+                                                        .pushNamed<bool>(
+                                                          CreateGroupScreen
+                                                              .routeName,
+                                                          queryParameters: {
+                                                            'id': group!.id,
+                                                          },
+                                                        );
 
-                                                      if (result ?? false) {
-                                                        bloc.updateGroupForMember(groupId: group.id);
-                                                      }
+                                                    if (result ?? false) {
+                                                      bloc.updateGroupForMember(
+                                                        groupId: group.id,
+                                                      );
                                                     }
                                                   }
-                                                  : null,
+                                                }
+                                              : null,
                                           icon: const Icon(Icons.edit_outlined),
                                         ).animate().fade(delay: 200.ms),
                                       ],
@@ -154,7 +189,9 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                                   IconButton.outlined(
                                     color: Colors.red,
                                     tooltip: localization.leave_group,
-                                    onPressed: isOwner ? null : bloc.toggleLeaveDialog,
+                                    onPressed: isOwner
+                                        ? null
+                                        : bloc.toggleLeaveDialog,
                                     icon: const Icon(Icons.exit_to_app),
                                   ).animate().fade(delay: 200.ms),
                                 ],
@@ -169,7 +206,9 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                                 height: 40,
                                 child: ListView.separated(
                                   scrollDirection: Axis.horizontal,
-                                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+                                  padding: const .symmetric(
+                                    horizontal: AppSpacing.s,
+                                  ),
                                   itemCount: group?.members.length ?? 0,
                                   itemBuilder: (context, position) {
                                     final member = group!.members[position];
@@ -178,14 +217,21 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                                       return Row(
                                         spacing: AppSpacing.s,
                                         children: [
-                                          Text('${localization.members}:').animate().fade(delay: 100.ms),
-                                          CircleAvatar(child: Text(member.initials)).animate().fade(delay: 200.ms),
+                                          Text(
+                                            '${localization.members}:',
+                                          ).animate().fade(delay: 100.ms),
+                                          CircleAvatar(
+                                            child: Text(member.initials),
+                                          ).animate().fade(delay: 200.ms),
                                         ],
                                       );
                                     }
-                                    return CircleAvatar(child: Text(member.initials)).animate().fade(delay: 200.ms);
+                                    return CircleAvatar(
+                                      child: Text(member.initials),
+                                    ).animate().fade(delay: 200.ms);
                                   },
-                                  separatorBuilder: (__, _) => const Gap(AppSpacing.xs),
+                                  separatorBuilder: (_, _) =>
+                                      const Gap(AppSpacing.xs),
                                 ),
                               ),
                             ),
@@ -198,7 +244,8 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                   SliverToBoxAdapter(
                     child: BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
                       bloc: bloc,
-                      buildWhen: (previous, current) => previous.isCalendarView != current.isCalendarView,
+                      buildWhen: (previous, current) =>
+                          previous.isCalendarView != current.isCalendarView,
                       builder: (context, state) {
                         if (state.isCalendarView) {
                           return SizedBox(
@@ -257,16 +304,21 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                     onComplete: bloc.toggleTaskStatus,
                     onPending: bloc.toggleTaskStatus,
                     onDelete: bloc.setTaskToDelete,
-                    onRefresh: () async => await bloc.refresh(groupId: widget.id),
+                    onRefresh: () async =>
+                        await bloc.refresh(groupId: widget.id),
                   );
                 },
               ),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () async {
                 if (context.mounted) {
-                  final result = await context.pushNamed<bool>(CreateTaskScreen.routeName, pathParameters: {'id': widget.id});
+                  final result = await context.pushNamed<bool>(
+                    CreateTaskScreen.routeName,
+                    pathParameters: {'id': widget.id},
+                  );
 
                   if (result ?? false) {
                     bloc.updateGroupForMember(groupId: widget.id);
@@ -293,8 +345,14 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
           return AlertDialog(
             title: Text('${localization.leave_group}?'),
             actions: [
-              TextButton(onPressed: bloc.toggleLeaveDialog, child: Text(localization.cancel, textAlign: TextAlign.end)),
-              TextButton(onPressed: bloc.leaveGroup, child: Text(localization.leave, textAlign: TextAlign.end)),
+              TextButton(
+                onPressed: bloc.toggleLeaveDialog,
+                child: Text(localization.cancel, textAlign: .end),
+              ),
+              TextButton(
+                onPressed: bloc.leaveGroup,
+                child: Text(localization.leave, textAlign: .end),
+              ),
             ],
           );
         },
@@ -318,8 +376,14 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
             title: Text('${localization.delete} ${task.title}?'),
             content: Text(localization.action_cannot_be_undone),
             actions: [
-              TextButton(onPressed: () => bloc.setTaskToDelete(null), child: Text(localization.cancel, textAlign: TextAlign.end)),
-              TextButton(onPressed: () => bloc.deleteTask(task), child: Text(localization.delete, textAlign: TextAlign.end)),
+              TextButton(
+                onPressed: () => bloc.setTaskToDelete(null),
+                child: Text(localization.cancel, textAlign: .end),
+              ),
+              TextButton(
+                onPressed: () => bloc.deleteTask(task),
+                child: Text(localization.delete, textAlign: .end),
+              ),
             ],
           );
         },

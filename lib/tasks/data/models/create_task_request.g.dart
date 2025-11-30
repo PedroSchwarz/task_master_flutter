@@ -6,52 +6,46 @@ part of 'create_task_request.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_CreateTaskRequest _$CreateTaskRequestFromJson(
-  Map<String, dynamic> json,
-) => _CreateTaskRequest(
-  title: json['title'] as String,
-  dueDate: DateTime.parse(json['dueDate'] as String),
-  group: json['group'] as String,
-  checklist:
-      (json['checklist'] as List<dynamic>)
+_CreateTaskRequest _$CreateTaskRequestFromJson(Map<String, dynamic> json) =>
+    _CreateTaskRequest(
+      title: json['title'] as String,
+      dueDate: DateTime.parse(json['dueDate'] as String),
+      group: json['group'] as String,
+      checklist: (json['checklist'] as List<dynamic>)
           .map(
             (e) => CreateTaskChecklistItem.fromJson(e as Map<String, dynamic>),
           )
           .toList(),
-  recurring: json['recurring'] as bool,
-  description: json['description'] as String?,
-  priority: $enumDecodeNullable(_$TaskPriorityEnumMap, json['priority']),
-  status: $enumDecodeNullable(_$TaskStatusEnumMap, json['status']),
-  assignedTo:
-      (json['assignedTo'] as List<dynamic>?)?.map((e) => e as String).toList(),
-  recurrencePattern: $enumDecodeNullable(
-    _$TaskRecurrenceEnumMap,
-    json['recurrencePattern'],
-  ),
-  recurrenceEndDate:
-      json['recurrenceEndDate'] == null
+      recurring: json['recurring'] as bool,
+      description: json['description'] as String?,
+      priority: $enumDecodeNullable(_$TaskPriorityEnumMap, json['priority']),
+      status: $enumDecodeNullable(_$TaskStatusEnumMap, json['status']),
+      assignedTo: (json['assignedTo'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      recurrencePattern: $enumDecodeNullable(
+        _$TaskRecurrenceEnumMap,
+        json['recurrencePattern'],
+      ),
+      recurrenceEndDate: json['recurrenceEndDate'] == null
           ? null
           : DateTime.parse(json['recurrenceEndDate'] as String),
-);
+    );
 
-Map<String, dynamic> _$CreateTaskRequestToJson(
-  _CreateTaskRequest instance,
-) => <String, dynamic>{
-  'title': instance.title,
-  'dueDate': instance.dueDate.toIso8601String(),
-  'group': instance.group,
-  'checklist': instance.checklist,
-  'recurring': instance.recurring,
-  if (instance.description case final value?) 'description': value,
-  if (_$TaskPriorityEnumMap[instance.priority] case final value?)
-    'priority': value,
-  if (_$TaskStatusEnumMap[instance.status] case final value?) 'status': value,
-  if (instance.assignedTo case final value?) 'assignedTo': value,
-  if (_$TaskRecurrenceEnumMap[instance.recurrencePattern] case final value?)
-    'recurrencePattern': value,
-  if (instance.recurrenceEndDate?.toIso8601String() case final value?)
-    'recurrenceEndDate': value,
-};
+Map<String, dynamic> _$CreateTaskRequestToJson(_CreateTaskRequest instance) =>
+    <String, dynamic>{
+      'title': instance.title,
+      'dueDate': instance.dueDate.toIso8601String(),
+      'group': instance.group,
+      'checklist': instance.checklist,
+      'recurring': instance.recurring,
+      'description': ?instance.description,
+      'priority': ?_$TaskPriorityEnumMap[instance.priority],
+      'status': ?_$TaskStatusEnumMap[instance.status],
+      'assignedTo': ?instance.assignedTo,
+      'recurrencePattern': ?_$TaskRecurrenceEnumMap[instance.recurrencePattern],
+      'recurrenceEndDate': ?instance.recurrenceEndDate?.toIso8601String(),
+    };
 
 const _$TaskPriorityEnumMap = {
   TaskPriority.low: 'low',

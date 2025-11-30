@@ -10,7 +10,9 @@ class ProgressRepository {
   @visibleForTesting
   final ProgressLocalDataSource progressLocalDataSource;
 
-  Future<TaskProgressionSelection> getProgressionSelection({TaskProgressionSelection defaultValue = TaskProgressionSelection.assigned}) async {
+  Future<TaskProgressionSelection> getProgressionSelection({
+    TaskProgressionSelection defaultValue = .assigned,
+  }) async {
     try {
       final selection = await progressLocalDataSource.load();
       return selection ?? defaultValue;
@@ -20,7 +22,9 @@ class ProgressRepository {
     }
   }
 
-  Future<void> setProgressionSelection(TaskProgressionSelection selection) async {
+  Future<void> setProgressionSelection(
+    TaskProgressionSelection selection,
+  ) async {
     try {
       await progressLocalDataSource.save(selection);
     } catch (e) {

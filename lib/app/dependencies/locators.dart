@@ -37,24 +37,37 @@ sealed class BaseServiceLocators {
 class Locators extends BaseServiceLocators {
   @override
   BuildConfigurations get buildConfigurations {
-    return const BuildConfigurations(baseUrl: 'https://task-master-api-beej.onrender.com/', environment: Environment.production);
+    return const BuildConfigurations(
+      baseUrl: 'https://task-master-api-beej.onrender.com/',
+      environment: .production,
+    );
   }
 
   @override
   Future<void> setup() async {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
     getIt.registerSingleton(
       const FlutterSecureStorage(
-        iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock_this_device),
-        aOptions: AndroidOptions(sharedPreferencesName: 'task_master_secure_storage', encryptedSharedPreferences: true),
+        iOptions: IOSOptions(
+          accessibility: KeychainAccessibility.first_unlock_this_device,
+        ),
+        aOptions: AndroidOptions(
+          sharedPreferencesName: 'task_master_secure_storage',
+          encryptedSharedPreferences: true,
+        ),
       ),
     );
 
     final sharedPreferences = await SharedPreferences.getInstance();
     getIt.registerSingleton(sharedPreferences);
 
-    final appStorage = AppLocalStorage(secureStorage: getIt(), sharedPreferences: getIt());
+    final appStorage = AppLocalStorage(
+      secureStorage: getIt(),
+      sharedPreferences: getIt(),
+    );
     await appStorage.create();
 
     final notificationsRepository = NotificationsRepository(
@@ -69,13 +82,34 @@ class Locators extends BaseServiceLocators {
       ..registerSingleton(const Uuid())
       ..registerSingleton(CredentialsLocalDataSource(localStorage: getIt()))
       ..registerSingleton(UserLocalDataSource(localStorage: getIt()))
-      ..registerSingleton(CredentialsRepository(credentialsLocalDataSource: getIt()))
+      ..registerSingleton(
+        CredentialsRepository(credentialsLocalDataSource: getIt()),
+      )
       ..registerSingleton(UserRepository(userLocalDataSource: getIt()))
-      ..registerSingleton(createDio(baseUrl: buildConfigurations.baseUrl), instanceName: BaseServiceLocators.noAuthDio)
+      ..registerSingleton(
+        createDio(baseUrl: buildConfigurations.baseUrl),
+        instanceName: BaseServiceLocators.noAuthDio,
+      )
       ..registerSingleton(WebsocketClient(configurations: getIt()))
-      ..registerSingleton(AuthRemoteDataSource(getIt(instanceName: BaseServiceLocators.noAuthDio)))
-      ..registerSingleton(AuthRepository(authRemoteDataSource: getIt(), userRepository: getIt(), credentialsRepository: getIt()))
-      ..registerSingleton(createAuthenticatedDio(baseUrl: buildConfigurations.baseUrl, authRepository: getIt(), credentialsRepository: getIt()))
+      ..registerSingleton(
+        AuthRemoteDataSource(
+          getIt(instanceName: BaseServiceLocators.noAuthDio),
+        ),
+      )
+      ..registerSingleton(
+        AuthRepository(
+          authRemoteDataSource: getIt(),
+          userRepository: getIt(),
+          credentialsRepository: getIt(),
+        ),
+      )
+      ..registerSingleton(
+        createAuthenticatedDio(
+          baseUrl: buildConfigurations.baseUrl,
+          authRepository: getIt(),
+          credentialsRepository: getIt(),
+        ),
+      )
       ..registerSingleton(createRouter(authRepository: getIt()))
       ..registerSingleton(notificationsRepository)
       ..registerSingleton(SplashRepository(authRepository: getIt()))
@@ -83,17 +117,39 @@ class Locators extends BaseServiceLocators {
       ..registerFactory(() => LoginCubit(authRepository: getIt()))
       ..registerFactory(() => RegisterCubit(authRepository: getIt()))
       ..registerSingleton(UsersRemoteDataSource(getIt()))
-      ..registerSingleton(UsersRepository(authRepository: getIt(), usersRemoteDataSource: getIt(), notificationsRepository: getIt()))
+      ..registerSingleton(
+        UsersRepository(
+          authRepository: getIt(),
+          usersRemoteDataSource: getIt(),
+          notificationsRepository: getIt(),
+        ),
+      )
       ..registerSingleton(InvitesRemoteDataSource(getIt()))
       ..registerSingleton(InvitesRepository(invitesRemoteDataSource: getIt()))
       ..registerSingleton(GroupsRemoteDataSource(getIt()))
       ..registerSingleton(GroupsLocalDataSource(localStorage: getIt()))
       ..registerSingleton(GroupsWebsocket(client: getIt())..listen())
-      ..registerSingleton(GroupsRepository(groupsRemoteDataSource: getIt(), groupsLocalDataSource: getIt()))
-      ..registerFactory(
-        () => CreateGroupCubit(authRepository: getIt(), groupsRepository: getIt(), invitesRepository: getIt(), usersRepository: getIt()),
+      ..registerSingleton(
+        GroupsRepository(
+          groupsRemoteDataSource: getIt(),
+          groupsLocalDataSource: getIt(),
+        ),
       )
-      ..registerFactory(() => InvitesCubit(invitesRepository: getIt(), groupsRepository: getIt(), groupsWebsocket: getIt()))
+      ..registerFactory(
+        () => CreateGroupCubit(
+          authRepository: getIt(),
+          groupsRepository: getIt(),
+          invitesRepository: getIt(),
+          usersRepository: getIt(),
+        ),
+      )
+      ..registerFactory(
+        () => InvitesCubit(
+          invitesRepository: getIt(),
+          groupsRepository: getIt(),
+          groupsWebsocket: getIt(),
+        ),
+      )
       ..registerSingleton(TasksRemoteDataSource(getIt()))
       ..registerSingleton(TasksRepository(tasksRemoteDataSource: getIt()))
       ..registerSingleton(TasksWebsocket(client: getIt())..listen())
@@ -110,7 +166,13 @@ class Locators extends BaseServiceLocators {
           tasksWebsocket: getIt(),
         ),
       )
-      ..registerFactory(() => CreateTaskCubit(groupsRepository: getIt(), tasksRepository: getIt(), uuid: getIt()))
+      ..registerFactory(
+        () => CreateTaskCubit(
+          groupsRepository: getIt(),
+          tasksRepository: getIt(),
+          uuid: getIt(),
+        ),
+      )
       ..registerFactory(
         () => TaskDetailsCubit(
           authRepository: getIt(),
@@ -124,9 +186,17 @@ class Locators extends BaseServiceLocators {
       ..registerSingleton(ProgressLocalDataSource(localStorage: getIt()))
       ..registerSingleton(ProgressRepository(progressLocalDataSource: getIt()))
       ..registerSingleton(GetUsersCurrentWeekUseCase(authRepository: getIt()))
-      ..registerSingleton(GetTasksProgressionForWeeksUseCase(authRepository: getIt(), tasksRepository: getIt(), getUsersCurrentWeekUseCase: getIt()))
+      ..registerSingleton(
+        GetTasksProgressionForWeeksUseCase(
+          authRepository: getIt(),
+          tasksRepository: getIt(),
+          getUsersCurrentWeekUseCase: getIt(),
+        ),
+      )
       ..registerSingleton(DashboardLocalDataSource(localStorage: getIt()))
-      ..registerSingleton(DashboardRepository(dashboardLocalDataSource: getIt()))
+      ..registerSingleton(
+        DashboardRepository(dashboardLocalDataSource: getIt()),
+      )
       ..registerFactory(
         () => DashboardCubit(
           authRepository: getIt(),
@@ -141,7 +211,12 @@ class Locators extends BaseServiceLocators {
           tasksWebsocket: getIt(),
         ),
       )
-      ..registerFactory(() => ProgressionCubit(progressRepository: getIt(), getTasksProgressionForWeeksUseCase: getIt()));
+      ..registerFactory(
+        () => ProgressionCubit(
+          progressRepository: getIt(),
+          getTasksProgressionForWeeksUseCase: getIt(),
+        ),
+      );
   }
 
   Dio createDio({required String baseUrl}) {
@@ -154,7 +229,11 @@ class Locators extends BaseServiceLocators {
     required CredentialsRepository credentialsRepository,
   }) {
     final dio = Dio(BaseOptions(baseUrl: baseUrl));
-    final authInterceptor = AuthInterceptor(authRepository: authRepository, credentialsRepository: credentialsRepository, dio: dio);
+    final authInterceptor = AuthInterceptor(
+      authRepository: authRepository,
+      credentialsRepository: credentialsRepository,
+      dio: dio,
+    );
     dio.interceptors.add(authInterceptor);
     return dio;
   }

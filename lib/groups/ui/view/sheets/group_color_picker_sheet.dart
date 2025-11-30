@@ -3,7 +3,11 @@ import 'package:gap/gap.dart';
 import 'package:task_master/app/app.dart';
 
 class GroupColorPickerSheet extends StatefulWidget {
-  const GroupColorPickerSheet({required this.onChanged, this.initialColor, super.key});
+  const GroupColorPickerSheet({
+    required this.onChanged,
+    this.initialColor,
+    super.key,
+  });
 
   final ValueChanged<int?> onChanged;
   final int? initialColor;
@@ -17,7 +21,8 @@ class _GroupColorPickerSheetState extends State<GroupColorPickerSheet> {
   double green = 1;
   double blue = 1;
 
-  Color get currentColor => Color.from(alpha: 1, red: red, green: green, blue: blue);
+  Color get currentColor =>
+      Color.from(alpha: 1, red: red, green: green, blue: blue);
 
   @override
   void initState() {
@@ -38,21 +43,31 @@ class _GroupColorPickerSheetState extends State<GroupColorPickerSheet> {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+        padding: const .symmetric(horizontal: AppSpacing.s),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(localization.group_color, style: theme.textTheme.headlineMedium),
+            Text(
+              localization.group_color,
+              style: theme.textTheme.headlineMedium,
+            ),
             const Gap(AppSpacing.m),
-            Container(height: 250, width: double.infinity, decoration: BoxDecoration(color: currentColor, shape: BoxShape.circle)),
+            Container(
+              height: 250,
+              width: .infinity,
+              decoration: BoxDecoration(
+                color: currentColor,
+                shape: BoxShape.circle,
+              ),
+            ),
             const Gap(AppSpacing.m),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(localization.group_color_red),
                 Slider(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+                  padding: const .symmetric(vertical: AppSpacing.s),
                   value: red,
                   min: 0,
                   max: 1,
@@ -62,11 +77,11 @@ class _GroupColorPickerSheetState extends State<GroupColorPickerSheet> {
               ],
             ),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(localization.group_color_green),
                 Slider(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+                  padding: const .symmetric(vertical: AppSpacing.s),
                   value: green,
                   min: 0,
                   max: 1,
@@ -76,11 +91,11 @@ class _GroupColorPickerSheetState extends State<GroupColorPickerSheet> {
               ],
             ),
             Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: .start,
               children: [
                 Text(localization.group_color_blue),
                 Slider(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+                  padding: const .symmetric(vertical: AppSpacing.s),
                   value: blue,
                   min: 0,
                   max: 1,
@@ -98,7 +113,10 @@ class _GroupColorPickerSheetState extends State<GroupColorPickerSheet> {
                     onPressed: () {
                       widget.onChanged(null);
                     },
-                    child: Text(localization.remove_color, textAlign: TextAlign.end),
+                    child: Text(
+                      localization.remove_color,
+                      textAlign: .end,
+                    ),
                   ),
                 ),
                 Expanded(
@@ -106,7 +124,10 @@ class _GroupColorPickerSheetState extends State<GroupColorPickerSheet> {
                     onPressed: () {
                       widget.onChanged(currentColor.toARGB32());
                     },
-                    child: Text(localization.select_color, textAlign: TextAlign.end),
+                    child: Text(
+                      localization.select_color,
+                      textAlign: .end,
+                    ),
                   ),
                 ),
               ],

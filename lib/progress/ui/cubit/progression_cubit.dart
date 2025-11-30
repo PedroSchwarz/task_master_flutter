@@ -7,16 +7,18 @@ import 'package:task_master/progress/progress.dart';
 part 'progression_cubit.freezed.dart';
 
 class ProgressionCubit extends Cubit<ProgressionState> {
-  ProgressionCubit({required this.progressRepository, required this.getTasksProgressionForWeeksUseCase})
-    : super(
-        const ProgressionState(
-          isLoading: false,
-          progression: [],
-          period: ProgressionPeriod.oneMonth,
-          selection: TaskProgressionSelection.assigned,
-          isRefreshing: false,
-        ),
-      );
+  ProgressionCubit({
+    required this.progressRepository,
+    required this.getTasksProgressionForWeeksUseCase,
+  }) : super(
+         const ProgressionState(
+           isLoading: false,
+           progression: [],
+           period: .oneMonth,
+           selection: .assigned,
+           isRefreshing: false,
+         ),
+       );
 
   static final _log = Logger('ProgressionCubit');
 
@@ -39,7 +41,10 @@ class ProgressionCubit extends Cubit<ProgressionState> {
 
   Future<void> loadProgression({int weeks = 4}) async {
     try {
-      final progression = await getTasksProgressionForWeeksUseCase(selection: state.selection, weeks: weeks);
+      final progression = await getTasksProgressionForWeeksUseCase(
+        selection: state.selection,
+        weeks: weeks,
+      );
       emit(state.copyWith(progression: progression));
     } catch (e) {
       _log.severe('Error loading progression: $e', e);
@@ -48,7 +53,10 @@ class ProgressionCubit extends Cubit<ProgressionState> {
 
   Future<void> updateSelection(TaskProgressionSelection selection) async {
     emit(state.copyWith(isRefreshing: true, selection: selection));
-    await Future.wait([loadProgression(), progressRepository.setProgressionSelection(selection)]);
+    await Future.wait([
+      loadProgression(),
+      progressRepository.setProgressionSelection(selection),
+    ]);
     emit(state.copyWith(isRefreshing: false));
   }
 
@@ -75,14 +83,16 @@ sealed class ProgressionState with _$ProgressionState {
 
   const ProgressionState._();
 
-  double get maxTotal => progression.map((progression) => progression?.total ?? 0).max.toDouble();
+  double get maxTotal =>
+      progression.map((progression) => progression?.total ?? 0).max.toDouble();
 }
 
 enum ProgressionPeriod {
   oneMonth(weeks: 4),
   threeMonths(weeks: 12),
   sixMonths(weeks: 24),
-  oneYear(weeks: 48);
+  oneYear(weeks: 48)
+  ;
 
   const ProgressionPeriod({required this.weeks});
 

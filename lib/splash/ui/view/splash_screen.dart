@@ -15,7 +15,8 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   final bloc = getIt<SplashCubit>();
   late final AnimationController _animationController;
   late final Animation<double> _animation;
@@ -26,8 +27,14 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     bloc.load();
 
     _animationController = AnimationController(vsync: this);
-    _animation = CurvedAnimation(parent: Tween(begin: 0.6, end: 1.0).animate(_animationController), curve: Curves.decelerate);
-    _animationController.repeat(period: const Duration(seconds: 2), reverse: true);
+    _animation = CurvedAnimation(
+      parent: Tween(begin: 0.6, end: 1.0).animate(_animationController),
+      curve: Curves.decelerate,
+    );
+    _animationController.repeat(
+      period: const Duration(seconds: 2),
+      reverse: true,
+    );
   }
 
   @override
@@ -41,13 +48,17 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     return BlocListener<SplashCubit, SplashState>(
       bloc: bloc,
       listener: _listenNavigationFlow,
-      child: Scaffold(body: Center(child: ScaleTransition(scale: _animation, child: const AppLogo()))),
+      child: Scaffold(
+        body: Center(
+          child: ScaleTransition(scale: _animation, child: const AppLogo()),
+        ),
+      ),
     );
   }
 
   void _listenNavigationFlow(BuildContext context, SplashState state) {
     switch (state.navigation) {
-      case SplashNavigation.home:
+      case .home:
         context.goNamed(DashboardScreen.routeName);
       default:
         context.goNamed(LoginScreen.routeName);

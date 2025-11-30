@@ -11,7 +11,7 @@ class UserLocalDataSource {
   final AppLocalStorage localStorage;
 
   Future<UserData?> load() async {
-    final value = await localStorage.read(LocalStorageKey.user);
+    final value = await localStorage.read(.user);
 
     if (value == null) {
       return null;
@@ -21,10 +21,10 @@ class UserLocalDataSource {
   }
 
   Future<void> save(UserData value) async {
-    await localStorage.write(LocalStorageKey.user, jsonEncode(value.toJson()));
+    await localStorage.write(.user, jsonEncode(value.toJson()));
   }
 
   Future<void> delete() async {
-    await localStorage.delete(LocalStorageKey.user);
+    await localStorage.delete(.user);
   }
 }

@@ -2,7 +2,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppLocalStorage {
-  const AppLocalStorage({required this.secureStorage, required this.sharedPreferences});
+  const AppLocalStorage({
+    required this.secureStorage,
+    required this.sharedPreferences,
+  });
 
   final FlutterSecureStorage secureStorage;
   final SharedPreferences sharedPreferences;
@@ -15,17 +18,25 @@ class AppLocalStorage {
     }
   }
 
-  Future<void> write(Enum key, String value) async {
+  Future<void> write(LocalStorageKey key, String value) async {
     await secureStorage.write(key: key.name, value: value);
   }
 
-  Future<String?> read(Enum key) async {
+  Future<String?> read(LocalStorageKey key) async {
     return secureStorage.read(key: key.name);
   }
 
-  Future<void> delete(Enum key) async {
+  Future<void> delete(LocalStorageKey key) async {
     await secureStorage.delete(key: key.name);
   }
 }
 
-enum LocalStorageKey { credentials, user, showProgression, showHighlights, tasksListView, progressionSelection, groupsListType }
+enum LocalStorageKey {
+  credentials,
+  user,
+  showProgression,
+  showHighlights,
+  tasksListView,
+  progressionSelection,
+  groupsListType,
+}

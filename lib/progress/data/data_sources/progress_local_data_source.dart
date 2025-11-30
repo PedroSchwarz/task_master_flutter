@@ -10,16 +10,18 @@ class ProgressLocalDataSource {
   final AppLocalStorage localStorage;
 
   Future<TaskProgressionSelection?> load() async {
-    final value = await localStorage.read(LocalStorageKey.progressionSelection);
+    final value = await localStorage.read(.progressionSelection);
 
     if (value == null) {
       return null;
     }
 
-    return TaskProgressionSelection.values.firstWhereOrNull((e) => e.name == value);
+    return .values.firstWhereOrNull(
+      (e) => e.name == value,
+    );
   }
 
   Future<void> save(TaskProgressionSelection selection) async {
-    await localStorage.write(LocalStorageKey.progressionSelection, selection.name);
+    await localStorage.write(.progressionSelection, selection.name);
   }
 }

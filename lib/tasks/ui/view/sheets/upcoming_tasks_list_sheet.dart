@@ -16,43 +16,50 @@ class UpcomingTasksListSheet extends StatelessWidget {
     final localization = context.localization;
 
     return ElevatedButton(
-      onPressed:
-          tasks.isEmpty
-              ? null
-              : () {
-                showModalBottomSheet(
-                  context: context,
-                  useSafeArea: true,
-                  showDragHandle: true,
-                  scrollControlDisabledMaxHeightRatio: 0.9,
-                  builder: (context) {
-                    if (tasks.isEmpty && context.canPop()) {
-                      context.pop();
-                    }
+      onPressed: tasks.isEmpty
+          ? null
+          : () {
+              showModalBottomSheet(
+                context: context,
+                useSafeArea: true,
+                showDragHandle: true,
+                scrollControlDisabledMaxHeightRatio: 0.9,
+                builder: (context) {
+                  if (tasks.isEmpty && context.canPop()) {
+                    context.pop();
+                  }
 
-                    return ListView.separated(
-                      itemCount: tasks.length,
-                      itemBuilder: (_, position) {
-                        final task = tasks[position];
-                        return SimplifiedTaskItem(
-                          task: task,
-                          position: position,
-                          onTap: () {
-                            context.goNamed(TaskDetailsScreen.routeName, pathParameters: {'id': task.group, 'taskId': task.id});
-                          },
-                        );
-                      },
-                      separatorBuilder: (_, __) => const Divider(),
-                    );
-                  },
-                );
-              },
+                  return ListView.separated(
+                    itemCount: tasks.length,
+                    itemBuilder: (_, position) {
+                      final task = tasks[position];
+                      return SimplifiedTaskItem(
+                        task: task,
+                        position: position,
+                        onTap: () {
+                          context.goNamed(
+                            TaskDetailsScreen.routeName,
+                            pathParameters: {
+                              'id': task.group,
+                              'taskId': task.id,
+                            },
+                          );
+                        },
+                      );
+                    },
+                    separatorBuilder: (_, _) => const Divider(),
+                  );
+                },
+              );
+            },
       style: ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.primaryContainer,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.s)),
+        shape: RoundedRectangleBorder(
+          borderRadius: .circular(AppSpacing.s),
+        ),
         textStyle: theme.textTheme.titleMedium,
         foregroundColor: theme.colorScheme.onPrimaryContainer,
-        padding: const EdgeInsets.all(AppSpacing.m),
+        padding: const .all(AppSpacing.m),
       ),
       child: Text(localization.dashboard_upcoming_tasks),
     ).animate().fade(delay: 200.ms);

@@ -33,15 +33,22 @@ class GroupsList extends StatelessWidget {
     final localization = context.localization;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: .start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+          padding: const .symmetric(horizontal: AppSpacing.s),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: .spaceBetween,
             children: [
               Text(localization.groups, style: theme.textTheme.headlineSmall),
-              IconButton(onPressed: onToggleListType, icon: Icon(listType == GroupsListType.list ? Icons.grid_view : Icons.table_rows_outlined)),
+              IconButton(
+                onPressed: onToggleListType,
+                icon: Icon(
+                  listType == .list
+                      ? Icons.grid_view
+                      : Icons.table_rows_outlined,
+                ),
+              ),
             ],
           ),
         ).animate().fade(delay: 100.ms),
@@ -49,8 +56,13 @@ class GroupsList extends StatelessWidget {
           child: RefreshIndicator(
             onRefresh: onRefresh,
             child: switch (listType) {
-              GroupsListType.list => ListView.separated(
-                padding: const EdgeInsets.only(top: AppSpacing.s, left: AppSpacing.s, right: AppSpacing.s, bottom: AppSpacing.max),
+              .list => ListView.separated(
+                padding: const .only(
+                  top: AppSpacing.s,
+                  left: AppSpacing.s,
+                  right: AppSpacing.s,
+                  bottom: AppSpacing.max,
+                ),
                 itemCount: groups.length,
                 itemBuilder: (context, position) {
                   final group = groups[position];
@@ -65,8 +77,13 @@ class GroupsList extends StatelessWidget {
                 },
                 separatorBuilder: (context, index) => const Gap(AppSpacing.s),
               ),
-              GroupsListType.grid => GridView.builder(
-                padding: const EdgeInsets.only(top: AppSpacing.s, left: AppSpacing.s, right: AppSpacing.s, bottom: AppSpacing.max),
+              .grid => GridView.builder(
+                padding: const .only(
+                  top: AppSpacing.s,
+                  left: AppSpacing.s,
+                  right: AppSpacing.s,
+                  bottom: AppSpacing.max,
+                ),
                 itemCount: groups.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,

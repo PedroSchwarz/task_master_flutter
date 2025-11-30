@@ -6,7 +6,11 @@ import 'package:task_master/progress/domain/use_cases/get_users_current_week_use
 import 'package:task_master/tasks/tasks.dart';
 
 class GetTasksProgressionForWeeksUseCase {
-  const GetTasksProgressionForWeeksUseCase({required this.authRepository, required this.tasksRepository, required this.getUsersCurrentWeekUseCase});
+  const GetTasksProgressionForWeeksUseCase({
+    required this.authRepository,
+    required this.tasksRepository,
+    required this.getUsersCurrentWeekUseCase,
+  });
 
   @visibleForTesting
   final AuthRepository authRepository;
@@ -17,13 +21,17 @@ class GetTasksProgressionForWeeksUseCase {
   @visibleForTesting
   final GetUsersCurrentWeekUseCase getUsersCurrentWeekUseCase;
 
-  Future<List<WeeklyTaskProgression?>> call({required TaskProgressionSelection selection, int weeks = 5}) async {
+  Future<List<WeeklyTaskProgression?>> call({
+    required TaskProgressionSelection selection,
+    int weeks = 5,
+  }) async {
     final assignedTasks = switch (selection) {
-      TaskProgressionSelection.owned => await tasksRepository.getAllOwned(),
-      TaskProgressionSelection.assigned => await tasksRepository.getAllAssigned(),
+      .owned => await tasksRepository.getAllOwned(),
+      .assigned => await tasksRepository.getAllAssigned(),
     };
 
-    final registrationDate = authRepository.currentUser.value!.createdAt.toLocal();
+    final registrationDate = authRepository.currentUser.value!.createdAt
+        .toLocal();
 
     final currentWeek = getUsersCurrentWeekUseCase();
 
@@ -38,18 +46,27 @@ class GetTasksProgressionForWeeksUseCase {
     for (int i = 0; i < actualWeeks; i++) {
       final weekNumber = currentWeek - i;
 
-      final startOfWeek = registrationDate.add(Duration(days: (weekNumber - 1) * 7));
-      final endOfWeek = startOfWeek.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59));
+      final startOfWeek = registrationDate.add(
+        Duration(days: (weekNumber - 1) * 7),
+      );
+      final endOfWeek = startOfWeek.add(
+        const Duration(days: 6, hours: 23, minutes: 59, seconds: 59),
+      );
 
-      final tasksInThisWeek =
-          assignedTasks.where((task) {
-            final taskDate = task.dueDate.toLocal();
-            return taskDate.isAfter(startOfWeek.subtract(const Duration(seconds: 1))) && taskDate.isBefore(endOfWeek.add(const Duration(seconds: 1)));
-          }).toList();
+      final tasksInThisWeek = assignedTasks.where((task) {
+        final taskDate = task.dueDate.toLocal();
+        return taskDate.isAfter(
+              startOfWeek.subtract(const Duration(seconds: 1)),
+            ) &&
+            taskDate.isBefore(endOfWeek.add(const Duration(seconds: 1)));
+      }).toList();
 
       final completedTasks = tasksInThisWeek.where((task) => task.completed);
 
-      final overdueTasks = tasksInThisWeek.where((task) => !task.completed && task.dueDate.toLocal().isBefore(DateTime.now()));
+      final overdueTasks = tasksInThisWeek.where(
+        (task) =>
+            !task.completed && task.dueDate.toLocal().isBefore(DateTime.now()),
+      );
 
       progressions.add(
         WeeklyTaskProgression(

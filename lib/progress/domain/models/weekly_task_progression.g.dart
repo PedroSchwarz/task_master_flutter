@@ -15,12 +15,9 @@ _WeeklyTaskProgression _$WeeklyTaskProgressionFromJson(
   completed: (json['completed'] as num).toInt(),
   total: (json['total'] as num).toInt(),
   overdue: (json['overdue'] as num).toInt(),
-  tasks:
-      (json['tasks'] as List<dynamic>)
-          .map(
-            (e) => SimplifiedTaskResponse.fromJson(e as Map<String, dynamic>),
-          )
-          .toList(),
+  tasks: (json['tasks'] as List<dynamic>)
+      .map((e) => SimplifiedTaskResponse.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$WeeklyTaskProgressionToJson(

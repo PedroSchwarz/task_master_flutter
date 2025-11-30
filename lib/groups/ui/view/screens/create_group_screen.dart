@@ -34,15 +34,18 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
     return BlocListener<CreateGroupCubit, CreateGroupState>(
       bloc: bloc,
-      listenWhen: (previous, current) => previous.showInviteUsersSheet != current.showInviteUsersSheet,
+      listenWhen: (previous, current) =>
+          previous.showInviteUsersSheet != current.showInviteUsersSheet,
       listener: _listenInviteUsersSheet,
       child: BlocListener<CreateGroupCubit, CreateGroupState>(
         bloc: bloc,
-        listenWhen: (previous, current) => previous.showDeleteDialog != current.showDeleteDialog,
+        listenWhen: (previous, current) =>
+            previous.showDeleteDialog != current.showDeleteDialog,
         listener: _listenDeleteDialog,
         child: BlocListener<CreateGroupCubit, CreateGroupState>(
           bloc: bloc,
-          listenWhen: (previous, current) => previous.shouldGoBack != current.shouldGoBack,
+          listenWhen: (previous, current) =>
+              previous.shouldGoBack != current.shouldGoBack,
           listener: _listenNavigationFlow,
           child: GestureDetector(
             onTap: () {
@@ -59,27 +62,40 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     SliverAppBar.medium(
                       title: BlocBuilder<CreateGroupCubit, CreateGroupState>(
                         bloc: bloc,
-                        buildWhen: (previous, current) => previous.isLoading != current.isLoading || previous.isUpdating != current.isUpdating,
+                        buildWhen: (previous, current) =>
+                            previous.isLoading != current.isLoading ||
+                            previous.isUpdating != current.isUpdating,
                         builder: (context, state) {
                           return AppSkeleton(
                             isLoading: state.isLoading,
-                            child: Text(state.isUpdating ? localization.update_group : localization.create_group),
+                            child: Text(
+                              state.isUpdating
+                                  ? localization.update_group
+                                  : localization.create_group,
+                            ),
                           );
                         },
                       ),
                       actions: [
                         BlocBuilder<CreateGroupCubit, CreateGroupState>(
                           bloc: bloc,
-                          buildWhen:
-                              (previous, current) =>
-                                  previous.isLoading != current.isLoading || //
-                                  previous.group != current.group || //
-                                  previous.groupColor != current.groupColor,
+                          buildWhen: (previous, current) =>
+                              previous.isLoading != current.isLoading || //
+                              previous.group != current.group || //
+                              previous.groupColor != current.groupColor,
                           builder: (context, state) {
-                            final color = state.groupColor != null ? Color(state.groupColor!) : null;
+                            final color = state.groupColor != null
+                                ? Color(state.groupColor!)
+                                : null;
 
                             return IconButton.outlined(
-                              style: IconButton.styleFrom(side: BorderSide(color: theme.colorScheme.onSurface, width: 3), backgroundColor: color),
+                              style: IconButton.styleFrom(
+                                side: BorderSide(
+                                  color: theme.colorScheme.onSurface,
+                                  width: 3,
+                                ),
+                                backgroundColor: color,
+                              ),
                               onPressed: () {
                                 showModalBottomSheet(
                                   context: context,
@@ -104,26 +120,38 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                       ],
                       bottom: PreferredSize(
                         preferredSize: const Size(0, AppSpacing.s),
-                        child: BlocSelector<CreateGroupCubit, CreateGroupState, bool>(
-                          bloc: bloc,
-                          selector: (state) => state.isSubmitting || state.isLoading,
-                          builder: (context, isLoading) => isLoading ? const LinearProgressIndicator() : const SizedBox.shrink(),
-                        ),
+                        child:
+                            BlocSelector<
+                              CreateGroupCubit,
+                              CreateGroupState,
+                              bool
+                            >(
+                              bloc: bloc,
+                              selector: (state) =>
+                                  state.isSubmitting || state.isLoading,
+                              builder: (context, isLoading) => isLoading
+                                  ? const LinearProgressIndicator()
+                                  : const SizedBox.shrink(),
+                            ),
                       ),
                     ),
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
+                        padding: const .fromLTRB(
+                          AppSpacing.s,
+                          AppSpacing.s,
+                          AppSpacing.s,
+                          0,
+                        ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          crossAxisAlignment: .stretch,
                           spacing: AppSpacing.s,
                           children: [
                             BlocBuilder<CreateGroupCubit, CreateGroupState>(
                               bloc: bloc,
-                              buildWhen:
-                                  (previous, current) =>
-                                      previous.isLoading != current.isLoading || //
-                                      previous.name != current.name,
+                              buildWhen: (previous, current) =>
+                                  previous.isLoading != current.isLoading || //
+                                  previous.name != current.name,
                               builder: (context, state) {
                                 return AppSkeleton(
                                   isLoading: state.isLoading,
@@ -131,17 +159,16 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                     label: localization.name,
                                     initialValue: state.name,
                                     onChanged: bloc.updateName,
-                                    textCapitalization: TextCapitalization.words,
+                                    textCapitalization: .words,
                                   ),
                                 );
                               },
                             ),
                             BlocBuilder<CreateGroupCubit, CreateGroupState>(
                               bloc: bloc,
-                              buildWhen:
-                                  (previous, current) =>
-                                      previous.isLoading != current.isLoading || //
-                                      previous.name != current.name,
+                              buildWhen: (previous, current) =>
+                                  previous.isLoading != current.isLoading || //
+                                  previous.name != current.name,
                               builder: (context, state) {
                                 return AppSkeleton(
                                   isLoading: state.isLoading,
@@ -149,7 +176,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                     label: localization.description,
                                     initialValue: state.description,
                                     onChanged: bloc.updateDescription,
-                                    textCapitalization: TextCapitalization.sentences,
+                                    textCapitalization: .sentences,
                                     maxLines: 5,
                                   ),
                                 );
@@ -157,18 +184,19 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             ),
                             BlocBuilder<CreateGroupCubit, CreateGroupState>(
                               bloc: bloc,
-                              buildWhen:
-                                  (previous, current) =>
-                                      previous.users != current.users || //
-                                      previous.isUpdating != current.isUpdating || //
-                                      previous.selectedUsersIds != current.selectedUsersIds,
+                              buildWhen: (previous, current) =>
+                                  previous.users != current.users || //
+                                  previous.isUpdating !=
+                                      current.isUpdating || //
+                                  previous.selectedUsersIds !=
+                                      current.selectedUsersIds,
                               builder: (context, state) {
                                 if (state.users.isEmpty) {
                                   return const SizedBox.shrink();
                                 }
 
                                 return Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment: .spaceBetween,
                                   children: [
                                     TextButton(
                                       onPressed: bloc.toggleInviteUsersSheet,
@@ -176,11 +204,21 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                         spacing: AppSpacing.xs,
                                         children: [
                                           const Icon(Icons.person_add_outlined),
-                                          Text(state.isUpdating ? localization.group_manage_members : localization.group_invite_members),
+                                          Text(
+                                            state.isUpdating
+                                                ? localization
+                                                      .group_manage_members
+                                                : localization
+                                                      .group_invite_members,
+                                          ),
                                         ],
                                       ),
                                     ),
-                                    Text(localization.group_members_selected(state.selectedUsersIds.length)),
+                                    Text(
+                                      localization.group_members_selected(
+                                        state.selectedUsersIds.length,
+                                      ),
+                                    ),
                                   ],
                                 ).animate().fadeIn();
                               },
@@ -192,23 +230,28 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     SliverFillRemaining(
                       hasScrollBody: false,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+                        padding: const .symmetric(horizontal: AppSpacing.s),
                         child: BlocBuilder<CreateGroupCubit, CreateGroupState>(
                           bloc: bloc,
-                          buildWhen:
-                              (previous, current) =>
-                                  previous.isLoading != current.isLoading || //
-                                  previous.canSubmit != current.canSubmit || //
-                                  previous.isUpdating != current.isUpdating,
+                          buildWhen: (previous, current) =>
+                              previous.isLoading != current.isLoading || //
+                              previous.canSubmit != current.canSubmit || //
+                              previous.isUpdating != current.isUpdating,
                           builder: (context, state) {
                             return Row(
                               spacing: AppSpacing.s,
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                              crossAxisAlignment: .end,
                               children: [
                                 Expanded(
                                   child: FilledButton(
-                                    onPressed: state.canSubmit ? bloc.saveGroup : null,
-                                    child: Text(state.isUpdating ? localization.update : localization.create),
+                                    onPressed: state.canSubmit
+                                        ? bloc.saveGroup
+                                        : null,
+                                    child: Text(
+                                      state.isUpdating
+                                          ? localization.update
+                                          : localization.create,
+                                    ),
                                   ),
                                 ),
                                 if (state.isUpdating)
@@ -237,29 +280,34 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     );
   }
 
-  Future<void> _listenInviteUsersSheet(BuildContext context, CreateGroupState state) async {
+  Future<void> _listenInviteUsersSheet(
+    BuildContext context,
+    CreateGroupState state,
+  ) async {
     if (state.showInviteUsersSheet) {
       await showModalBottomSheet(
         context: context,
         useSafeArea: true,
         isScrollControlled: true,
-        builder:
-            (context) => InviteUsersSheet(
-              users: state.users,
-              selectedUsersIds: state.selectedUsersIds,
-              isUpdating: state.isUpdating,
-              onPressed: (selectedUsersIds) {
-                bloc.updateSelectedUsersIds(selectedUsersIds);
-                context.pop();
-              },
-            ),
+        builder: (context) => InviteUsersSheet(
+          users: state.users,
+          selectedUsersIds: state.selectedUsersIds,
+          isUpdating: state.isUpdating,
+          onPressed: (selectedUsersIds) {
+            bloc.updateSelectedUsersIds(selectedUsersIds);
+            context.pop();
+          },
+        ),
       );
 
       bloc.toggleInviteUsersSheet();
     }
   }
 
-  Future<void> _listenDeleteDialog(BuildContext context, CreateGroupState state) async {
+  Future<void> _listenDeleteDialog(
+    BuildContext context,
+    CreateGroupState state,
+  ) async {
     final group = state.group;
 
     if (group == null) {
@@ -277,8 +325,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
             title: Text('${localization.delete} ${group.name}?'),
             content: Text(localization.action_cannot_be_undone),
             actions: [
-              TextButton(onPressed: bloc.toggleDeleteDialog, child: Text(localization.cancel, textAlign: TextAlign.end)),
-              TextButton(onPressed: bloc.deleteGroup, child: Text(localization.delete, textAlign: TextAlign.end)),
+              TextButton(
+                onPressed: bloc.toggleDeleteDialog,
+                child: Text(localization.cancel, textAlign: .end),
+              ),
+              TextButton(
+                onPressed: bloc.deleteGroup,
+                child: Text(localization.delete, textAlign: .end),
+              ),
             ],
           );
         },
@@ -288,7 +342,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     }
   }
 
-  Future<void> _listenNavigationFlow(BuildContext context, CreateGroupState state) async {
+  Future<void> _listenNavigationFlow(
+    BuildContext context,
+    CreateGroupState state,
+  ) async {
     if (state.shouldGoBack) {
       context.pop(true);
     }

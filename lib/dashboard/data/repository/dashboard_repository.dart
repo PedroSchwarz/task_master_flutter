@@ -11,7 +11,9 @@ class DashboardRepository {
   @visibleForTesting
   final DashboardLocalDataSource dashboardLocalDataSource;
 
-  Future<GroupsListType> getGroupsListType({GroupsListType defaultValue = GroupsListType.list}) async {
+  Future<GroupsListType> getGroupsListType({
+    GroupsListType defaultValue = .list,
+  }) async {
     try {
       final type = await dashboardLocalDataSource.loadGroupsListType();
       return type ?? defaultValue;

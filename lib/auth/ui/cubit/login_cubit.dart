@@ -6,7 +6,15 @@ part 'login_cubit.freezed.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit({required this.authRepository})
-    : super(const LoginState(email: '', password: '', hidePassword: true, isSubmitting: false, isAuthenticated: false));
+    : super(
+        const LoginState(
+          email: '',
+          password: '',
+          hidePassword: true,
+          isSubmitting: false,
+          isAuthenticated: false,
+        ),
+      );
 
   @visibleForTesting
   final AuthRepository authRepository;
@@ -28,7 +36,7 @@ class LoginCubit extends Cubit<LoginState> {
     final result = await authRepository.login(state.email, state.password);
 
     switch (result) {
-      case LoginResult.success:
+      case .success:
         emit(state.copyWith(isAuthenticated: true));
       default:
         emit(state.copyWith(error: result));

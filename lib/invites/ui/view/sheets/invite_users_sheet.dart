@@ -4,7 +4,13 @@ import 'package:task_master/app/app.dart';
 import 'package:task_master/users/data/models/user_response.dart';
 
 class InviteUsersSheet extends StatefulWidget {
-  const InviteUsersSheet({required this.users, required this.selectedUsersIds, required this.isUpdating, required this.onPressed, super.key});
+  const InviteUsersSheet({
+    required this.users,
+    required this.selectedUsersIds,
+    required this.isUpdating,
+    required this.onPressed,
+    super.key,
+  });
 
   final List<UserResponse> users;
   final List<String> selectedUsersIds;
@@ -36,10 +42,16 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
     final localization = context.localization;
 
     return Scaffold(
-      appBar: AppBar(leading: IconButton(onPressed: context.pop, icon: const Icon(Icons.close)), automaticallyImplyLeading: false),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: context.pop,
+          icon: const Icon(Icons.close),
+        ),
+        automaticallyImplyLeading: false,
+      ),
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: .stretch,
           spacing: AppSpacing.s,
           children: [
             Expanded(
@@ -48,7 +60,7 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
                   AppSliverHeaderWrapper.floating(
                     padding: 0,
                     child: Container(
-                      padding: const EdgeInsets.all(AppSpacing.s),
+                      padding: const .all(AppSpacing.s),
                       color: theme.scaffoldBackgroundColor,
                       child: AppTextField(
                         label: localization.search_user,
@@ -59,15 +71,20 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
                             });
                           } else {
                             setState(() {
-                              _users =
-                                  widget.users
-                                      .where(
-                                        (element) =>
-                                            element.firstName.toLowerCase().contains(value.toLowerCase()) ||
-                                            element.lastName.toLowerCase().contains(value.toLowerCase()) ||
-                                            element.email.toLowerCase().contains(value.toLowerCase()),
-                                      )
-                                      .toList();
+                              _users = widget.users
+                                  .where(
+                                    (element) =>
+                                        element.firstName
+                                            .toLowerCase()
+                                            .contains(value.toLowerCase()) ||
+                                        element.lastName.toLowerCase().contains(
+                                          value.toLowerCase(),
+                                        ) ||
+                                        element.email.toLowerCase().contains(
+                                          value.toLowerCase(),
+                                        ),
+                                  )
+                                  .toList();
                             });
                           }
                         },
@@ -88,7 +105,10 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
                         checkboxShape: const CircleBorder(),
                         checkboxScaleFactor: 1.2,
                         selected: isSelected,
-                        onChanged: (value) => toggleInvite(user.id, value: value),
+                        onChanged: (value) => toggleInvite(
+                          user.id,
+                          value: value,
+                        ),
                       );
                     },
                   ),
@@ -96,10 +116,12 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+              padding: const .symmetric(horizontal: AppSpacing.s),
               child: FilledButton(
                 onPressed: () => widget.onPressed(_selectedIds),
-                child: Text(widget.isUpdating ? localization.update : localization.invite),
+                child: Text(
+                  widget.isUpdating ? localization.update : localization.invite,
+                ),
               ),
             ),
           ],

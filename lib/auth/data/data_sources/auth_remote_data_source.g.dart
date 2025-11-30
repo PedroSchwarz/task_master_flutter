@@ -2,11 +2,13 @@
 
 part of 'auth_remote_data_source.dart';
 
+// dart format off
+
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
 
 class _AuthRemoteDataSource implements AuthRemoteDataSource {
   _AuthRemoteDataSource(this._dio, {this.baseUrl, this.errorLogger}) {
@@ -25,7 +27,8 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': 'application/json'};
     _headers.removeWhere((k, v) => v == null);
-    final _data = request;
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
     final _options = _setStreamType<AuthResponse>(
       Options(
             method: 'POST',
@@ -46,7 +49,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
     try {
       _value = AuthResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -58,7 +61,8 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{r'Content-Type': 'application/json'};
     _headers.removeWhere((k, v) => v == null);
-    final _data = request;
+    final _data = <String, dynamic>{};
+    _data.addAll(request.toJson());
     final _options = _setStreamType<AuthResponse>(
       Options(
             method: 'POST',
@@ -79,7 +83,7 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
     try {
       _value = AuthResponse.fromJson(_result.data!);
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -112,3 +116,5 @@ class _AuthRemoteDataSource implements AuthRemoteDataSource {
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
+
+// dart format on

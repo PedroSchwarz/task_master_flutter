@@ -2,11 +2,13 @@
 
 part of 'users_remote_data_source.dart';
 
+// dart format off
+
 // **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
+// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
 
 class _UsersRemoteDataSource implements UsersRemoteDataSource {
   _UsersRemoteDataSource(this._dio, {this.baseUrl, this.errorLogger}) {
@@ -44,14 +46,11 @@ class _UsersRemoteDataSource implements UsersRemoteDataSource {
     final _result = await _dio.fetch<List<dynamic>>(_options);
     late List<UserResponse> _value;
     try {
-      _value =
-          _result.data!
-              .map(
-                (dynamic i) => UserResponse.fromJson(i as Map<String, dynamic>),
-              )
-              .toList();
+      _value = _result.data!
+          .map((dynamic i) => UserResponse.fromJson(i as Map<String, dynamic>))
+          .toList();
     } on Object catch (e, s) {
-      errorLogger?.logError(e, s, _options);
+      errorLogger?.logError(e, s, _options, _result);
       rethrow;
     }
     return _value;
@@ -109,3 +108,5 @@ class _UsersRemoteDataSource implements UsersRemoteDataSource {
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
+
+// dart format on

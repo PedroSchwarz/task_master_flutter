@@ -19,22 +19,35 @@ class GroupContentUnavailable extends StatelessWidget {
             child: ConstrainedBox(
               constraints: BoxConstraints(minHeight: constraints.maxHeight),
               child: Padding(
-                padding: const EdgeInsets.all(AppSpacing.s),
+                padding: const .all(AppSpacing.s),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: .center,
+                  crossAxisAlignment: .stretch,
                   children: [
-                    Text(localization.empty_groups_title, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
+                    Text(
+                      localization.empty_groups_title,
+                      style: theme.textTheme.titleLarge,
+                      textAlign: .center,
+                    ),
                     RichText(
                       text: TextSpan(
                         style: theme.textTheme.titleMedium,
                         children: [
-                          TextSpan(text: localization.empty_groups_description_1),
-                          TextSpan(text: ' + ', style: theme.textTheme.titleLarge?.copyWith(color: theme.colorScheme.primary)),
-                          TextSpan(text: localization.empty_groups_description_2),
+                          TextSpan(
+                            text: localization.empty_groups_description_1,
+                          ),
+                          TextSpan(
+                            text: ' + ',
+                            style: theme.textTheme.titleLarge?.copyWith(
+                              color: theme.colorScheme.primary,
+                            ),
+                          ),
+                          TextSpan(
+                            text: localization.empty_groups_description_2,
+                          ),
                         ],
                       ),
-                      textAlign: TextAlign.center,
+                      textAlign: .center,
                     ),
                   ],
                 ),

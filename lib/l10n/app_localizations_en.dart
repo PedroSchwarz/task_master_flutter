@@ -90,10 +90,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get empty_groups_title => 'You don\'t belong to any groups yet.';
 
   @override
-  String get empty_groups_description_1 => 'You can create a new group by tapping the';
+  String get empty_groups_description_1 =>
+      'You can create a new group by tapping the';
 
   @override
-  String get empty_groups_description_2 => 'button or join an existing one with an invitation.';
+  String get empty_groups_description_2 =>
+      'button or join an existing one with an invitation.';
 
   @override
   String get invites => 'Invites';
@@ -242,7 +244,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get empty_tasks_description_2 => 'button.';
 
   @override
-  String get empty_filtered_tasks_title => 'No tasks found for selected filters.';
+  String get empty_filtered_tasks_title =>
+      'No tasks found for selected filters.';
 
   @override
   String get update_task => 'Update Task';

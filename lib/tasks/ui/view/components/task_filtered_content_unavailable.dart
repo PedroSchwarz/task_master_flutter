@@ -10,13 +10,17 @@ class TaskFilteredContentUnavailable extends StatelessWidget {
     final localization = context.localization;
 
     return Padding(
-      padding: const EdgeInsets.all(AppSpacing.s),
+      padding: const .all(AppSpacing.s),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: .center,
+        crossAxisAlignment: .stretch,
         children: [
           const Spacer(),
-          Text(localization.empty_filtered_tasks_title, style: theme.textTheme.titleLarge, textAlign: TextAlign.center),
+          Text(
+            localization.empty_filtered_tasks_title,
+            style: theme.textTheme.titleLarge,
+            textAlign: .center,
+          ),
           const Spacer(),
         ],
       ),

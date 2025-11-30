@@ -31,13 +31,13 @@ class DashboardCubit extends Cubit<DashboardState> {
            isLoading: false,
            showingProgression: false,
            showingHighlights: false,
-           groupsListType: GroupsListType.list,
+           groupsListType: .list,
            groups: [],
            upcomingTasks: [],
            overdueTasks: [],
            invites: [],
            progression: [],
-           selection: TaskProgressionSelection.owned,
+           selection: .owned,
            isRefreshing: false,
          ),
        );
@@ -94,14 +94,20 @@ class DashboardCubit extends Cubit<DashboardState> {
     });
 
     _tasksSubscription = tasksWebsocket.tasksUpdatedStream.listen((id) async {
-      final progressionIds = state.progression.nonNulls.expand((progression) => progression.taskIds);
+      final progressionIds = state.progression.nonNulls.expand(
+        (progression) => progression.taskIds,
+      );
       final isInProgression = progressionIds.any((taskId) => taskId == id);
       final upcomingIds = state.upcomingTasks.map((task) => task.id);
       final isInUpcoming = upcomingIds.any((taskId) => taskId == id);
       final overdueIds = state.overdueTasks.map((task) => task.id);
       final isInOverdue = overdueIds.any((taskId) => taskId == id);
 
-      await Future.wait([if (isInProgression) loadProgression(), if (isInUpcoming) loadUpcomingTasks(), if (isInOverdue) loadOverdueTasks()]);
+      await Future.wait([
+        if (isInProgression) loadProgression(),
+        if (isInUpcoming) loadUpcomingTasks(),
+        if (isInOverdue) loadOverdueTasks(),
+      ]);
     });
 
     final selection = await progressRepository.getProgressionSelection();
@@ -123,13 +129,27 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   Future<void> refresh() async {
     emit(state.copyWith(isRefreshing: true));
-    await Future.wait([loadGroups(), loadInvites(), loadUpcomingTasks(), loadOverdueTasks(), loadProgression()]);
+    await Future.wait([
+      loadGroups(),
+      loadInvites(),
+      loadUpcomingTasks(),
+      loadOverdueTasks(),
+      loadProgression(),
+    ]);
     emit(state.copyWith(isRefreshing: false));
   }
 
   Future<void> loadProgressionAndHighlight() async {
-    final result = await Future.wait([dashboardRepository.getShowingProgression(), dashboardRepository.getShowingHighlights()]);
-    emit(state.copyWith(showingProgression: result.first, showingHighlights: result.last));
+    final result = await Future.wait([
+      dashboardRepository.getShowingProgression(),
+      dashboardRepository.getShowingHighlights(),
+    ]);
+    emit(
+      state.copyWith(
+        showingProgression: result.first,
+        showingHighlights: result.last,
+      ),
+    );
   }
 
   Future<void> loadGroupsListType() async {
@@ -140,7 +160,12 @@ class DashboardCubit extends Cubit<DashboardState> {
   Future<void> loadGroups() async {
     try {
       final groups = await groupsRepository.getGroups();
-      emit(state.copyWith(groups: groups..sort((a, b) => b.createdAt.compareTo(a.createdAt)), invites: []));
+      emit(
+        state.copyWith(
+          groups: groups..sort((a, b) => b.createdAt.compareTo(a.createdAt)),
+          invites: [],
+        ),
+      );
     } catch (e) {
       _log.info('Error loading groups: $e', e);
     }
@@ -150,7 +175,9 @@ class DashboardCubit extends Cubit<DashboardState> {
     _invitesFetchTimer?.cancel();
 
     try {
-      final invites = await invitesRepository.getInvites(status: InviteStatus.pending.name);
+      final List<InviteResponse> invites = await invitesRepository.getInvites(
+        status: InviteStatus.pending.name,
+      );
       emit(state.copyWith(invites: invites));
       _invitesFetchTimer = Timer(const Duration(minutes: 2), loadInvites);
     } catch (e) {
@@ -178,7 +205,9 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   Future<void> loadProgression() async {
     try {
-      final progression = await getTasksProgressionForWeeksUseCase(selection: state.selection);
+      final progression = await getTasksProgressionForWeeksUseCase(
+        selection: state.selection,
+      );
       emit(state.copyWith(progression: progression));
     } catch (e) {
       _log.info('Error loading progressions: $e', e);
@@ -186,7 +215,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   }
 
   Future<void> updateGroupsListType() async {
-    final type = state.groupsListType == GroupsListType.list ? GroupsListType.grid : GroupsListType.list;
+    final GroupsListType type = state.groupsListType == .list ? .grid : .list;
     emit(state.copyWith(groupsListType: type));
     await dashboardRepository.setGroupsListType(type);
   }
@@ -203,7 +232,10 @@ class DashboardCubit extends Cubit<DashboardState> {
 
   Future<void> updateSelection(TaskProgressionSelection selection) async {
     emit(state.copyWith(isRefreshing: true, selection: selection));
-    await Future.wait([loadProgression(), progressRepository.setProgressionSelection(selection)]);
+    await Future.wait([
+      loadProgression(),
+      progressRepository.setProgressionSelection(selection),
+    ]);
     emit(state.copyWith(isRefreshing: false));
   }
 
@@ -236,5 +268,6 @@ sealed class DashboardState with _$DashboardState {
     required bool isRefreshing,
   }) = _DashboardState;
 
-  factory DashboardState.fromJson(Map<String, dynamic> json) => _$DashboardStateFromJson(json);
+  factory DashboardState.fromJson(Map<String, dynamic> json) =>
+      _$DashboardStateFromJson(json);
 }

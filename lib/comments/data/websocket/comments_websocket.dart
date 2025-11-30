@@ -7,7 +7,7 @@ class CommentsWebsocket {
   CommentsWebsocket._({required Socket socket}) : _socket = socket;
 
   factory CommentsWebsocket({required WebsocketClient client}) {
-    final connection = client.buildSocket(topic: WebsocketTopic.comments);
+    final connection = client.buildSocket(topic: .comments);
     return CommentsWebsocket._(socket: connection);
   }
 

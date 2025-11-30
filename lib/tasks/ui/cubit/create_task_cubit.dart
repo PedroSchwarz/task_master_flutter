@@ -14,22 +14,25 @@ import 'package:uuid/uuid.dart';
 part 'create_task_cubit.freezed.dart';
 
 class CreateTaskCubit extends Cubit<CreateTaskState> {
-  CreateTaskCubit({required this.groupsRepository, required this.tasksRepository, required this.uuid})
-    : super(
-        CreateTaskState(
-          isLoading: false,
-          title: '',
-          checklist: [],
-          priority: TaskPriority.medium,
-          status: TaskStatus.todo,
-          date: DateTime.now().add(const Duration(days: 1)),
-          time: const TimeOfDay(hour: 8, minute: 0),
-          assignedIds: {},
-          recurring: false,
-          isSubmitting: false,
-          shouldGoBack: false,
-        ),
-      );
+  CreateTaskCubit({
+    required this.groupsRepository,
+    required this.tasksRepository,
+    required this.uuid,
+  }) : super(
+         CreateTaskState(
+           isLoading: false,
+           title: '',
+           checklist: [],
+           priority: .medium,
+           status: .todo,
+           date: DateTime.now().add(const Duration(days: 1)),
+           time: const TimeOfDay(hour: 8, minute: 0),
+           assignedIds: {},
+           recurring: false,
+           isSubmitting: false,
+           shouldGoBack: false,
+         ),
+       );
 
   static final _log = Logger('CreateTaskCubit');
 
@@ -43,7 +46,10 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
   final Uuid uuid;
 
   Future<void> load({required String groupId, String? taskId}) async {
-    await Future.wait([loadGroup(groupId), if (taskId != null) loadTask(taskId)]);
+    await Future.wait([
+      loadGroup(groupId),
+      if (taskId != null) loadTask(taskId),
+    ]);
   }
 
   Future<void> loadGroup(String id) async {
@@ -92,7 +98,17 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
     final checklist = List<TaskChecklistItem>.from(state.checklist);
 
     emit(
-      state.copyWith(checklist: [...checklist, TaskChecklistItem(id: uuid.v4(), status: TaskChecklistItemStatus.incomplete, title: '', order: 0)]),
+      state.copyWith(
+        checklist: [
+          ...checklist,
+          TaskChecklistItem(
+            id: uuid.v4(),
+            status: .incomplete,
+            title: '',
+            order: 0,
+          ),
+        ],
+      ),
     );
 
     updateChecklistItemsOrder();
@@ -134,13 +150,12 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
   void updateChecklistItemsOrder() {
     final checklist = List<TaskChecklistItem>.from(state.checklist);
 
-    final updatedChecklist =
-        checklist.indexed.map((item) {
-          final index = item.$1;
-          final value = item.$2;
+    final updatedChecklist = checklist.indexed.map((item) {
+      final index = item.$1;
+      final value = item.$2;
 
-          return value.copyWith(order: index);
-        }).toList();
+      return value.copyWith(order: index);
+    }).toList();
 
     emit(state.copyWith(checklist: updatedChecklist));
   }
@@ -183,7 +198,11 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
 
   void toggleAssignment(String memberId) {
     if (state.assignedIds.contains(memberId)) {
-      emit(state.copyWith(assignedIds: state.assignedIds.where((id) => id != memberId).toSet()));
+      emit(
+        state.copyWith(
+          assignedIds: state.assignedIds.where((id) => id != memberId).toSet(),
+        ),
+      );
       return;
     }
 
@@ -191,7 +210,13 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
   }
 
   void updateRecurring(bool value) {
-    emit(state.copyWith(recurring: value, recurrencePattern: value ? TaskRecurrence.daily : null, recurrenceEndDate: null));
+    emit(
+      state.copyWith(
+        recurring: value,
+        recurrencePattern: value ? .daily : null,
+        recurrenceEndDate: null,
+      ),
+    );
   }
 
   void updatePattern(TaskRecurrence pattern) {
@@ -229,13 +254,21 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
           description: state.description,
           priority: state.priority,
           status: state.status,
-          dueDate: DateTime(state.date.year, state.date.month, state.date.day, state.time.hour, state.time.minute).toUtc(),
+          dueDate: DateTime(
+            state.date.year,
+            state.date.month,
+            state.date.day,
+            state.time.hour,
+            state.time.minute,
+          ).toUtc(),
           group: group.id,
           assignedTo: state.assignedIds.toList(),
-          checklist:
-              state.checklist.map((item) {
-                return CreateTaskChecklistItem(title: item.title, order: item.order);
-              }).toList(),
+          checklist: state.checklist.map((item) {
+            return CreateTaskChecklistItem(
+              title: item.title,
+              order: item.order,
+            );
+          }).toList(),
           recurring: state.recurring,
           recurrencePattern: state.recurrencePattern,
           recurrenceEndDate: state.recurrenceEndDate?.toUtc(),
@@ -264,13 +297,22 @@ class CreateTaskCubit extends Cubit<CreateTaskState> {
           description: state.description,
           priority: state.priority,
           status: state.status,
-          dueDate: DateTime(state.date.year, state.date.month, state.date.day, state.time.hour, state.time.minute).toUtc(),
+          dueDate: DateTime(
+            state.date.year,
+            state.date.month,
+            state.date.day,
+            state.time.hour,
+            state.time.minute,
+          ).toUtc(),
           assignedTo: state.assignedIds.toList(),
           completed: task.completed,
-          checklist:
-              state.checklist.map((item) {
-                return UpdateTaskChecklistItem(title: item.title, status: item.status, order: item.order);
-              }).toList(),
+          checklist: state.checklist.map((item) {
+            return UpdateTaskChecklistItem(
+              title: item.title,
+              status: item.status,
+              order: item.order,
+            );
+          }).toList(),
           recurring: state.recurring,
           recurrencePattern: state.recurrencePattern,
           recurrenceEndDate: state.recurrenceEndDate?.toUtc(),
@@ -314,7 +356,9 @@ sealed class CreateTaskState with _$CreateTaskState {
 
   String get formattedTime {
     final formatter = DateFormat('hh:mm a');
-    return formatter.format(DateTime(date.year, date.month, date.day, time.hour, time.minute));
+    return formatter.format(
+      DateTime(date.year, date.month, date.day, time.hour, time.minute),
+    );
   }
 
   String? get formattedRecurrenceEndDate {
@@ -326,7 +370,8 @@ sealed class CreateTaskState with _$CreateTaskState {
     return formatter.format(recurrenceEndDate!);
   }
 
-  List<UserResponse> get assignableUsers => group != null ? {...group!.members, group!.owner}.toList() : [];
+  List<UserResponse> get assignableUsers =>
+      group != null ? {...group!.members, group!.owner}.toList() : [];
 
   bool get isUpdating => task != null;
 
