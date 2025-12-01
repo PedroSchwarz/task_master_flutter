@@ -191,7 +191,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                                 ),
                                 bottomTitles: AxisTitles(
                                   sideTitles: SideTitles(
-                                    showTitles: true,
+                                    showTitles: state.period == .oneMonth,
                                     reservedSize: 35,
                                     getTitlesWidget: (value, meta) =>
                                         bottomTitles(

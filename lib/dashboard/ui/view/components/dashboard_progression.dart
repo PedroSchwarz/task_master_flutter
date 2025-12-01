@@ -22,7 +22,7 @@ class DashboardProgression extends StatelessWidget {
     if (isLoading) {
       return const Padding(
         padding: .all(AppSpacing.s),
-        child: AppSkeleton(isLoading: true, child: SizedBox(height: 150)),
+        child: AppSkeleton(isLoading: true, child: SizedBox(height: 120)),
       );
     }
 

@@ -62,6 +62,6 @@ class OverdueTasksListSheet extends StatelessWidget {
         padding: const .all(AppSpacing.m),
       ),
       child: Text(localization.dashboard_overdue_tasks),
-    ).animate().fade(delay: 200.ms);
+    ).animate().fade(delay: 150.ms);
   }
 }

@@ -30,13 +30,10 @@ class DashboardHighlights extends StatelessWidget {
         spacing: AppSpacing.s,
         crossAxisAlignment: .start,
         children: [
-          AppSkeleton(
-            isLoading: isLoading,
-            child: Text(
-              localization.dashboard_highlights,
-              style: theme.textTheme.titleLarge,
-            ).animate().fade(delay: 150.ms),
-          ),
+          Text(
+            localization.dashboard_highlights,
+            style: theme.textTheme.titleLarge,
+          ).animate().fade(delay: 100.ms),
           Row(
             spacing: AppSpacing.s,
             children: [
