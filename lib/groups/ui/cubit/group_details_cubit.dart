@@ -38,6 +38,8 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
            showLeaveDialog: false,
            isRefreshing: false,
            shouldGoBack: false,
+           showScrollToTopButton: false,
+           showSelectCurrentDate: false,
          ),
        );
 
@@ -133,7 +135,12 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   }
 
   void updateSelectedDate(DateTime value) {
-    emit(state.copyWith(selectedDate: value));
+    final isToday = DateUtils.isSameDay(value, DateTime.now());
+    emit(state.copyWith(selectedDate: value, showSelectCurrentDate: !isToday));
+  }
+
+  void setShowSelectCurrentDate({required bool value}) {
+    emit(state.copyWith(showSelectCurrentDate: value));
   }
 
   Future<void> toggleListView() async {
@@ -223,6 +230,10 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
         prioritySort: .none,
       ),
     );
+  }
+
+  void setShowScrollToTopButton({required bool value}) {
+    emit(state.copyWith(showScrollToTopButton: value));
   }
 
   Future<void> setTaskToDelete(TaskResponse? task) async {
@@ -328,6 +339,8 @@ sealed class GroupDetailsState with _$GroupDetailsState {
     required bool showLeaveDialog,
     required bool isRefreshing,
     required bool shouldGoBack,
+    required bool showScrollToTopButton,
+    required bool showSelectCurrentDate,
     GroupResponse? group,
     UserData? currentUser,
     UserResponse? userToFilterBy,

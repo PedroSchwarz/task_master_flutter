@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/groups/groups.dart';
 import 'package:task_master/tasks/tasks.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class GroupDetailsScreen extends StatefulWidget {
   const GroupDetailsScreen({required this.id, required this.name, super.key});
@@ -21,12 +22,19 @@ class GroupDetailsScreen extends StatefulWidget {
 }
 
 class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
+  late final ScrollController _scrollController;
+  late final CalendarPagerController _calendarPagerController;
+  final GlobalKey<ScaffoldState> _scaffoldKey = .new();
+
   final bloc = getIt<GroupDetailsCubit>();
   late final String title;
 
   @override
   void initState() {
     super.initState();
+    _scrollController = .new();
+    _calendarPagerController = .new();
+
     title = widget.name;
     bloc.load(groupId: widget.id);
   }
@@ -34,6 +42,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   @override
   void dispose() {
     bloc.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -58,6 +67,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
               previous.taskToDelete != current.taskToDelete,
           listener: _listenTaskToDelete,
           child: Scaffold(
+            key: _scaffoldKey,
             endDrawer: Drawer(
               child: BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
                 bloc: bloc,
@@ -85,233 +95,330 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                 },
               ),
             ),
-            body: NestedScrollView(
-              floatHeaderSlivers: true,
-              headerSliverBuilder: (_, _) {
-                return [
-                  SliverAppBar.medium(
-                    title:
-                        BlocSelector<
-                          GroupDetailsCubit,
-                          GroupDetailsState,
-                          String?
-                        >(
-                          bloc: bloc,
-                          selector: (state) => state.group?.name,
-                          builder: (context, name) {
-                            return Text(name ?? title);
-                          },
-                        ),
-                    bottom: PreferredSize(
-                      preferredSize: const Size(0, AppSpacing.s),
-                      child:
+            body: Stack(
+              children: [
+                NestedScrollView(
+                  controller: _scrollController,
+                  floatHeaderSlivers: true,
+                  headerSliverBuilder: (_, _) {
+                    return [
+                      SliverAppBar.medium(
+                        title:
+                            BlocSelector<
+                              GroupDetailsCubit,
+                              GroupDetailsState,
+                              String?
+                            >(
+                              bloc: bloc,
+                              selector: (state) => state.group?.name,
+                              builder: (context, name) {
+                                return Text(name ?? title);
+                              },
+                            ),
+                        actions: [
                           BlocSelector<
                             GroupDetailsCubit,
                             GroupDetailsState,
                             bool
                           >(
                             bloc: bloc,
-                            selector: (state) =>
-                                state.isLoading || state.isRefreshing,
-                            builder: (context, isLoading) => isLoading
-                                ? const LinearProgressIndicator()
-                                : const SizedBox.shrink(),
+                            selector: (state) => state.showSelectCurrentDate,
+                            builder: (context, showSelectCurrentDate) {
+                              if (showSelectCurrentDate) {
+                                return IconButton(
+                                  tooltip: localization.go_to_current_date,
+                                  onPressed: () {
+                                    bloc.updateSelectedDate(DateTime.now());
+                                    _calendarPagerController.goToInitialDate();
+                                  },
+                                  icon: const Icon(Icons.today),
+                                );
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            },
                           ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
-                      bloc: bloc,
-                      buildWhen: (previous, current) =>
-                          previous.group != current.group,
-                      builder: (context, state) {
-                        final group = state.group;
-                        final isOwner = group?.owner.id == bloc.currentUser.id;
-
-                        return ExpansionTile(
-                          title: Text(
-                            localization.details,
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              color: theme.colorScheme.secondary,
-                            ),
+                          IconButton(
+                            onPressed: _scaffoldKey.currentState?.openEndDrawer,
+                            icon: const Icon(Icons.menu),
                           ),
-                          shape: const RoundedRectangleBorder(),
-                          tilePadding: const .symmetric(
-                            horizontal: AppSpacing.s,
-                          ),
-                          children: [
-                            Padding(
-                              padding: const .symmetric(
-                                horizontal: AppSpacing.s,
+                        ],
+                        bottom: PreferredSize(
+                          preferredSize: const Size(0, AppSpacing.s),
+                          child:
+                              BlocSelector<
+                                GroupDetailsCubit,
+                                GroupDetailsState,
+                                bool
+                              >(
+                                bloc: bloc,
+                                selector: (state) =>
+                                    state.isLoading || state.isRefreshing,
+                                builder: (context, isLoading) => isLoading
+                                    ? const LinearProgressIndicator()
+                                    : const SizedBox.shrink(),
                               ),
-                              child: Row(
-                                mainAxisAlignment: .spaceBetween,
-                                crossAxisAlignment: .center,
-                                spacing: AppSpacing.xs,
+                        ),
+                      ),
+                    ];
+                  },
+                  body: RefreshIndicator(
+                    onRefresh: () async => await bloc.refresh(
+                      groupId: widget.id,
+                    ),
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
+                            bloc: bloc,
+                            buildWhen: (previous, current) =>
+                                previous.group != current.group,
+                            builder: (context, state) {
+                              final group = state.group;
+                              final isOwner =
+                                  group?.owner.id == bloc.currentUser.id;
+
+                              return ExpansionTile(
+                                title: Text(
+                                  localization.details,
+                                  style: theme.textTheme.titleMedium?.copyWith(
+                                    color: theme.colorScheme.secondary,
+                                  ),
+                                ),
+                                shape: const RoundedRectangleBorder(),
+                                tilePadding: const .symmetric(
+                                  horizontal: AppSpacing.s,
+                                ),
                                 children: [
-                                  AppSkeleton(
-                                    isLoading: group == null,
+                                  Padding(
+                                    padding: const .symmetric(
+                                      horizontal: AppSpacing.s,
+                                    ),
                                     child: Row(
+                                      mainAxisAlignment: .spaceBetween,
+                                      crossAxisAlignment: .center,
                                       spacing: AppSpacing.xs,
                                       children: [
-                                        Text(
-                                          '${localization.actions}:',
-                                        ).animate().fade(delay: 100.ms),
-                                        IconButton.filledTonal(
-                                          color: theme
-                                              .colorScheme
-                                              .onPrimaryContainer,
-                                          onPressed: isOwner
-                                              ? () async {
-                                                  if (context.mounted) {
-                                                    final result = await context
-                                                        .pushNamed<bool>(
-                                                          CreateGroupScreen
-                                                              .routeName,
-                                                          queryParameters: {
-                                                            'id': group!.id,
-                                                          },
-                                                        );
+                                        AppSkeleton(
+                                          isLoading: group == null,
+                                          child: Row(
+                                            spacing: AppSpacing.xs,
+                                            children: [
+                                              Text(
+                                                '${localization.actions}:',
+                                              ).animate().fade(delay: 100.ms),
+                                              IconButton.filledTonal(
+                                                color: theme
+                                                    .colorScheme
+                                                    .onPrimaryContainer,
+                                                onPressed: isOwner
+                                                    ? () async {
+                                                        if (context.mounted) {
+                                                          final result = await context
+                                                              .pushNamed<bool>(
+                                                                CreateGroupScreen
+                                                                    .routeName,
+                                                                queryParameters: {
+                                                                  'id':
+                                                                      group!.id,
+                                                                },
+                                                              );
 
-                                                    if (result ?? false) {
-                                                      bloc.updateGroupForMember(
-                                                        groupId: group.id,
-                                                      );
-                                                    }
-                                                  }
-                                                }
-                                              : null,
-                                          icon: const Icon(Icons.edit_outlined),
+                                                          if (result ?? false) {
+                                                            bloc.updateGroupForMember(
+                                                              groupId: group.id,
+                                                            );
+                                                          }
+                                                        }
+                                                      }
+                                                    : null,
+                                                icon: const Icon(
+                                                  Icons.edit_outlined,
+                                                ),
+                                              ).animate().fade(delay: 200.ms),
+                                            ],
+                                          ),
+                                        ),
+                                        IconButton.outlined(
+                                          color: Colors.red,
+                                          tooltip: localization.leave_group,
+                                          onPressed: isOwner
+                                              ? null
+                                              : bloc.toggleLeaveDialog,
+                                          icon: const Icon(Icons.exit_to_app),
                                         ).animate().fade(delay: 200.ms),
                                       ],
                                     ),
                                   ),
-                                  IconButton.outlined(
-                                    color: Colors.red,
-                                    tooltip: localization.leave_group,
-                                    onPressed: isOwner
-                                        ? null
-                                        : bloc.toggleLeaveDialog,
-                                    icon: const Icon(Icons.exit_to_app),
-                                  ).animate().fade(delay: 200.ms),
-                                ],
-                              ),
-                            ),
-                            const Gap(AppSpacing.xxs),
-                            const Divider(),
-                            const Gap(AppSpacing.xs),
-                            AppSkeleton(
-                              isLoading: group == null,
-                              child: SizedBox(
-                                height: 40,
-                                child: ListView.separated(
-                                  scrollDirection: Axis.horizontal,
-                                  padding: const .symmetric(
-                                    horizontal: AppSpacing.s,
-                                  ),
-                                  itemCount: group?.members.length ?? 0,
-                                  itemBuilder: (context, position) {
-                                    final member = group!.members[position];
+                                  const Gap(AppSpacing.xxs),
+                                  const Divider(),
+                                  const Gap(AppSpacing.xs),
+                                  AppSkeleton(
+                                    isLoading: group == null,
+                                    child: SizedBox(
+                                      height: 40,
+                                      child: ListView.separated(
+                                        scrollDirection: Axis.horizontal,
+                                        padding: const .symmetric(
+                                          horizontal: AppSpacing.s,
+                                        ),
+                                        itemCount: group?.members.length ?? 0,
+                                        itemBuilder: (context, position) {
+                                          final member =
+                                              group!.members[position];
 
-                                    if (position == 0) {
-                                      return Row(
-                                        spacing: AppSpacing.s,
-                                        children: [
-                                          Text(
-                                            '${localization.members}:',
-                                          ).animate().fade(delay: 100.ms),
-                                          CircleAvatar(
+                                          if (position == 0) {
+                                            return Row(
+                                              spacing: AppSpacing.s,
+                                              children: [
+                                                Text(
+                                                  '${localization.members}:',
+                                                ).animate().fade(delay: 100.ms),
+                                                CircleAvatar(
+                                                  child: Text(member.initials),
+                                                ).animate().fade(delay: 200.ms),
+                                              ],
+                                            );
+                                          }
+                                          return CircleAvatar(
                                             child: Text(member.initials),
-                                          ).animate().fade(delay: 200.ms),
-                                        ],
-                                      );
-                                    }
-                                    return CircleAvatar(
-                                      child: Text(member.initials),
-                                    ).animate().fade(delay: 200.ms);
-                                  },
-                                  separatorBuilder: (_, _) =>
-                                      const Gap(AppSpacing.xs),
-                                ),
-                              ),
-                            ),
-                            const Gap(AppSpacing.s),
-                          ],
-                        );
-                      },
-                    ).animate().fade(delay: 100.ms),
+                                          ).animate().fade(delay: 200.ms);
+                                        },
+                                        separatorBuilder: (_, _) =>
+                                            const Gap(AppSpacing.xs),
+                                      ),
+                                    ),
+                                  ),
+                                  const Gap(AppSpacing.s),
+                                ],
+                              );
+                            },
+                          ).animate().fade(delay: 100.ms),
+                        ),
+                        SliverToBoxAdapter(
+                          child:
+                              BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
+                                bloc: bloc,
+                                buildWhen: (previous, current) =>
+                                    previous.isCalendarView !=
+                                    current.isCalendarView,
+                                builder: (context, state) {
+                                  if (state.isCalendarView) {
+                                    return VisibilityDetector(
+                                      key: const Key('calendar_pager'),
+                                      onVisibilityChanged: (visibility) {
+                                        final isHidden =
+                                            visibility.visibleFraction <= 0.5;
+                                        bloc.setShowScrollToTopButton(
+                                          value: isHidden,
+                                        );
+                                      },
+                                      child: CalendarPagerView(
+                                        controller: _calendarPagerController,
+                                        theme: CalendarPagerTheme.from(
+                                          background:
+                                              theme.scaffoldBackgroundColor,
+                                          accent: theme.colorScheme.primary,
+                                          headerTitle:
+                                              theme.textTheme.headlineLarge!,
+                                          itemBorder: theme.colorScheme.primary,
+                                          onAccent: theme.colorScheme.onPrimary,
+                                          hasShadow: false,
+                                        ),
+                                        hasHeader: false,
+                                        onDateSelected: bloc.updateSelectedDate,
+                                        onWeekChanged: (week, initialWeek) {
+                                          bloc.setShowSelectCurrentDate(
+                                            value: week != initialWeek,
+                                          );
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    return const SizedBox.shrink();
+                                  }
+                                },
+                              ).animate().fade(delay: 100.ms),
+                        ),
+                        BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
+                          bloc: bloc,
+                          builder: (context, state) {
+                            if (state.isLoading) {
+                              return const TasksListLoading();
+                            }
+
+                            if (state.tasks.isEmpty) {
+                              return const TaskContentUnavailable();
+                            }
+
+                            if (state.filteredTasks.isEmpty) {
+                              return const TaskFilteredContentUnavailable();
+                            }
+
+                            return TasksList(
+                              tasks: state.filteredTasks,
+                              currentUserId: bloc.currentUser.id,
+                              onPressed: (task) async {
+                                if (context.mounted) {
+                                  final result = await context.pushNamed<bool>(
+                                    TaskDetailsScreen.routeName,
+                                    pathParameters: {
+                                      'id': widget.id,
+                                      'taskId': task.id,
+                                    },
+                                  );
+
+                                  if (result ?? false) {
+                                    bloc.updateTasksForMember(taskId: task.id);
+                                  }
+                                }
+                              },
+                              onComplete: bloc.toggleTaskStatus,
+                              onPending: bloc.toggleTaskStatus,
+                              onDelete: bloc.setTaskToDelete,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  SliverToBoxAdapter(
-                    child: BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
-                      bloc: bloc,
-                      buildWhen: (previous, current) =>
-                          previous.isCalendarView != current.isCalendarView,
-                      builder: (context, state) {
-                        if (state.isCalendarView) {
-                          return SizedBox(
-                            height: CalendarPagerViewConstants.collapsedHeight,
-                            child: CalendarPagerView(
-                              theme: CalendarPagerTheme.from(
-                                background: theme.scaffoldBackgroundColor,
-                                accent: theme.colorScheme.primary,
-                                headerTitle: theme.textTheme.headlineLarge!,
-                                itemBorder: theme.colorScheme.primary,
-                                onAccent: theme.colorScheme.onPrimary,
-                                hasShadow: false,
-                              ),
-                              hasHeader: false,
-                              onDateSelected: bloc.updateSelectedDate,
+                ),
+                BlocSelector<GroupDetailsCubit, GroupDetailsState, bool>(
+                  bloc: bloc,
+                  selector: (state) => state.showScrollToTopButton,
+                  builder: (context, showScrollToTopButton) {
+                    if (showScrollToTopButton) {
+                      return Positioned(
+                        bottom: AppSpacing.s,
+                        right: AppSpacing.s,
+                        child: SafeArea(
+                          child: FloatingActionButton(
+                            heroTag: const ValueKey('scroll_to_top_button'),
+                            backgroundColor: theme.colorScheme.primary,
+                            shape: const CircleBorder(),
+                            onPressed: () {
+                              _scrollController.animateTo(
+                                0,
+                                duration: const Duration(milliseconds: 200),
+                                curve: Curves.easeInOut,
+                              );
+                            },
+                            child: Icon(
+                              Icons.keyboard_arrow_up,
+                              color: theme.colorScheme.onPrimary,
+                              size: 32,
                             ),
-                          );
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      },
-                    ).animate().fade(delay: 100.ms),
-                  ),
-                ];
-              },
-              body: BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
-                bloc: bloc,
-                builder: (context, state) {
-                  if (state.isLoading) {
-                    return const TasksListLoading();
-                  }
-
-                  if (state.tasks.isEmpty) {
-                    return const TaskContentUnavailable();
-                  }
-
-                  if (state.filteredTasks.isEmpty) {
-                    return const TaskFilteredContentUnavailable();
-                  }
-
-                  return TasksList(
-                    tasks: state.filteredTasks,
-                    currentUserId: bloc.currentUser.id,
-                    onPressed: (task) async {
-                      if (context.mounted) {
-                        final result = await context.pushNamed<bool>(
-                          TaskDetailsScreen.routeName,
-                          pathParameters: {'id': widget.id, 'taskId': task.id},
-                        );
-
-                        if (result ?? false) {
-                          bloc.updateTasksForMember(taskId: task.id);
-                        }
-                      }
-                    },
-                    onComplete: bloc.toggleTaskStatus,
-                    onPending: bloc.toggleTaskStatus,
-                    onDelete: bloc.setTaskToDelete,
-                    onRefresh: () async =>
-                        await bloc.refresh(groupId: widget.id),
-                  );
-                },
-              ),
+                          ),
+                        ),
+                      ).animate().fade(delay: 200.ms);
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
+                ),
+              ],
             ),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation: .centerFloat,
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () async {
                 if (context.mounted) {
