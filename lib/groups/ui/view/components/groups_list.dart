@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:gap/gap.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/auth/data/models/user_data.dart';
@@ -11,102 +10,64 @@ class GroupsList extends StatelessWidget {
   const GroupsList({
     required this.groups,
     required this.listType,
-    required this.onToggleListType,
     required this.currentUser,
     required this.onSelected,
     required this.onEdit,
-    required this.onRefresh,
     super.key,
   });
 
   final List<GroupResponse> groups;
   final GroupsListType listType;
-  final VoidCallback onToggleListType;
   final UserData currentUser;
   final void Function(GroupResponse) onSelected;
   final Future<void> Function(GroupResponse) onEdit;
-  final RefreshCallback onRefresh;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final localization = context.localization;
+    return SliverPadding(
+      padding: const .only(
+        top: AppSpacing.s,
+        left: AppSpacing.s,
+        right: AppSpacing.s,
+        bottom: AppSpacing.max,
+      ),
+      sliver: switch (listType) {
+        .list => SliverList.separated(
+          itemCount: groups.length,
+          itemBuilder: (context, position) {
+            final group = groups[position];
 
-    return Column(
-      crossAxisAlignment: .start,
-      children: [
-        Padding(
-          padding: const .symmetric(horizontal: AppSpacing.s),
-          child: Row(
-            mainAxisAlignment: .spaceBetween,
-            children: [
-              Text(localization.groups, style: theme.textTheme.headlineSmall),
-              IconButton(
-                onPressed: onToggleListType,
-                icon: Icon(
-                  listType == .list
-                      ? Icons.grid_view
-                      : Icons.table_rows_outlined,
-                ),
-              ),
-            ],
-          ),
-        ).animate().fade(delay: 100.ms),
-        Expanded(
-          child: RefreshIndicator(
-            onRefresh: onRefresh,
-            child: switch (listType) {
-              .list => ListView.separated(
-                padding: const .only(
-                  top: AppSpacing.s,
-                  left: AppSpacing.s,
-                  right: AppSpacing.s,
-                  bottom: AppSpacing.max,
-                ),
-                itemCount: groups.length,
-                itemBuilder: (context, position) {
-                  final group = groups[position];
-
-                  return GroupItem(
-                    group: group,
-                    position: position,
-                    isEditable: group.owner.id == currentUser.id,
-                    onTap: () => onSelected(group),
-                    onEdit: () => onEdit(group),
-                  );
-                },
-                separatorBuilder: (context, index) => const Gap(AppSpacing.s),
-              ),
-              .grid => GridView.builder(
-                padding: const .only(
-                  top: AppSpacing.s,
-                  left: AppSpacing.s,
-                  right: AppSpacing.s,
-                  bottom: AppSpacing.max,
-                ),
-                itemCount: groups.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1.1,
-                  mainAxisSpacing: AppSpacing.s,
-                  crossAxisSpacing: AppSpacing.s,
-                ),
-                itemBuilder: (context, position) {
-                  final group = groups[position];
-
-                  return GroupItem(
-                    group: group,
-                    position: position,
-                    isEditable: group.owner.id == currentUser.id,
-                    onTap: () => onSelected(group),
-                    onEdit: () => onEdit(group),
-                  );
-                },
-              ),
-            },
-          ),
+            return GroupItem(
+              group: group,
+              position: position,
+              isEditable: group.owner.id == currentUser.id,
+              onTap: () => onSelected(group),
+              onEdit: () => onEdit(group),
+            );
+          },
+          separatorBuilder: (context, index) => const Gap(AppSpacing.s),
         ),
-      ],
+        .grid => SliverGrid.builder(
+          itemCount: groups.length,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            childAspectRatio: 1.1,
+            mainAxisSpacing: AppSpacing.s,
+            crossAxisSpacing: AppSpacing.s,
+          ),
+          itemBuilder: (context, position) {
+            final group = groups[position];
+
+            return GroupItem(
+              group: group,
+              position: position,
+              isEditable: group.owner.id == currentUser.id,
+              onTap: () => onSelected(group),
+              onEdit: () => onEdit(group),
+            );
+          },
+        ),
+      },
     );
   }
 }

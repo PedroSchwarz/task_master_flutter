@@ -12,34 +12,38 @@ class GroupListLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return switch (listType) {
-      .list => ListView.separated(
+      .list => SliverPadding(
         padding: const .all(AppSpacing.s),
-        itemCount: 5,
-        itemBuilder: (_, _) {
-          return const AppSkeleton(
-            isLoading: true,
-            child: SizedBox(height: 150, width: .infinity),
-          );
-        },
-        separatorBuilder: (_, _) {
-          return const Gap(AppSpacing.s);
-        },
-      ),
-      .grid => GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: AppSpacing.s,
-          crossAxisSpacing: AppSpacing.s,
-          childAspectRatio: 1.1,
+        sliver: SliverList.separated(
+          itemCount: 5,
+          itemBuilder: (_, _) {
+            return const AppSkeleton(
+              isLoading: true,
+              child: SizedBox(height: 150, width: .infinity),
+            );
+          },
+          separatorBuilder: (_, _) {
+            return const Gap(AppSpacing.s);
+          },
         ),
+      ),
+      .grid => SliverPadding(
         padding: const .all(AppSpacing.s),
-        itemCount: 5,
-        itemBuilder: (_, _) {
-          return const AppSkeleton(
-            isLoading: true,
-            child: SizedBox(height: 150, width: .infinity),
-          );
-        },
+        sliver: SliverGrid.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: AppSpacing.s,
+            crossAxisSpacing: AppSpacing.s,
+            childAspectRatio: 1.1,
+          ),
+          itemCount: 5,
+          itemBuilder: (_, _) {
+            return const AppSkeleton(
+              isLoading: true,
+              child: SizedBox(height: 150, width: .infinity),
+            );
+          },
+        ),
       ),
     };
   }

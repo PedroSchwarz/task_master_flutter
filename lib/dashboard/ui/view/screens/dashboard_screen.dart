@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
@@ -28,6 +29,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final localization = context.localization;
+    final theme = Theme.of(context);
 
     return Scaffold(
       drawer: BlocBuilder<DashboardCubit, DashboardState>(
@@ -95,112 +97,151 @@ class _DashboardScreenState extends State<DashboardScreen> {
               ),
             ),
           ),
-          SliverToBoxAdapter(
-            child: BlocBuilder<DashboardCubit, DashboardState>(
-              bloc: bloc,
-              buildWhen: (previous, current) =>
-                  previous.isLoading != current.isLoading || //
-                  previous.selection != current.selection || //
-                  previous.showingProgression != current.showingProgression,
-              builder: (context, state) {
-                if (state.showingProgression) {
-                  return DashboardProgressionFilters(
-                    isLoading: state.isLoading,
-                    selection: state.selection,
-                    onSelection: bloc.updateSelection,
-                  );
-                }
-
-                return const SizedBox.shrink();
-              },
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: BlocBuilder<DashboardCubit, DashboardState>(
-              bloc: bloc,
-              buildWhen: (previous, current) =>
-                  previous.progression != current.progression || //
-                  previous.isLoading != current.isLoading || //
-                  previous.showingProgression != current.showingProgression,
-              builder: (context, state) {
-                if (state.showingProgression) {
-                  return DashboardProgression(
-                    isLoading: state.isLoading,
-                    progression: state.progression,
-                  );
-                }
-
-                return const SizedBox.shrink();
-              },
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: BlocBuilder<DashboardCubit, DashboardState>(
-              bloc: bloc,
-              buildWhen: (previous, current) =>
-                  previous.isLoading != current.isLoading || //
-                  previous.showingHighlights != current.showingHighlights || //
-                  previous.upcomingTasks != current.upcomingTasks || //
-                  previous.overdueTasks != current.overdueTasks,
-              builder: (context, state) {
-                if (state.showingHighlights) {
-                  return DashboardHighlights(
-                    isLoading: state.isLoading,
-                    upcomingTasks: state.upcomingTasks,
-                    overdueTasks: state.overdueTasks,
-                  );
-                }
-
-                return const SizedBox.shrink();
-              },
-            ),
-          ),
         ],
-        body: BlocBuilder<DashboardCubit, DashboardState>(
-          bloc: bloc,
-          buildWhen: (previous, current) =>
-              previous.isLoading != current.isLoading || //
-              previous.groups != current.groups || //
-              previous.groupsListType != current.groupsListType,
-          builder: (context, state) {
-            if (state.isLoading) {
-              return GroupListLoading(listType: state.groupsListType);
-            }
+        body: RefreshIndicator(
+          onRefresh: bloc.refresh,
+          child: CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: BlocBuilder<DashboardCubit, DashboardState>(
+                  bloc: bloc,
+                  buildWhen: (previous, current) =>
+                      previous.isLoading != current.isLoading || //
+                      previous.selection != current.selection || //
+                      previous.showingProgression != current.showingProgression,
+                  builder: (context, state) {
+                    if (state.showingProgression) {
+                      return DashboardProgressionFilters(
+                        isLoading: state.isLoading,
+                        selection: state.selection,
+                        onSelection: bloc.updateSelection,
+                      );
+                    }
 
-            if (state.groups.isEmpty) {
-              return GroupContentUnavailable(onRefresh: bloc.refresh);
-            }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: BlocBuilder<DashboardCubit, DashboardState>(
+                  bloc: bloc,
+                  buildWhen: (previous, current) =>
+                      previous.progression != current.progression || //
+                      previous.isLoading != current.isLoading || //
+                      previous.showingProgression != current.showingProgression,
+                  builder: (context, state) {
+                    if (state.showingProgression) {
+                      return DashboardProgression(
+                        isLoading: state.isLoading,
+                        progression: state.progression,
+                      );
+                    }
 
-            return GroupsList(
-              groups: state.groups,
-              listType: state.groupsListType,
-              onToggleListType: bloc.updateGroupsListType,
-              currentUser: bloc.currentUser,
-              onSelected: (group) {
-                context.goNamed(
-                  GroupDetailsScreen.routeName,
-                  pathParameters: {'id': group.id},
-                  queryParameters: {'name': group.name},
-                );
-              },
-              onEdit: (group) async {
-                if (context.mounted) {
-                  final result = await context.pushNamed<bool>(
-                    CreateGroupScreen.routeName,
-                    queryParameters: {'id': group.id},
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: BlocBuilder<DashboardCubit, DashboardState>(
+                  bloc: bloc,
+                  buildWhen: (previous, current) =>
+                      previous.isLoading != current.isLoading || //
+                      previous.showingHighlights !=
+                          current.showingHighlights || //
+                      previous.upcomingTasks != current.upcomingTasks || //
+                      previous.overdueTasks != current.overdueTasks,
+                  builder: (context, state) {
+                    if (state.showingHighlights) {
+                      return DashboardHighlights(
+                        isLoading: state.isLoading,
+                        upcomingTasks: state.upcomingTasks,
+                        overdueTasks: state.overdueTasks,
+                      );
+                    }
+
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
+              BlocBuilder<DashboardCubit, DashboardState>(
+                bloc: bloc,
+                buildWhen: (previous, current) =>
+                    previous.isLoading != current.isLoading || //
+                    previous.groups != current.groups || //
+                    previous.groupsListType != current.groupsListType,
+                builder: (context, state) {
+                  return SliverPadding(
+                    padding: const .symmetric(horizontal: AppSpacing.s),
+                    sliver: SliverToBoxAdapter(
+                      child: Row(
+                        mainAxisAlignment: .spaceBetween,
+                        children: [
+                          Text(
+                            localization.groups,
+                            style: theme.textTheme.headlineSmall,
+                          ),
+                          IconButton(
+                            onPressed: state.groups.isEmpty
+                                ? null
+                                : bloc.updateGroupsListType,
+                            icon: Icon(
+                              state.groupsListType == .list
+                                  ? Icons.grid_view
+                                  : Icons.table_rows_outlined,
+                            ),
+                          ),
+                        ],
+                      ).animate().fade(delay: 200.ms),
+                    ),
                   );
-
-                  if (result ?? false) {
-                    bloc.updateGroupsForUsers(groupId: group.id);
+                },
+              ),
+              BlocBuilder<DashboardCubit, DashboardState>(
+                bloc: bloc,
+                buildWhen: (previous, current) =>
+                    previous.isLoading != current.isLoading || //
+                    previous.groups != current.groups || //
+                    previous.groupsListType != current.groupsListType,
+                builder: (context, state) {
+                  if (state.isLoading) {
+                    return GroupListLoading(listType: state.groupsListType);
                   }
-                }
-              },
-              onRefresh: bloc.refresh,
-            );
-          },
+
+                  if (state.groups.isEmpty) {
+                    return const GroupContentUnavailable();
+                  }
+
+                  return GroupsList(
+                    groups: state.groups,
+                    listType: state.groupsListType,
+                    currentUser: bloc.currentUser,
+                    onSelected: (group) {
+                      context.goNamed(
+                        GroupDetailsScreen.routeName,
+                        pathParameters: {'id': group.id},
+                        queryParameters: {'name': group.name},
+                      );
+                    },
+                    onEdit: (group) async {
+                      if (context.mounted) {
+                        final result = await context.pushNamed<bool>(
+                          CreateGroupScreen.routeName,
+                          queryParameters: {'id': group.id},
+                        );
+
+                        if (result ?? false) {
+                          bloc.updateGroupsForUsers(groupId: group.id);
+                        }
+                      }
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: .centerFloat,
       floatingActionButton: FloatingActionButton.extended(
         label: Text(localization.create_group),
         icon: const Icon(Icons.add),
