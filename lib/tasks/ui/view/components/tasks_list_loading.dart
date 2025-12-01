@@ -8,18 +8,20 @@ class TasksListLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
+    return SliverPadding(
       padding: const .all(AppSpacing.s),
-      itemCount: 5,
-      itemBuilder: (_, _) {
-        return const AppSkeleton(
-          isLoading: true,
-          child: SizedBox(height: 150, width: .infinity),
-        );
-      },
-      separatorBuilder: (_, _) {
-        return const Gap(AppSpacing.s);
-      },
+      sliver: SliverList.separated(
+        itemCount: 5,
+        itemBuilder: (_, _) {
+          return const AppSkeleton(
+            isLoading: true,
+            child: SizedBox(height: 150, width: .infinity),
+          );
+        },
+        separatorBuilder: (_, _) {
+          return const Gap(AppSpacing.s);
+        },
+      ),
     );
   }
 }

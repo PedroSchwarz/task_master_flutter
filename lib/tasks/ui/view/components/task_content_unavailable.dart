@@ -9,36 +9,36 @@ class TaskContentUnavailable extends StatelessWidget {
     final theme = Theme.of(context);
     final localization = context.localization;
 
-    return Padding(
+    return SliverPadding(
       padding: const .all(AppSpacing.s),
-      child: Column(
-        mainAxisAlignment: .center,
-        crossAxisAlignment: .stretch,
-        children: [
-          const Spacer(),
-          Text(
-            localization.empty_tasks_title,
-            style: theme.textTheme.titleLarge,
-            textAlign: .center,
-          ),
-          RichText(
-            text: TextSpan(
-              style: theme.textTheme.titleMedium,
-              children: [
-                TextSpan(text: localization.empty_tasks_description_1),
-                TextSpan(
-                  text: ' + ',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: theme.colorScheme.primary,
-                  ),
-                ),
-                TextSpan(text: localization.empty_tasks_description_2),
-              ],
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          mainAxisAlignment: .center,
+          crossAxisAlignment: .stretch,
+          children: [
+            Text(
+              localization.empty_tasks_title,
+              style: theme.textTheme.titleLarge,
+              textAlign: .center,
             ),
-            textAlign: .center,
-          ),
-          const Spacer(),
-        ],
+            RichText(
+              text: TextSpan(
+                style: theme.textTheme.titleMedium,
+                children: [
+                  TextSpan(text: localization.empty_tasks_description_1),
+                  TextSpan(
+                    text: ' + ',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                  TextSpan(text: localization.empty_tasks_description_2),
+                ],
+              ),
+              textAlign: .center,
+            ),
+          ],
+        ),
       ),
     );
   }

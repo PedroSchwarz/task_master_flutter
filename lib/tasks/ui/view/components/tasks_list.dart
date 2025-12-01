@@ -11,7 +11,6 @@ class TasksList extends StatelessWidget {
     required this.onComplete,
     required this.onPending,
     required this.onDelete,
-    required this.onRefresh,
     super.key,
   });
 
@@ -21,14 +20,12 @@ class TasksList extends StatelessWidget {
   final Future<void> Function(TaskResponse) onComplete;
   final Future<void> Function(TaskResponse) onPending;
   final Future<void> Function(TaskResponse?) onDelete;
-  final RefreshCallback onRefresh;
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: onRefresh,
-      child: ListView.separated(
-        padding: const .only(top: AppSpacing.s, bottom: AppSpacing.max),
+    return SliverPadding(
+      padding: const .only(top: AppSpacing.s, bottom: AppSpacing.max),
+      sliver: SliverList.separated(
         itemCount: tasks.length,
         itemBuilder: (context, position) {
           final task = tasks[position];

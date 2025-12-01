@@ -9,20 +9,20 @@ class TaskFilteredContentUnavailable extends StatelessWidget {
     final theme = Theme.of(context);
     final localization = context.localization;
 
-    return Padding(
+    return SliverPadding(
       padding: const .all(AppSpacing.s),
-      child: Column(
-        mainAxisAlignment: .center,
-        crossAxisAlignment: .stretch,
-        children: [
-          const Spacer(),
-          Text(
-            localization.empty_filtered_tasks_title,
-            style: theme.textTheme.titleLarge,
-            textAlign: .center,
-          ),
-          const Spacer(),
-        ],
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          mainAxisAlignment: .center,
+          crossAxisAlignment: .stretch,
+          children: [
+            Text(
+              localization.empty_filtered_tasks_title,
+              style: theme.textTheme.titleLarge,
+              textAlign: .center,
+            ),
+          ],
+        ),
       ),
     );
   }
