@@ -252,5 +252,7 @@
     "remove_color": "Remove Color",
     "@remove_color": {},
     "select_color": "Select Color",
-    "@select_color": {}
+    "@select_color": {},
+    "go_to_current_date": "Go to Current Date",
+    "@go_to_current_date": {}
 }

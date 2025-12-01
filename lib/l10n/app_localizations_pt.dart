@@ -382,4 +382,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get select_color => 'Selecionar Cor';
+
+  @override
+  String get go_to_current_date => 'Ir para a Data Atual';
 }

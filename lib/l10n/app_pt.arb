@@ -252,5 +252,7 @@
     "remove_color": "Remover Cor",
     "@remove_color": {},
     "select_color": "Selecionar Cor",
-    "@select_color": {}
+    "@select_color": {},
+    "go_to_current_date": "Ir para a Data Atual",
+    "@go_to_current_date": {}
 }

@@ -835,6 +835,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select Color'**
   String get select_color;
+
+  /// No description provided for @go_to_current_date.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to Current Date'**
+  String get go_to_current_date;
 }
 
 class _AppLocalizationsDelegate

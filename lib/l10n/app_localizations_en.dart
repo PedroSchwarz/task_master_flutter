@@ -381,4 +381,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get select_color => 'Select Color';
+
+  @override
+  String get go_to_current_date => 'Go to Current Date';
 }
