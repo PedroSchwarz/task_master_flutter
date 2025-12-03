@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logging/logging.dart';
 import 'package:task_master/app/ui/navigation.dart';
 import 'package:task_master/firebase_options.dart';
 
@@ -22,12 +23,17 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
         android: AndroidNotificationDetails(
           'task-assignments',
           'Task Assignments',
-          channelDescription: 'This channel is used for task assignment notifications.',
+          channelDescription:
+              'This channel is used for task assignment notifications.',
           importance: Importance.high,
           priority: Priority.high,
           icon: '@mipmap/ic_launcher',
         ),
-        iOS: DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
       ),
       payload: jsonEncode(message.data),
     );
@@ -35,7 +41,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class NotificationsRepository {
-  const NotificationsRepository({required this.firebaseMessaging, required this.localNotifications});
+  const NotificationsRepository({
+    required this.firebaseMessaging,
+    required this.localNotifications,
+  });
 
   @visibleForTesting
   final FirebaseMessaging firebaseMessaging;
@@ -43,54 +52,88 @@ class NotificationsRepository {
   @visibleForTesting
   final FlutterLocalNotificationsPlugin localNotifications;
 
+  static final _log = Logger('NotificationsRepository');
+
   Future<void> initialize() async {
-    await firebaseMessaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+    try {
+      await firebaseMessaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+    } catch (e) {
+      // Permission request failed, but continue initialization
+      _log.severe('Failed to request notification permissions: $e');
+    }
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
+    const AndroidInitializationSettings androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const DarwinInitializationSettings iosSettings =
+        DarwinInitializationSettings(
+          requestAlertPermission: true,
+          requestBadgePermission: true,
+          requestSoundPermission: true,
+        );
+
+    const InitializationSettings initSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
     );
 
-    const InitializationSettings initSettings = InitializationSettings(android: androidSettings, iOS: iosSettings);
+    try {
+      await localNotifications.initialize(
+        initSettings,
+        onDidReceiveNotificationResponse: (NotificationResponse details) {
+          _handleNotificationTap(details);
+        },
+      );
+    } catch (e) {
+      // Local notifications initialization failed, but continue
+      _log.severe('Failed to initialize local notifications: $e');
+    }
 
-    await localNotifications.initialize(
-      initSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse details) {
-        _handleNotificationTap(details);
-      },
-    );
-
-    await _createNotificationChannel();
+    try {
+      await _createNotificationChannel();
+    } catch (e) {
+      // Channel creation failed, but continue
+      _log.severe('Failed to create notification channel: $e');
+    }
 
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       _handleNotificationTap(
-        NotificationResponse(notificationResponseType: NotificationResponseType.selectedNotification, id: 0, payload: jsonEncode(message.data)),
+        NotificationResponse(
+          notificationResponseType:
+              NotificationResponseType.selectedNotification,
+          id: 0,
+          payload: jsonEncode(message.data),
+        ),
       );
     });
 
-    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-    if (initialMessage != null) {
-      _handleNotificationTap(
-        NotificationResponse(
-          notificationResponseType: NotificationResponseType.selectedNotification,
-          id: 0,
-          payload: jsonEncode(initialMessage.data),
-        ),
-      );
+    try {
+      RemoteMessage? initialMessage = await FirebaseMessaging.instance
+          .getInitialMessage();
+      if (initialMessage != null) {
+        _handleNotificationTap(
+          NotificationResponse(
+            notificationResponseType:
+                NotificationResponseType.selectedNotification,
+            id: 0,
+            payload: jsonEncode(initialMessage.data),
+          ),
+        );
+      }
+    } catch (e) {
+      // Failed to get initial message, but continue
+      _log.severe('Failed to get initial message: $e');
     }
   }
 
@@ -102,7 +145,11 @@ class NotificationsRepository {
       importance: Importance.high,
     );
 
-    await localNotifications.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
+    await localNotifications
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.createNotificationChannel(channel);
   }
 
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
@@ -115,12 +162,17 @@ class NotificationsRepository {
           android: AndroidNotificationDetails(
             'task-assignments',
             'Task Assignments',
-            channelDescription: 'This channel is used for task assignment notifications.',
+            channelDescription:
+                'This channel is used for task assignment notifications.',
             importance: Importance.high,
             priority: Priority.high,
             icon: '@mipmap/ic_launcher',
           ),
-          iOS: DarwinNotificationDetails(presentAlert: true, presentBadge: true, presentSound: true),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
         ),
         payload: jsonEncode(message.data),
       );

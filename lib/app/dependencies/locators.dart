@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/app/ui/navigation.dart';
@@ -35,6 +36,8 @@ sealed class BaseServiceLocators {
 }
 
 class Locators extends BaseServiceLocators {
+  static final _log = Logger('Locators');
+
   @override
   BuildConfigurations get buildConfigurations {
     return const BuildConfigurations(
@@ -68,13 +71,24 @@ class Locators extends BaseServiceLocators {
       secureStorage: getIt(),
       sharedPreferences: getIt(),
     );
-    await appStorage.create();
+
+    try {
+      await appStorage.create();
+    } catch (e) {
+      // Secure storage initialization failed, but continue
+      _log.severe('Failed to initialize app storage: $e');
+    }
 
     final notificationsRepository = NotificationsRepository(
       firebaseMessaging: FirebaseMessaging.instance,
       localNotifications: FlutterLocalNotificationsPlugin(),
     );
-    await notificationsRepository.initialize();
+    try {
+      await notificationsRepository.initialize();
+    } catch (e) {
+      // Notification initialization failed, but continue
+      _log.severe('Failed to initialize notifications: $e');
+    }
 
     getIt
       ..registerSingleton(appStorage)
