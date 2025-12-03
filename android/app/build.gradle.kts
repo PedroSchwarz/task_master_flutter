@@ -28,7 +28,8 @@ android {
         applicationId = "com.example.pedroschwarz.task_master"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 31
+        // minSdk 23 is required for encryptedSharedPreferences in flutter_secure_storage
+        minSdk = flutter.minSdkVersion
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
