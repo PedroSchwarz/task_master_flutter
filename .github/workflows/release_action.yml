@@ -37,6 +37,13 @@ jobs:
       - name: Get Flutter dependencies
         run: flutter pub get
 
+      - name: Install Android NDK 29
+        run: |
+          sudo mkdir -p /usr/local/lib/android/sdk/licenses
+          yes | sdkmanager --licenses
+          sdkmanager "ndk;29.0.14033849" --install
+          sdkmanager --list
+
       - name: Build Android APK
         run: flutter build apk --release --obfuscate --split-debug-info=build/symbols
 
