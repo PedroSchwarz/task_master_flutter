@@ -4,7 +4,6 @@ import 'package:task_master/app/design_system/theme/app_typography.dart';
 class AppTheme {
   static const Color primaryPurple = Color(0xFF6750A4);
   static const Color primaryPurpleLight = Color.fromARGB(255, 204, 189, 244);
-  static const Color secondaryColor = Color(0xFF625B71);
 
   static const Color lightBackgroundColor = Color(0xFFFDFDFD);
   static const Color lightInputBackgroundColor = Color.fromARGB(
@@ -13,7 +12,7 @@ class AppTheme {
     225,
     225,
   );
-  static const Color darkBackgroundColor = Color.fromARGB(255, 46, 46, 46);
+  static const Color darkBackgroundColor = Color.fromARGB(255, 21, 21, 21);
   static const Color darkInputBackgroundColor = Color.fromARGB(255, 62, 62, 62);
 
   static final ThemeData lightTheme = ThemeData(

@@ -41,7 +41,7 @@ class SimplifiedTaskItem extends StatelessWidget {
             crossAxisAlignment: .center,
             children: [
               Flexible(
-                fit: FlexFit.tight,
+                fit: .tight,
                 child: Column(
                   crossAxisAlignment: .start,
                   children: [
@@ -55,7 +55,7 @@ class SimplifiedTaskItem extends StatelessWidget {
                       task.description ?? localization.no_description,
                       style: theme.textTheme.bodyLarge,
                       maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: .ellipsis,
                     ),
                     const Gap(AppSpacing.xs),
                     Text(

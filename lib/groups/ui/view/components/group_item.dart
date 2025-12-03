@@ -75,13 +75,13 @@ class GroupItem extends StatelessWidget {
                         Text(
                           group.name,
                           maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                           style: theme.textTheme.titleLarge,
                         ),
                         Text(
                           group.description,
                           maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                          overflow: .ellipsis,
                         ),
                       ],
                     ),
@@ -89,7 +89,7 @@ class GroupItem extends StatelessWidget {
                     SizedBox(
                       height: 40,
                       child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
+                        scrollDirection: .horizontal,
                         itemCount: group.members.length,
                         itemBuilder: (context, index) {
                           final member = group.members[index];

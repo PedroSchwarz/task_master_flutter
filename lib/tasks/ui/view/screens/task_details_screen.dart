@@ -80,7 +80,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                 Container(
                                   padding: const .all(AppSpacing.xxs),
                                   decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
+                                    shape: .circle,
                                     border: .all(
                                       color: Colors.green,
                                       width: 3,
@@ -102,10 +102,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                     milliseconds: 100,
                                   ),
                                   showDuration: const Duration(seconds: 4),
-
                                   child: Text(
                                     maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                    overflow: .ellipsis,
                                     task?.title ?? '',
                                     style: theme.textTheme.headlineLarge
                                         ?.copyWith(
@@ -315,18 +314,16 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         .medium => localization.medium,
                                         .high => localization.high,
                                       },
-                                      style: theme.textTheme.titleMedium
+                                      style: theme.textTheme.titleSmall
                                           ?.copyWith(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                           ),
                                     ),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: .circular(100),
+                                      borderRadius: .circular(AppSpacing.xs),
                                     ),
-                                    padding: const .all(
-                                      AppSpacing.xs,
-                                    ),
+                                    padding: const .all(AppSpacing.xs),
                                     backgroundColor: task.priority.color,
                                     side: .none,
                                   ),
@@ -337,18 +334,16 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         .inProgress => localization.in_progress,
                                         .done => localization.done,
                                       },
-                                      style: theme.textTheme.titleMedium
+                                      style: theme.textTheme.titleSmall
                                           ?.copyWith(
                                             color: Colors.white,
                                             fontWeight: FontWeight.bold,
                                           ),
                                     ),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: .circular(100),
+                                      borderRadius: .circular(AppSpacing.xs),
                                     ),
-                                    padding: const .all(
-                                      AppSpacing.xs,
-                                    ),
+                                    padding: const .all(AppSpacing.xs),
                                     backgroundColor: task.status.color,
                                     side: .none,
                                   ),

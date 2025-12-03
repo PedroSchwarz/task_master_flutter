@@ -31,17 +31,18 @@ class ProgressionItem extends StatelessWidget {
           children: [
             Text(label, style: theme.textTheme.headlineSmall),
             Row(
-              spacing: AppSpacing.s,
+              spacing: AppSpacing.xxxs,
               mainAxisAlignment: .spaceBetween,
               crossAxisAlignment: .start,
               children: progression.map((progression) {
                 return Column(
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: .max,
                   mainAxisAlignment: .spaceBetween,
                   spacing: AppSpacing.xs,
                   children: [
                     Text(
-                      '${(progression?.startDate.day ?? 0)}-${(progression?.endDate.day ?? 0)} / ${(progression?.endDate.month ?? 0)}',
+                      '${(progression?.startDate.day ?? 0)}-${(progression?.endDate.day ?? 0)}/${(progression?.endDate.month ?? 0)}',
+                      style: theme.textTheme.bodyMedium,
                     ),
                     if (progression == null || progression.tasks.isEmpty)
                       const CircleAvatar(radius: 21, child: Icon(Icons.close))

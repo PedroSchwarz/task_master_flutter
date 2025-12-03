@@ -25,6 +25,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   late final ScrollController _scrollController;
   late final CalendarPagerController _calendarPagerController;
   final GlobalKey<ScaffoldState> _scaffoldKey = .new();
+  late final FocusNode _taskSearchFocusNode;
 
   final bloc = getIt<GroupDetailsCubit>();
   late final String title;
@@ -34,7 +35,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
     super.initState();
     _scrollController = .new();
     _calendarPagerController = .new();
-
+    _taskSearchFocusNode = .new();
     title = widget.name;
     bloc.load(groupId: widget.id);
   }
@@ -43,6 +44,7 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   void dispose() {
     bloc.dispose();
     _scrollController.dispose();
+    _taskSearchFocusNode.dispose();
     super.dispose();
   }
 
@@ -138,6 +140,35 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                               }
                             },
                           ),
+                          BlocSelector<
+                            GroupDetailsCubit,
+                            GroupDetailsState,
+                            bool
+                          >(
+                            bloc: bloc,
+                            selector: (state) => state.showTaskSearch,
+                            builder: (context, showTaskSearch) {
+                              return IconButton(
+                                onPressed: () {
+                                  final value = !showTaskSearch;
+                                  bloc.updateShowTaskSearch(value: value);
+                                  if (value) {
+                                    _taskSearchFocusNode.requestFocus();
+                                  } else {
+                                    _taskSearchFocusNode.unfocus();
+                                  }
+                                },
+                                icon: Icon(
+                                  showTaskSearch
+                                      ? Icons.search_off
+                                      : Icons.search,
+                                  color: showTaskSearch
+                                      ? theme.colorScheme.error
+                                      : theme.colorScheme.onPrimaryContainer,
+                                ),
+                              );
+                            },
+                          ),
                           IconButton(
                             onPressed: _scaffoldKey.currentState?.openEndDrawer,
                             icon: const Icon(Icons.menu),
@@ -178,122 +209,172 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                               final isOwner =
                                   group?.owner.id == bloc.currentUser.id;
 
-                              return ExpansionTile(
-                                title: Text(
-                                  localization.details,
-                                  style: theme.textTheme.titleMedium?.copyWith(
-                                    color: theme.colorScheme.secondary,
-                                  ),
-                                ),
-                                shape: const RoundedRectangleBorder(),
-                                tilePadding: const .symmetric(
-                                  horizontal: AppSpacing.s,
-                                ),
-                                children: [
-                                  Padding(
-                                    padding: const .symmetric(
-                                      horizontal: AppSpacing.s,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: .spaceBetween,
-                                      crossAxisAlignment: .center,
-                                      spacing: AppSpacing.xs,
-                                      children: [
-                                        AppSkeleton(
-                                          isLoading: group == null,
-                                          child: Row(
-                                            spacing: AppSpacing.xs,
-                                            children: [
-                                              Text(
-                                                '${localization.actions}:',
-                                              ).animate().fade(delay: 100.ms),
-                                              IconButton.filledTonal(
-                                                color: theme
-                                                    .colorScheme
-                                                    .onPrimaryContainer,
-                                                onPressed: isOwner
-                                                    ? () async {
-                                                        if (context.mounted) {
-                                                          final result = await context
-                                                              .pushNamed<bool>(
-                                                                CreateGroupScreen
-                                                                    .routeName,
-                                                                queryParameters: {
-                                                                  'id':
-                                                                      group!.id,
-                                                                },
-                                                              );
-
-                                                          if (result ?? false) {
-                                                            bloc.updateGroupForMember(
-                                                              groupId: group.id,
-                                                            );
-                                                          }
-                                                        }
-                                                      }
-                                                    : null,
-                                                icon: const Icon(
-                                                  Icons.edit_outlined,
-                                                ),
-                                              ).animate().fade(delay: 200.ms),
-                                            ],
-                                          ),
+                              return VisibilityDetector(
+                                key: const Key('calendar_pager'),
+                                onVisibilityChanged: (visibility) {
+                                  final isHidden =
+                                      visibility.visibleFraction <= 0.5;
+                                  bloc.setShowScrollToTopButton(
+                                    value: isHidden,
+                                  );
+                                },
+                                child: ExpansionTile(
+                                  title: Text(
+                                    localization.details,
+                                    style: theme.textTheme.titleMedium
+                                        ?.copyWith(
+                                          color: theme.colorScheme.secondary,
                                         ),
-                                        IconButton.outlined(
-                                          color: Colors.red,
-                                          tooltip: localization.leave_group,
-                                          onPressed: isOwner
-                                              ? null
-                                              : bloc.toggleLeaveDialog,
-                                          icon: const Icon(Icons.exit_to_app),
-                                        ).animate().fade(delay: 200.ms),
-                                      ],
-                                    ),
                                   ),
-                                  const Gap(AppSpacing.xxs),
-                                  const Divider(),
-                                  const Gap(AppSpacing.xs),
-                                  AppSkeleton(
-                                    isLoading: group == null,
-                                    child: SizedBox(
-                                      height: 40,
-                                      child: ListView.separated(
-                                        scrollDirection: Axis.horizontal,
-                                        padding: const .symmetric(
-                                          horizontal: AppSpacing.s,
-                                        ),
-                                        itemCount: group?.members.length ?? 0,
-                                        itemBuilder: (context, position) {
-                                          final member =
-                                              group!.members[position];
-
-                                          if (position == 0) {
-                                            return Row(
-                                              spacing: AppSpacing.s,
+                                  shape: const RoundedRectangleBorder(),
+                                  tilePadding: const .symmetric(
+                                    horizontal: AppSpacing.s,
+                                  ),
+                                  children: [
+                                    Padding(
+                                      padding: const .symmetric(
+                                        horizontal: AppSpacing.s,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: .spaceBetween,
+                                        crossAxisAlignment: .center,
+                                        spacing: AppSpacing.xs,
+                                        children: [
+                                          AppSkeleton(
+                                            isLoading: group == null,
+                                            child: Row(
+                                              spacing: AppSpacing.xs,
                                               children: [
                                                 Text(
-                                                  '${localization.members}:',
+                                                  '${localization.actions}:',
                                                 ).animate().fade(delay: 100.ms),
-                                                CircleAvatar(
-                                                  child: Text(member.initials),
+                                                IconButton.filledTonal(
+                                                  color: theme
+                                                      .colorScheme
+                                                      .onPrimaryContainer,
+                                                  onPressed: isOwner
+                                                      ? () async {
+                                                          if (context.mounted) {
+                                                            final result = await context
+                                                                .pushNamed<
+                                                                  bool
+                                                                >(
+                                                                  CreateGroupScreen
+                                                                      .routeName,
+                                                                  queryParameters: {
+                                                                    'id': group!
+                                                                        .id,
+                                                                  },
+                                                                );
+
+                                                            if (result ??
+                                                                false) {
+                                                              bloc.updateGroupForMember(
+                                                                groupId:
+                                                                    group.id,
+                                                              );
+                                                            }
+                                                          }
+                                                        }
+                                                      : null,
+                                                  icon: const Icon(
+                                                    Icons.edit_outlined,
+                                                  ),
                                                 ).animate().fade(delay: 200.ms),
                                               ],
-                                            );
-                                          }
-                                          return CircleAvatar(
-                                            child: Text(member.initials),
-                                          ).animate().fade(delay: 200.ms);
-                                        },
-                                        separatorBuilder: (_, _) =>
-                                            const Gap(AppSpacing.xs),
+                                            ),
+                                          ),
+                                          IconButton.outlined(
+                                            color: Colors.red,
+                                            tooltip: localization.leave_group,
+                                            onPressed: isOwner
+                                                ? null
+                                                : bloc.toggleLeaveDialog,
+                                            icon: const Icon(Icons.exit_to_app),
+                                          ).animate().fade(delay: 200.ms),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                  const Gap(AppSpacing.s),
-                                ],
+                                    const Gap(AppSpacing.xxs),
+                                    const Divider(),
+                                    const Gap(AppSpacing.xs),
+                                    AppSkeleton(
+                                      isLoading: group == null,
+                                      child: SizedBox(
+                                        height: 40,
+                                        child: ListView.separated(
+                                          scrollDirection: .horizontal,
+                                          padding: const .symmetric(
+                                            horizontal: AppSpacing.s,
+                                          ),
+                                          itemCount: group?.members.length ?? 0,
+                                          itemBuilder: (context, position) {
+                                            final member =
+                                                group!.members[position];
+
+                                            if (position == 0) {
+                                              return Row(
+                                                spacing: AppSpacing.s,
+                                                children: [
+                                                  Text(
+                                                    '${localization.members}:',
+                                                  ).animate().fade(
+                                                    delay: 100.ms,
+                                                  ),
+                                                  CircleAvatar(
+                                                    child: Text(
+                                                      member.initials,
+                                                    ),
+                                                  ).animate().fade(
+                                                    delay: 200.ms,
+                                                  ),
+                                                ],
+                                              );
+                                            }
+                                            return CircleAvatar(
+                                              child: Text(member.initials),
+                                            ).animate().fade(delay: 200.ms);
+                                          },
+                                          separatorBuilder: (_, _) =>
+                                              const Gap(AppSpacing.xs),
+                                        ),
+                                      ),
+                                    ),
+                                    const Gap(AppSpacing.s),
+                                  ],
+                                ),
                               );
                             },
                           ).animate().fade(delay: 100.ms),
+                        ),
+                        BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
+                          bloc: bloc,
+                          buildWhen: (previous, current) =>
+                              previous.formattedWeekMonth !=
+                                  current.formattedWeekMonth ||
+                              previous.isCalendarView != current.isCalendarView,
+                          builder: (context, state) {
+                            if (state.isCalendarView) {
+                              return SliverPadding(
+                                padding: const .symmetric(
+                                  horizontal: AppSpacing.s,
+                                ),
+                                sliver: SliverToBoxAdapter(
+                                  child: Text(
+                                    state.formattedWeekMonth,
+                                    style: theme.textTheme.headlineSmall
+                                        ?.copyWith(
+                                          color: theme.colorScheme.secondary,
+                                        ),
+                                  ).animate().fade(delay: 100.ms),
+                                ),
+                              );
+                            } else {
+                              return const SliverToBoxAdapter(
+                                child: SizedBox.shrink(),
+                              );
+                            }
+                          },
                         ),
                         SliverToBoxAdapter(
                           child:
@@ -304,42 +385,111 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                                     current.isCalendarView,
                                 builder: (context, state) {
                                   if (state.isCalendarView) {
-                                    return VisibilityDetector(
-                                      key: const Key('calendar_pager'),
-                                      onVisibilityChanged: (visibility) {
-                                        final isHidden =
-                                            visibility.visibleFraction <= 0.5;
-                                        bloc.setShowScrollToTopButton(
-                                          value: isHidden,
-                                        );
-                                      },
-                                      child: CalendarPagerView(
-                                        controller: _calendarPagerController,
-                                        theme: CalendarPagerTheme.from(
-                                          background:
-                                              theme.scaffoldBackgroundColor,
-                                          accent: theme.colorScheme.primary,
-                                          headerTitle:
-                                              theme.textTheme.headlineLarge!,
-                                          itemBorder: theme.colorScheme.primary,
-                                          onAccent: theme.colorScheme.onPrimary,
-                                          hasShadow: false,
-                                        ),
-                                        hasHeader: false,
-                                        onDateSelected: bloc.updateSelectedDate,
-                                        onWeekChanged: (week, initialWeek) {
-                                          bloc.setShowSelectCurrentDate(
-                                            value: week != initialWeek,
-                                          );
-                                        },
+                                    return CalendarPagerView(
+                                      controller: _calendarPagerController,
+                                      theme: CalendarPagerTheme.from(
+                                        background:
+                                            theme.scaffoldBackgroundColor,
+                                        accent: theme.colorScheme.primary,
+                                        headerTitle:
+                                            theme.textTheme.headlineLarge!,
+                                        itemBorder: theme.colorScheme.primary,
+                                        onAccent: theme.colorScheme.onPrimary,
+                                        hasShadow: false,
                                       ),
-                                    );
+                                      hasHeader: false,
+                                      onDateSelected: bloc.updateSelectedDate,
+                                      onWeekChanged:
+                                          (
+                                            week,
+                                            initialWeek,
+                                            firstDate,
+                                            lastDate,
+                                          ) {
+                                            bloc.setShowSelectCurrentDate(
+                                              value: week != initialWeek,
+                                            );
+                                            bloc.updateFirstAndLastDate(
+                                              firstDate: firstDate,
+                                              lastDate: lastDate,
+                                            );
+                                          },
+                                    ).animate().fade(delay: 150.ms);
                                   } else {
                                     return const SizedBox.shrink();
                                   }
                                 },
-                              ).animate().fade(delay: 100.ms),
+                              ),
                         ),
+                        BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
+                          bloc: bloc,
+                          buildWhen: (previous, current) =>
+                              previous.formattedSelectedDate !=
+                                  current.formattedSelectedDate ||
+                              previous.isCalendarView != current.isCalendarView,
+                          builder: (context, state) {
+                            if (state.isCalendarView) {
+                              return SliverToBoxAdapter(
+                                child: Column(
+                                  crossAxisAlignment: .stretch,
+                                  spacing: AppSpacing.s,
+                                  children: [
+                                    const Divider(),
+                                    Padding(
+                                      padding: const .symmetric(
+                                        horizontal: AppSpacing.s,
+                                      ),
+                                      child: Text(
+                                        state.formattedSelectedDate,
+                                        style: theme.textTheme.headlineLarge
+                                            ?.copyWith(
+                                              color:
+                                                  theme.colorScheme.secondary,
+                                            ),
+                                      ),
+                                    ),
+                                  ],
+                                ).animate().fade(delay: 200.ms),
+                              );
+                            } else {
+                              return const SliverToBoxAdapter(
+                                child: SizedBox.shrink(),
+                              );
+                            }
+                          },
+                        ),
+                        BlocSelector<
+                          GroupDetailsCubit,
+                          GroupDetailsState,
+                          bool
+                        >(
+                          bloc: bloc,
+                          selector: (state) => state.showTaskSearch,
+                          builder: (context, showTaskSearch) {
+                            return SliverToBoxAdapter(
+                              child: showTaskSearch
+                                  ? Padding(
+                                      padding: const .all(AppSpacing.s),
+                                      child:
+                                          AppSearchField(
+                                                focusNode: _taskSearchFocusNode,
+                                                onChanged: (value) {
+                                                  bloc.updateTaskSearchQuery(
+                                                    value: value,
+                                                  );
+                                                },
+                                                hintText: localization.search,
+                                                prefixIcon: Icons.search,
+                                              )
+                                              .animate()
+                                              .fade(delay: 200.ms)
+                                              .slide(delay: 100.ms),
+                                    )
+                                  : const SizedBox.shrink(),
+                            );
+                          },
+                        ),
+
                         BlocBuilder<GroupDetailsCubit, GroupDetailsState>(
                           bloc: bloc,
                           builder: (context, state) {

@@ -117,6 +117,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               initialValue: state.description,
                               onChanged: bloc.updateDescription,
                               maxLines: 5,
+                              keyboardType: .multiline,
+                              textInputAction: .newline,
                             ),
                           );
                         },
@@ -218,7 +220,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                       child: DropdownMenu(
                                         label: Row(
                                           spacing: AppSpacing.xs,
-                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisSize: .min,
                                           children: [
                                             Icon(
                                               state.priority.icon,
@@ -286,7 +288,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                       child: DropdownMenu(
                                         label: Row(
                                           spacing: AppSpacing.xs,
-                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisSize: .min,
                                           children: [
                                             Icon(
                                               state.status.icon,
@@ -440,7 +442,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                 isLoading: state.isLoading,
                                 child: Row(
                                   spacing: AppSpacing.s,
-                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisSize: .max,
                                   mainAxisAlignment: .spaceBetween,
                                   children: [
                                     Text(
@@ -598,7 +600,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                               border: isAssigned
                                   ? .all(color: theme.colorScheme.primary)
                                   : null,
-                              shape: BoxShape.circle,
+                              shape: .circle,
                             ),
                             child: CircleAvatar(
                               backgroundColor: isAssigned

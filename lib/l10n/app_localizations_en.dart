@@ -384,4 +384,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get go_to_current_date => 'Go to Current Date';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get empty_filtered_groups_title =>
+      'No groups found with searched title and/or description.';
 }

@@ -55,7 +55,7 @@ class OverdueTasksListSheet extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.primary,
         shape: RoundedRectangleBorder(
-          borderRadius: .circular(AppSpacing.s),
+          borderRadius: .circular(AppSpacing.xs),
         ),
         textStyle: theme.textTheme.titleMedium,
         foregroundColor: theme.colorScheme.onPrimary,

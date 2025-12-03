@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:task_master/auth/auth.dart';
 import 'package:task_master/groups/groups.dart';
@@ -40,6 +41,10 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
            shouldGoBack: false,
            showScrollToTopButton: false,
            showSelectCurrentDate: false,
+           showTaskSearch: false,
+           taskSearchQuery: '',
+           firstDate: DateTime.now(),
+           lastDate: DateTime.now(),
          ),
        );
 
@@ -135,12 +140,23 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
   }
 
   void updateSelectedDate(DateTime value) {
-    final isToday = DateUtils.isSameDay(value, DateTime.now());
-    emit(state.copyWith(selectedDate: value, showSelectCurrentDate: !isToday));
+    emit(state.copyWith(selectedDate: value));
   }
 
   void setShowSelectCurrentDate({required bool value}) {
     emit(state.copyWith(showSelectCurrentDate: value));
+  }
+
+  void updateFirstAndLastDate({
+    required DateTime firstDate,
+    required DateTime lastDate,
+  }) {
+    emit(
+      state.copyWith(
+        firstDate: firstDate,
+        lastDate: lastDate,
+      ),
+    );
   }
 
   Future<void> toggleListView() async {
@@ -316,6 +332,19 @@ class GroupDetailsCubit extends Cubit<GroupDetailsState> {
     groupsWebsocket.updateGroups(groupId: groupId);
   }
 
+  void updateShowTaskSearch({required bool value}) {
+    emit(
+      state.copyWith(
+        showTaskSearch: value,
+        taskSearchQuery: !value ? '' : state.taskSearchQuery,
+      ),
+    );
+  }
+
+  void updateTaskSearchQuery({required String value}) {
+    emit(state.copyWith(taskSearchQuery: value));
+  }
+
   Future<void> dispose() async {
     await _groupsSubscription?.cancel();
     await _tasksSubscription?.cancel();
@@ -341,6 +370,10 @@ sealed class GroupDetailsState with _$GroupDetailsState {
     required bool shouldGoBack,
     required bool showScrollToTopButton,
     required bool showSelectCurrentDate,
+    required bool showTaskSearch,
+    required String taskSearchQuery,
+    required DateTime firstDate,
+    required DateTime lastDate,
     GroupResponse? group,
     UserData? currentUser,
     UserResponse? userToFilterBy,
@@ -357,6 +390,21 @@ sealed class GroupDetailsState with _$GroupDetailsState {
       assignedUsers.map((user) => user.id).toList();
 
   bool get isCalendarView => listView == .calendar;
+
+  String get formattedFirstDate =>
+      DateFormat('MMM yyyy').format(firstDate.toLocal());
+  String get formattedLastDate =>
+      DateFormat('MMM yyyy').format(lastDate.toLocal());
+
+  bool get firstAndLastDateBelongToSameMonth =>
+      formattedFirstDate == formattedLastDate;
+
+  String get formattedWeekMonth => firstAndLastDateBelongToSameMonth
+      ? formattedFirstDate
+      : '$formattedFirstDate - $formattedLastDate';
+
+  String get formattedSelectedDate =>
+      DateFormat('MMMM yyyy').format(selectedDate.toLocal());
 
   List<TaskResponse> get filteredTasks => tasks
       .where((task) {
@@ -444,6 +492,17 @@ sealed class GroupDetailsState with _$GroupDetailsState {
           case .oldest:
             return a.createdAt.compareTo(b.createdAt);
         }
+      })
+      .where((task) {
+        if (taskSearchQuery.isEmpty) {
+          return true;
+        }
+        return task.title.toLowerCase().contains(
+              taskSearchQuery.toLowerCase(),
+            ) ||
+            (task.description ?? '').toLowerCase().contains(
+              taskSearchQuery.toLowerCase(),
+            );
       })
       .toList();
 }

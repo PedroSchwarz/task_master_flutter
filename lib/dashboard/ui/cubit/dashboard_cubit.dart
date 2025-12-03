@@ -38,6 +38,8 @@ class DashboardCubit extends Cubit<DashboardState> {
            invites: [],
            progression: [],
            selection: .owned,
+           showGroupSearch: false,
+           groupSearchQuery: '',
            isRefreshing: false,
          ),
        );
@@ -243,8 +245,22 @@ class DashboardCubit extends Cubit<DashboardState> {
     groupsWebsocket.updateGroups(groupId: groupId);
   }
 
+  void updateShowGroupSearch({required bool value}) {
+    emit(
+      state.copyWith(
+        showGroupSearch: value,
+        groupSearchQuery: !value ? '' : state.groupSearchQuery,
+      ),
+    );
+  }
+
+  void updateGroupSearchQuery(String value) {
+    emit(state.copyWith(groupSearchQuery: value));
+  }
+
   void signOut() async {
     _invitesFetchTimer?.cancel();
+    _invitesFetchTimer = null;
     await _groupsSubscription?.cancel();
     await _tasksSubscription?.cancel();
     await usersRepository.removeNotifications();
@@ -265,9 +281,26 @@ sealed class DashboardState with _$DashboardState {
     required List<InviteResponse> invites,
     required List<WeeklyTaskProgression?> progression,
     required TaskProgressionSelection selection,
+    required bool showGroupSearch,
+    required String groupSearchQuery,
     required bool isRefreshing,
   }) = _DashboardState;
 
+  const DashboardState._();
+
   factory DashboardState.fromJson(Map<String, dynamic> json) =>
       _$DashboardStateFromJson(json);
+
+  List<GroupResponse> get filteredGroups => groupSearchQuery.isEmpty
+      ? groups
+      : groups.where(
+          (group) {
+            return group.name.toLowerCase().contains(
+                  groupSearchQuery.toLowerCase(),
+                ) ||
+                group.description.toLowerCase().contains(
+                  groupSearchQuery.toLowerCase(),
+                );
+          },
+        ).toList();
 }

@@ -6,6 +6,7 @@ class AppTextField extends StatefulWidget {
     required this.onChanged,
     this.keyboardType = TextInputType.text,
     this.textCapitalization = .sentences,
+    this.textInputAction = .done,
     this.initialValue,
     this.error,
     this.maxLines = 1,
@@ -18,6 +19,7 @@ class AppTextField extends StatefulWidget {
   final ValueChanged<String> onChanged;
   final TextInputType keyboardType;
   final TextCapitalization textCapitalization;
+  final TextInputAction textInputAction;
   final String? initialValue;
   final String? error;
   final int? maxLines;
@@ -53,6 +55,7 @@ class _AppTextFieldState extends State<AppTextField> {
       obscureText: widget.obscureText ?? false,
       keyboardType: widget.keyboardType,
       textCapitalization: widget.textCapitalization,
+      textInputAction: widget.textInputAction,
       maxLines: widget.maxLines,
       decoration: InputDecoration(
         label: Text(widget.label),

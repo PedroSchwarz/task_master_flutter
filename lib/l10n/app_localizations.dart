@@ -841,6 +841,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Go to Current Date'**
   String get go_to_current_date;
+
+  /// No description provided for @search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// No description provided for @empty_filtered_groups_title.
+  ///
+  /// In en, this message translates to:
+  /// **'No groups found with searched title and/or description.'**
+  String get empty_filtered_groups_title;
 }
 
 class _AppLocalizationsDelegate

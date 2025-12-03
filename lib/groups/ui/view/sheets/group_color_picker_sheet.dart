@@ -46,7 +46,7 @@ class _GroupColorPickerSheetState extends State<GroupColorPickerSheet> {
         padding: const .symmetric(horizontal: AppSpacing.s),
         child: Column(
           crossAxisAlignment: .stretch,
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: .min,
           children: [
             Text(
               localization.group_color,
@@ -58,7 +58,7 @@ class _GroupColorPickerSheetState extends State<GroupColorPickerSheet> {
               width: .infinity,
               decoration: BoxDecoration(
                 color: currentColor,
-                shape: BoxShape.circle,
+                shape: .circle,
               ),
             ),
             const Gap(AppSpacing.m),

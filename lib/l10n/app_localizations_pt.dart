@@ -385,4 +385,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get go_to_current_date => 'Ir para a Data Atual';
+
+  @override
+  String get search => 'Pesquisar';
+
+  @override
+  String get empty_filtered_groups_title =>
+      'Nenhum grupo encontrado com o título e/ou descrição pesquisados.';
 }

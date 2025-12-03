@@ -131,13 +131,13 @@ class TaskItem extends StatelessWidget {
                   Container(
                     padding: const .all(AppSpacing.xxs),
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      shape: .circle,
                       border: .all(color: Colors.green, width: 3),
                     ),
                     child: const Icon(Icons.check_rounded, color: Colors.green),
                   ),
                 Flexible(
-                  fit: FlexFit.tight,
+                  fit: .tight,
                   child: Column(
                     crossAxisAlignment: .start,
                     children: [
@@ -151,7 +151,7 @@ class TaskItem extends StatelessWidget {
                         task.description ?? localization.no_description,
                         style: theme.textTheme.bodyLarge,
                         maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
+                        overflow: .ellipsis,
                       ),
                       if (!task.completed) ...[
                         const Gap(AppSpacing.xs),
@@ -184,13 +184,13 @@ class TaskItem extends StatelessWidget {
                                   .inProgress => localization.in_progress,
                                   .done => localization.done,
                                 },
-                                style: theme.textTheme.bodyMedium?.copyWith(
+                                style: theme.textTheme.bodySmall?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: .circular(100),
+                                borderRadius: .circular(AppSpacing.xs),
                               ),
                               padding: const .all(AppSpacing.xs),
                               backgroundColor: task.status.color.withValues(

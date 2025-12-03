@@ -104,7 +104,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                         horizontal: AppSpacing.s,
                       ),
                       itemCount: ProgressionPeriod.values.length,
-                      scrollDirection: Axis.horizontal,
+                      scrollDirection: .horizontal,
                       itemBuilder: (context, position) {
                         final period = ProgressionPeriod.values[position];
 
@@ -229,7 +229,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                           children: [
                             Row(
                               spacing: AppSpacing.xs,
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisSize: .min,
                               children: [
                                 const CircleAvatar(
                                   radius: AppSpacing.xs,
@@ -240,7 +240,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                             ),
                             Row(
                               spacing: AppSpacing.xs,
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisSize: .min,
                               children: [
                                 const CircleAvatar(
                                   radius: AppSpacing.xs,
@@ -251,7 +251,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                             ),
                             Row(
                               spacing: AppSpacing.xs,
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisSize: .min,
                               children: [
                                 const CircleAvatar(
                                   radius: AppSpacing.xs,
@@ -326,7 +326,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                           children: TaskPriority.values.map((priority) {
                             return Row(
                               spacing: AppSpacing.xs,
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisSize: .min,
                               children: [
                                 CircleAvatar(
                                   radius: AppSpacing.xs,
@@ -405,7 +405,7 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                           children: TaskStatus.values.map((status) {
                             return Row(
                               spacing: AppSpacing.xs,
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisSize: .min,
                               children: [
                                 CircleAvatar(
                                   radius: AppSpacing.xs,

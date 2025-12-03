@@ -254,5 +254,9 @@
     "select_color": "Select Color",
     "@select_color": {},
     "go_to_current_date": "Go to Current Date",
-    "@go_to_current_date": {}
+    "@go_to_current_date": {},
+    "search": "Search",
+    "@search": {},
+    "empty_filtered_groups_title": "No groups found with searched title and/or description.",
+    "@empty_filtered_groups_title": {}
 }

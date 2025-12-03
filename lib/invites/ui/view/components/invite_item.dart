@@ -38,7 +38,7 @@ class InviteItem extends StatelessWidget {
       trailing: invite.status == .pending
           ? Row(
               spacing: AppSpacing.xs,
-              mainAxisSize: MainAxisSize.min,
+              mainAxisSize: .min,
               children: [
                 IconButton.outlined(
                   onPressed: () {

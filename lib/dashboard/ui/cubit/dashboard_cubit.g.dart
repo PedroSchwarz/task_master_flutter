@@ -33,6 +33,8 @@ _DashboardState _$DashboardStateFromJson(
       )
       .toList(),
   selection: $enumDecode(_$TaskProgressionSelectionEnumMap, json['selection']),
+  showGroupSearch: json['showGroupSearch'] as bool,
+  groupSearchQuery: json['groupSearchQuery'] as String,
   isRefreshing: json['isRefreshing'] as bool,
 );
 
@@ -48,6 +50,8 @@ Map<String, dynamic> _$DashboardStateToJson(_DashboardState instance) =>
       'invites': instance.invites,
       'progression': instance.progression,
       'selection': _$TaskProgressionSelectionEnumMap[instance.selection]!,
+      'showGroupSearch': instance.showGroupSearch,
+      'groupSearchQuery': instance.groupSearchQuery,
       'isRefreshing': instance.isRefreshing,
     };
 

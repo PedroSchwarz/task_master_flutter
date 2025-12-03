@@ -254,5 +254,9 @@
     "select_color": "Selecionar Cor",
     "@select_color": {},
     "go_to_current_date": "Ir para a Data Atual",
-    "@go_to_current_date": {}
+    "@go_to_current_date": {},
+    "search": "Pesquisar",
+    "@search": {},
+    "empty_filtered_groups_title": "Nenhum grupo encontrado com o título e/ou descrição pesquisados.",
+    "@empty_filtered_groups_title": {}
 }

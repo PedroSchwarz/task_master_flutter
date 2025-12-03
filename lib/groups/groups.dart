@@ -8,6 +8,7 @@ export './data/websocket/groups_websocket.dart';
 export './ui/cubit/create_group_cubit.dart';
 export './ui/cubit/group_details_cubit.dart';
 export 'ui/view/components/group_content_unavailable.dart';
+export 'ui/view/components/group_filtered_content_unavailable.dart';
 export 'ui/view/components/group_list_loading.dart';
 export 'ui/view/components/groups_list.dart';
 export 'ui/view/drawer/group_details_filters_drawer.dart';

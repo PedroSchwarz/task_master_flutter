@@ -49,21 +49,21 @@ abstract class TaskResponse with _$TaskResponse {
       return null;
     }
 
-    final formatter = DateFormat('EEEE, d MMMM - hh:mm a');
+    final formatter = DateFormat('EEEE, d MMM - hh:mm a');
 
     return formatter.format(localDate.toLocal());
   }
 
   String get formattedCreatedAt {
     final localDate = createdAt;
-    final formatter = DateFormat('EEEE, d MMMM - hh:mm a');
+    final formatter = DateFormat('EEE, d MMM - hh:mm a');
 
     return formatter.format(localDate.toLocal());
   }
 
   String get formattedUpdatedAt {
     final localDate = updatedAt;
-    final formatter = DateFormat('EEEE, d MMMM - hh:mm a');
+    final formatter = DateFormat('EEE, d MMM - hh:mm a');
 
     return formatter.format(localDate.toLocal());
   }

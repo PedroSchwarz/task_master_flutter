@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GroupDetailsState {
 
- bool get isLoading; List<TaskResponse> get tasks; List<InviteResponse> get invites; DateTime get selectedDate; TaskListView get listView; TaskUserFilter get userFilter; TaskCompletionFilter get completionFilter; TaskStatusFilter get statusFilter; TaskPriorityFilter get priorityFilter; TaskDateSort get dateSort; TaskPrioritySort get prioritySort; bool get showLeaveDialog; bool get isRefreshing; bool get shouldGoBack; bool get showScrollToTopButton; bool get showSelectCurrentDate; GroupResponse? get group; UserData? get currentUser; UserResponse? get userToFilterBy; TaskResponse? get taskToDelete;
+ bool get isLoading; List<TaskResponse> get tasks; List<InviteResponse> get invites; DateTime get selectedDate; TaskListView get listView; TaskUserFilter get userFilter; TaskCompletionFilter get completionFilter; TaskStatusFilter get statusFilter; TaskPriorityFilter get priorityFilter; TaskDateSort get dateSort; TaskPrioritySort get prioritySort; bool get showLeaveDialog; bool get isRefreshing; bool get shouldGoBack; bool get showScrollToTopButton; bool get showSelectCurrentDate; bool get showTaskSearch; String get taskSearchQuery; DateTime get firstDate; DateTime get lastDate; GroupResponse? get group; UserData? get currentUser; UserResponse? get userToFilterBy; TaskResponse? get taskToDelete;
 /// Create a copy of GroupDetailsState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $GroupDetailsStateCopyWith<GroupDetailsState> get copyWith => _$GroupDetailsStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GroupDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.tasks, tasks)&&const DeepCollectionEquality().equals(other.invites, invites)&&(identical(other.selectedDate, selectedDate) || other.selectedDate == selectedDate)&&(identical(other.listView, listView) || other.listView == listView)&&(identical(other.userFilter, userFilter) || other.userFilter == userFilter)&&(identical(other.completionFilter, completionFilter) || other.completionFilter == completionFilter)&&(identical(other.statusFilter, statusFilter) || other.statusFilter == statusFilter)&&(identical(other.priorityFilter, priorityFilter) || other.priorityFilter == priorityFilter)&&(identical(other.dateSort, dateSort) || other.dateSort == dateSort)&&(identical(other.prioritySort, prioritySort) || other.prioritySort == prioritySort)&&(identical(other.showLeaveDialog, showLeaveDialog) || other.showLeaveDialog == showLeaveDialog)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&(identical(other.showScrollToTopButton, showScrollToTopButton) || other.showScrollToTopButton == showScrollToTopButton)&&(identical(other.showSelectCurrentDate, showSelectCurrentDate) || other.showSelectCurrentDate == showSelectCurrentDate)&&(identical(other.group, group) || other.group == group)&&(identical(other.currentUser, currentUser) || other.currentUser == currentUser)&&(identical(other.userToFilterBy, userToFilterBy) || other.userToFilterBy == userToFilterBy)&&(identical(other.taskToDelete, taskToDelete) || other.taskToDelete == taskToDelete));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GroupDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other.tasks, tasks)&&const DeepCollectionEquality().equals(other.invites, invites)&&(identical(other.selectedDate, selectedDate) || other.selectedDate == selectedDate)&&(identical(other.listView, listView) || other.listView == listView)&&(identical(other.userFilter, userFilter) || other.userFilter == userFilter)&&(identical(other.completionFilter, completionFilter) || other.completionFilter == completionFilter)&&(identical(other.statusFilter, statusFilter) || other.statusFilter == statusFilter)&&(identical(other.priorityFilter, priorityFilter) || other.priorityFilter == priorityFilter)&&(identical(other.dateSort, dateSort) || other.dateSort == dateSort)&&(identical(other.prioritySort, prioritySort) || other.prioritySort == prioritySort)&&(identical(other.showLeaveDialog, showLeaveDialog) || other.showLeaveDialog == showLeaveDialog)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&(identical(other.showScrollToTopButton, showScrollToTopButton) || other.showScrollToTopButton == showScrollToTopButton)&&(identical(other.showSelectCurrentDate, showSelectCurrentDate) || other.showSelectCurrentDate == showSelectCurrentDate)&&(identical(other.showTaskSearch, showTaskSearch) || other.showTaskSearch == showTaskSearch)&&(identical(other.taskSearchQuery, taskSearchQuery) || other.taskSearchQuery == taskSearchQuery)&&(identical(other.firstDate, firstDate) || other.firstDate == firstDate)&&(identical(other.lastDate, lastDate) || other.lastDate == lastDate)&&(identical(other.group, group) || other.group == group)&&(identical(other.currentUser, currentUser) || other.currentUser == currentUser)&&(identical(other.userToFilterBy, userToFilterBy) || other.userToFilterBy == userToFilterBy)&&(identical(other.taskToDelete, taskToDelete) || other.taskToDelete == taskToDelete));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,isLoading,const DeepCollectionEquality().hash(tasks),const DeepCollectionEquality().hash(invites),selectedDate,listView,userFilter,completionFilter,statusFilter,priorityFilter,dateSort,prioritySort,showLeaveDialog,isRefreshing,shouldGoBack,showScrollToTopButton,showSelectCurrentDate,group,currentUser,userToFilterBy,taskToDelete]);
+int get hashCode => Object.hashAll([runtimeType,isLoading,const DeepCollectionEquality().hash(tasks),const DeepCollectionEquality().hash(invites),selectedDate,listView,userFilter,completionFilter,statusFilter,priorityFilter,dateSort,prioritySort,showLeaveDialog,isRefreshing,shouldGoBack,showScrollToTopButton,showSelectCurrentDate,showTaskSearch,taskSearchQuery,firstDate,lastDate,group,currentUser,userToFilterBy,taskToDelete]);
 
 @override
 String toString() {
-  return 'GroupDetailsState(isLoading: $isLoading, tasks: $tasks, invites: $invites, selectedDate: $selectedDate, listView: $listView, userFilter: $userFilter, completionFilter: $completionFilter, statusFilter: $statusFilter, priorityFilter: $priorityFilter, dateSort: $dateSort, prioritySort: $prioritySort, showLeaveDialog: $showLeaveDialog, isRefreshing: $isRefreshing, shouldGoBack: $shouldGoBack, showScrollToTopButton: $showScrollToTopButton, showSelectCurrentDate: $showSelectCurrentDate, group: $group, currentUser: $currentUser, userToFilterBy: $userToFilterBy, taskToDelete: $taskToDelete)';
+  return 'GroupDetailsState(isLoading: $isLoading, tasks: $tasks, invites: $invites, selectedDate: $selectedDate, listView: $listView, userFilter: $userFilter, completionFilter: $completionFilter, statusFilter: $statusFilter, priorityFilter: $priorityFilter, dateSort: $dateSort, prioritySort: $prioritySort, showLeaveDialog: $showLeaveDialog, isRefreshing: $isRefreshing, shouldGoBack: $shouldGoBack, showScrollToTopButton: $showScrollToTopButton, showSelectCurrentDate: $showSelectCurrentDate, showTaskSearch: $showTaskSearch, taskSearchQuery: $taskSearchQuery, firstDate: $firstDate, lastDate: $lastDate, group: $group, currentUser: $currentUser, userToFilterBy: $userToFilterBy, taskToDelete: $taskToDelete)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $GroupDetailsStateCopyWith<$Res>  {
   factory $GroupDetailsStateCopyWith(GroupDetailsState value, $Res Function(GroupDetailsState) _then) = _$GroupDetailsStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, List<TaskResponse> tasks, List<InviteResponse> invites, DateTime selectedDate, TaskListView listView, TaskUserFilter userFilter, TaskCompletionFilter completionFilter, TaskStatusFilter statusFilter, TaskPriorityFilter priorityFilter, TaskDateSort dateSort, TaskPrioritySort prioritySort, bool showLeaveDialog, bool isRefreshing, bool shouldGoBack, bool showScrollToTopButton, bool showSelectCurrentDate, GroupResponse? group, UserData? currentUser, UserResponse? userToFilterBy, TaskResponse? taskToDelete
+ bool isLoading, List<TaskResponse> tasks, List<InviteResponse> invites, DateTime selectedDate, TaskListView listView, TaskUserFilter userFilter, TaskCompletionFilter completionFilter, TaskStatusFilter statusFilter, TaskPriorityFilter priorityFilter, TaskDateSort dateSort, TaskPrioritySort prioritySort, bool showLeaveDialog, bool isRefreshing, bool shouldGoBack, bool showScrollToTopButton, bool showSelectCurrentDate, bool showTaskSearch, String taskSearchQuery, DateTime firstDate, DateTime lastDate, GroupResponse? group, UserData? currentUser, UserResponse? userToFilterBy, TaskResponse? taskToDelete
 });
 
 
@@ -62,7 +62,7 @@ class _$GroupDetailsStateCopyWithImpl<$Res>
 
 /// Create a copy of GroupDetailsState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? tasks = null,Object? invites = null,Object? selectedDate = null,Object? listView = null,Object? userFilter = null,Object? completionFilter = null,Object? statusFilter = null,Object? priorityFilter = null,Object? dateSort = null,Object? prioritySort = null,Object? showLeaveDialog = null,Object? isRefreshing = null,Object? shouldGoBack = null,Object? showScrollToTopButton = null,Object? showSelectCurrentDate = null,Object? group = freezed,Object? currentUser = freezed,Object? userToFilterBy = freezed,Object? taskToDelete = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? tasks = null,Object? invites = null,Object? selectedDate = null,Object? listView = null,Object? userFilter = null,Object? completionFilter = null,Object? statusFilter = null,Object? priorityFilter = null,Object? dateSort = null,Object? prioritySort = null,Object? showLeaveDialog = null,Object? isRefreshing = null,Object? shouldGoBack = null,Object? showScrollToTopButton = null,Object? showSelectCurrentDate = null,Object? showTaskSearch = null,Object? taskSearchQuery = null,Object? firstDate = null,Object? lastDate = null,Object? group = freezed,Object? currentUser = freezed,Object? userToFilterBy = freezed,Object? taskToDelete = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,tasks: null == tasks ? _self.tasks : tasks // ignore: cast_nullable_to_non_nullable
@@ -80,7 +80,11 @@ as bool,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing /
 as bool,shouldGoBack: null == shouldGoBack ? _self.shouldGoBack : shouldGoBack // ignore: cast_nullable_to_non_nullable
 as bool,showScrollToTopButton: null == showScrollToTopButton ? _self.showScrollToTopButton : showScrollToTopButton // ignore: cast_nullable_to_non_nullable
 as bool,showSelectCurrentDate: null == showSelectCurrentDate ? _self.showSelectCurrentDate : showSelectCurrentDate // ignore: cast_nullable_to_non_nullable
-as bool,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
+as bool,showTaskSearch: null == showTaskSearch ? _self.showTaskSearch : showTaskSearch // ignore: cast_nullable_to_non_nullable
+as bool,taskSearchQuery: null == taskSearchQuery ? _self.taskSearchQuery : taskSearchQuery // ignore: cast_nullable_to_non_nullable
+as String,firstDate: null == firstDate ? _self.firstDate : firstDate // ignore: cast_nullable_to_non_nullable
+as DateTime,lastDate: null == lastDate ? _self.lastDate : lastDate // ignore: cast_nullable_to_non_nullable
+as DateTime,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
 as GroupResponse?,currentUser: freezed == currentUser ? _self.currentUser : currentUser // ignore: cast_nullable_to_non_nullable
 as UserData?,userToFilterBy: freezed == userToFilterBy ? _self.userToFilterBy : userToFilterBy // ignore: cast_nullable_to_non_nullable
 as UserResponse?,taskToDelete: freezed == taskToDelete ? _self.taskToDelete : taskToDelete // ignore: cast_nullable_to_non_nullable
@@ -214,10 +218,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  List<TaskResponse> tasks,  List<InviteResponse> invites,  DateTime selectedDate,  TaskListView listView,  TaskUserFilter userFilter,  TaskCompletionFilter completionFilter,  TaskStatusFilter statusFilter,  TaskPriorityFilter priorityFilter,  TaskDateSort dateSort,  TaskPrioritySort prioritySort,  bool showLeaveDialog,  bool isRefreshing,  bool shouldGoBack,  bool showScrollToTopButton,  bool showSelectCurrentDate,  GroupResponse? group,  UserData? currentUser,  UserResponse? userToFilterBy,  TaskResponse? taskToDelete)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  List<TaskResponse> tasks,  List<InviteResponse> invites,  DateTime selectedDate,  TaskListView listView,  TaskUserFilter userFilter,  TaskCompletionFilter completionFilter,  TaskStatusFilter statusFilter,  TaskPriorityFilter priorityFilter,  TaskDateSort dateSort,  TaskPrioritySort prioritySort,  bool showLeaveDialog,  bool isRefreshing,  bool shouldGoBack,  bool showScrollToTopButton,  bool showSelectCurrentDate,  bool showTaskSearch,  String taskSearchQuery,  DateTime firstDate,  DateTime lastDate,  GroupResponse? group,  UserData? currentUser,  UserResponse? userToFilterBy,  TaskResponse? taskToDelete)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GroupDetailsState() when $default != null:
-return $default(_that.isLoading,_that.tasks,_that.invites,_that.selectedDate,_that.listView,_that.userFilter,_that.completionFilter,_that.statusFilter,_that.priorityFilter,_that.dateSort,_that.prioritySort,_that.showLeaveDialog,_that.isRefreshing,_that.shouldGoBack,_that.showScrollToTopButton,_that.showSelectCurrentDate,_that.group,_that.currentUser,_that.userToFilterBy,_that.taskToDelete);case _:
+return $default(_that.isLoading,_that.tasks,_that.invites,_that.selectedDate,_that.listView,_that.userFilter,_that.completionFilter,_that.statusFilter,_that.priorityFilter,_that.dateSort,_that.prioritySort,_that.showLeaveDialog,_that.isRefreshing,_that.shouldGoBack,_that.showScrollToTopButton,_that.showSelectCurrentDate,_that.showTaskSearch,_that.taskSearchQuery,_that.firstDate,_that.lastDate,_that.group,_that.currentUser,_that.userToFilterBy,_that.taskToDelete);case _:
   return orElse();
 
 }
@@ -235,10 +239,10 @@ return $default(_that.isLoading,_that.tasks,_that.invites,_that.selectedDate,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  List<TaskResponse> tasks,  List<InviteResponse> invites,  DateTime selectedDate,  TaskListView listView,  TaskUserFilter userFilter,  TaskCompletionFilter completionFilter,  TaskStatusFilter statusFilter,  TaskPriorityFilter priorityFilter,  TaskDateSort dateSort,  TaskPrioritySort prioritySort,  bool showLeaveDialog,  bool isRefreshing,  bool shouldGoBack,  bool showScrollToTopButton,  bool showSelectCurrentDate,  GroupResponse? group,  UserData? currentUser,  UserResponse? userToFilterBy,  TaskResponse? taskToDelete)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  List<TaskResponse> tasks,  List<InviteResponse> invites,  DateTime selectedDate,  TaskListView listView,  TaskUserFilter userFilter,  TaskCompletionFilter completionFilter,  TaskStatusFilter statusFilter,  TaskPriorityFilter priorityFilter,  TaskDateSort dateSort,  TaskPrioritySort prioritySort,  bool showLeaveDialog,  bool isRefreshing,  bool shouldGoBack,  bool showScrollToTopButton,  bool showSelectCurrentDate,  bool showTaskSearch,  String taskSearchQuery,  DateTime firstDate,  DateTime lastDate,  GroupResponse? group,  UserData? currentUser,  UserResponse? userToFilterBy,  TaskResponse? taskToDelete)  $default,) {final _that = this;
 switch (_that) {
 case _GroupDetailsState():
-return $default(_that.isLoading,_that.tasks,_that.invites,_that.selectedDate,_that.listView,_that.userFilter,_that.completionFilter,_that.statusFilter,_that.priorityFilter,_that.dateSort,_that.prioritySort,_that.showLeaveDialog,_that.isRefreshing,_that.shouldGoBack,_that.showScrollToTopButton,_that.showSelectCurrentDate,_that.group,_that.currentUser,_that.userToFilterBy,_that.taskToDelete);}
+return $default(_that.isLoading,_that.tasks,_that.invites,_that.selectedDate,_that.listView,_that.userFilter,_that.completionFilter,_that.statusFilter,_that.priorityFilter,_that.dateSort,_that.prioritySort,_that.showLeaveDialog,_that.isRefreshing,_that.shouldGoBack,_that.showScrollToTopButton,_that.showSelectCurrentDate,_that.showTaskSearch,_that.taskSearchQuery,_that.firstDate,_that.lastDate,_that.group,_that.currentUser,_that.userToFilterBy,_that.taskToDelete);}
 }
 /// A variant of `when` that fallback to returning `null`
 ///
@@ -252,10 +256,10 @@ return $default(_that.isLoading,_that.tasks,_that.invites,_that.selectedDate,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  List<TaskResponse> tasks,  List<InviteResponse> invites,  DateTime selectedDate,  TaskListView listView,  TaskUserFilter userFilter,  TaskCompletionFilter completionFilter,  TaskStatusFilter statusFilter,  TaskPriorityFilter priorityFilter,  TaskDateSort dateSort,  TaskPrioritySort prioritySort,  bool showLeaveDialog,  bool isRefreshing,  bool shouldGoBack,  bool showScrollToTopButton,  bool showSelectCurrentDate,  GroupResponse? group,  UserData? currentUser,  UserResponse? userToFilterBy,  TaskResponse? taskToDelete)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  List<TaskResponse> tasks,  List<InviteResponse> invites,  DateTime selectedDate,  TaskListView listView,  TaskUserFilter userFilter,  TaskCompletionFilter completionFilter,  TaskStatusFilter statusFilter,  TaskPriorityFilter priorityFilter,  TaskDateSort dateSort,  TaskPrioritySort prioritySort,  bool showLeaveDialog,  bool isRefreshing,  bool shouldGoBack,  bool showScrollToTopButton,  bool showSelectCurrentDate,  bool showTaskSearch,  String taskSearchQuery,  DateTime firstDate,  DateTime lastDate,  GroupResponse? group,  UserData? currentUser,  UserResponse? userToFilterBy,  TaskResponse? taskToDelete)?  $default,) {final _that = this;
 switch (_that) {
 case _GroupDetailsState() when $default != null:
-return $default(_that.isLoading,_that.tasks,_that.invites,_that.selectedDate,_that.listView,_that.userFilter,_that.completionFilter,_that.statusFilter,_that.priorityFilter,_that.dateSort,_that.prioritySort,_that.showLeaveDialog,_that.isRefreshing,_that.shouldGoBack,_that.showScrollToTopButton,_that.showSelectCurrentDate,_that.group,_that.currentUser,_that.userToFilterBy,_that.taskToDelete);case _:
+return $default(_that.isLoading,_that.tasks,_that.invites,_that.selectedDate,_that.listView,_that.userFilter,_that.completionFilter,_that.statusFilter,_that.priorityFilter,_that.dateSort,_that.prioritySort,_that.showLeaveDialog,_that.isRefreshing,_that.shouldGoBack,_that.showScrollToTopButton,_that.showSelectCurrentDate,_that.showTaskSearch,_that.taskSearchQuery,_that.firstDate,_that.lastDate,_that.group,_that.currentUser,_that.userToFilterBy,_that.taskToDelete);case _:
   return null;
 
 }
@@ -267,7 +271,7 @@ return $default(_that.isLoading,_that.tasks,_that.invites,_that.selectedDate,_th
 
 
 class _GroupDetailsState extends GroupDetailsState {
-  const _GroupDetailsState({required this.isLoading, required final  List<TaskResponse> tasks, required final  List<InviteResponse> invites, required this.selectedDate, required this.listView, required this.userFilter, required this.completionFilter, required this.statusFilter, required this.priorityFilter, required this.dateSort, required this.prioritySort, required this.showLeaveDialog, required this.isRefreshing, required this.shouldGoBack, required this.showScrollToTopButton, required this.showSelectCurrentDate, this.group, this.currentUser, this.userToFilterBy, this.taskToDelete}): _tasks = tasks,_invites = invites,super._();
+  const _GroupDetailsState({required this.isLoading, required final  List<TaskResponse> tasks, required final  List<InviteResponse> invites, required this.selectedDate, required this.listView, required this.userFilter, required this.completionFilter, required this.statusFilter, required this.priorityFilter, required this.dateSort, required this.prioritySort, required this.showLeaveDialog, required this.isRefreshing, required this.shouldGoBack, required this.showScrollToTopButton, required this.showSelectCurrentDate, required this.showTaskSearch, required this.taskSearchQuery, required this.firstDate, required this.lastDate, this.group, this.currentUser, this.userToFilterBy, this.taskToDelete}): _tasks = tasks,_invites = invites,super._();
   
 
 @override final  bool isLoading;
@@ -298,6 +302,10 @@ class _GroupDetailsState extends GroupDetailsState {
 @override final  bool shouldGoBack;
 @override final  bool showScrollToTopButton;
 @override final  bool showSelectCurrentDate;
+@override final  bool showTaskSearch;
+@override final  String taskSearchQuery;
+@override final  DateTime firstDate;
+@override final  DateTime lastDate;
 @override final  GroupResponse? group;
 @override final  UserData? currentUser;
 @override final  UserResponse? userToFilterBy;
@@ -313,16 +321,16 @@ _$GroupDetailsStateCopyWith<_GroupDetailsState> get copyWith => __$GroupDetailsS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GroupDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._tasks, _tasks)&&const DeepCollectionEquality().equals(other._invites, _invites)&&(identical(other.selectedDate, selectedDate) || other.selectedDate == selectedDate)&&(identical(other.listView, listView) || other.listView == listView)&&(identical(other.userFilter, userFilter) || other.userFilter == userFilter)&&(identical(other.completionFilter, completionFilter) || other.completionFilter == completionFilter)&&(identical(other.statusFilter, statusFilter) || other.statusFilter == statusFilter)&&(identical(other.priorityFilter, priorityFilter) || other.priorityFilter == priorityFilter)&&(identical(other.dateSort, dateSort) || other.dateSort == dateSort)&&(identical(other.prioritySort, prioritySort) || other.prioritySort == prioritySort)&&(identical(other.showLeaveDialog, showLeaveDialog) || other.showLeaveDialog == showLeaveDialog)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&(identical(other.showScrollToTopButton, showScrollToTopButton) || other.showScrollToTopButton == showScrollToTopButton)&&(identical(other.showSelectCurrentDate, showSelectCurrentDate) || other.showSelectCurrentDate == showSelectCurrentDate)&&(identical(other.group, group) || other.group == group)&&(identical(other.currentUser, currentUser) || other.currentUser == currentUser)&&(identical(other.userToFilterBy, userToFilterBy) || other.userToFilterBy == userToFilterBy)&&(identical(other.taskToDelete, taskToDelete) || other.taskToDelete == taskToDelete));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GroupDetailsState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&const DeepCollectionEquality().equals(other._tasks, _tasks)&&const DeepCollectionEquality().equals(other._invites, _invites)&&(identical(other.selectedDate, selectedDate) || other.selectedDate == selectedDate)&&(identical(other.listView, listView) || other.listView == listView)&&(identical(other.userFilter, userFilter) || other.userFilter == userFilter)&&(identical(other.completionFilter, completionFilter) || other.completionFilter == completionFilter)&&(identical(other.statusFilter, statusFilter) || other.statusFilter == statusFilter)&&(identical(other.priorityFilter, priorityFilter) || other.priorityFilter == priorityFilter)&&(identical(other.dateSort, dateSort) || other.dateSort == dateSort)&&(identical(other.prioritySort, prioritySort) || other.prioritySort == prioritySort)&&(identical(other.showLeaveDialog, showLeaveDialog) || other.showLeaveDialog == showLeaveDialog)&&(identical(other.isRefreshing, isRefreshing) || other.isRefreshing == isRefreshing)&&(identical(other.shouldGoBack, shouldGoBack) || other.shouldGoBack == shouldGoBack)&&(identical(other.showScrollToTopButton, showScrollToTopButton) || other.showScrollToTopButton == showScrollToTopButton)&&(identical(other.showSelectCurrentDate, showSelectCurrentDate) || other.showSelectCurrentDate == showSelectCurrentDate)&&(identical(other.showTaskSearch, showTaskSearch) || other.showTaskSearch == showTaskSearch)&&(identical(other.taskSearchQuery, taskSearchQuery) || other.taskSearchQuery == taskSearchQuery)&&(identical(other.firstDate, firstDate) || other.firstDate == firstDate)&&(identical(other.lastDate, lastDate) || other.lastDate == lastDate)&&(identical(other.group, group) || other.group == group)&&(identical(other.currentUser, currentUser) || other.currentUser == currentUser)&&(identical(other.userToFilterBy, userToFilterBy) || other.userToFilterBy == userToFilterBy)&&(identical(other.taskToDelete, taskToDelete) || other.taskToDelete == taskToDelete));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,isLoading,const DeepCollectionEquality().hash(_tasks),const DeepCollectionEquality().hash(_invites),selectedDate,listView,userFilter,completionFilter,statusFilter,priorityFilter,dateSort,prioritySort,showLeaveDialog,isRefreshing,shouldGoBack,showScrollToTopButton,showSelectCurrentDate,group,currentUser,userToFilterBy,taskToDelete]);
+int get hashCode => Object.hashAll([runtimeType,isLoading,const DeepCollectionEquality().hash(_tasks),const DeepCollectionEquality().hash(_invites),selectedDate,listView,userFilter,completionFilter,statusFilter,priorityFilter,dateSort,prioritySort,showLeaveDialog,isRefreshing,shouldGoBack,showScrollToTopButton,showSelectCurrentDate,showTaskSearch,taskSearchQuery,firstDate,lastDate,group,currentUser,userToFilterBy,taskToDelete]);
 
 @override
 String toString() {
-  return 'GroupDetailsState(isLoading: $isLoading, tasks: $tasks, invites: $invites, selectedDate: $selectedDate, listView: $listView, userFilter: $userFilter, completionFilter: $completionFilter, statusFilter: $statusFilter, priorityFilter: $priorityFilter, dateSort: $dateSort, prioritySort: $prioritySort, showLeaveDialog: $showLeaveDialog, isRefreshing: $isRefreshing, shouldGoBack: $shouldGoBack, showScrollToTopButton: $showScrollToTopButton, showSelectCurrentDate: $showSelectCurrentDate, group: $group, currentUser: $currentUser, userToFilterBy: $userToFilterBy, taskToDelete: $taskToDelete)';
+  return 'GroupDetailsState(isLoading: $isLoading, tasks: $tasks, invites: $invites, selectedDate: $selectedDate, listView: $listView, userFilter: $userFilter, completionFilter: $completionFilter, statusFilter: $statusFilter, priorityFilter: $priorityFilter, dateSort: $dateSort, prioritySort: $prioritySort, showLeaveDialog: $showLeaveDialog, isRefreshing: $isRefreshing, shouldGoBack: $shouldGoBack, showScrollToTopButton: $showScrollToTopButton, showSelectCurrentDate: $showSelectCurrentDate, showTaskSearch: $showTaskSearch, taskSearchQuery: $taskSearchQuery, firstDate: $firstDate, lastDate: $lastDate, group: $group, currentUser: $currentUser, userToFilterBy: $userToFilterBy, taskToDelete: $taskToDelete)';
 }
 
 
@@ -333,7 +341,7 @@ abstract mixin class _$GroupDetailsStateCopyWith<$Res> implements $GroupDetailsS
   factory _$GroupDetailsStateCopyWith(_GroupDetailsState value, $Res Function(_GroupDetailsState) _then) = __$GroupDetailsStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, List<TaskResponse> tasks, List<InviteResponse> invites, DateTime selectedDate, TaskListView listView, TaskUserFilter userFilter, TaskCompletionFilter completionFilter, TaskStatusFilter statusFilter, TaskPriorityFilter priorityFilter, TaskDateSort dateSort, TaskPrioritySort prioritySort, bool showLeaveDialog, bool isRefreshing, bool shouldGoBack, bool showScrollToTopButton, bool showSelectCurrentDate, GroupResponse? group, UserData? currentUser, UserResponse? userToFilterBy, TaskResponse? taskToDelete
+ bool isLoading, List<TaskResponse> tasks, List<InviteResponse> invites, DateTime selectedDate, TaskListView listView, TaskUserFilter userFilter, TaskCompletionFilter completionFilter, TaskStatusFilter statusFilter, TaskPriorityFilter priorityFilter, TaskDateSort dateSort, TaskPrioritySort prioritySort, bool showLeaveDialog, bool isRefreshing, bool shouldGoBack, bool showScrollToTopButton, bool showSelectCurrentDate, bool showTaskSearch, String taskSearchQuery, DateTime firstDate, DateTime lastDate, GroupResponse? group, UserData? currentUser, UserResponse? userToFilterBy, TaskResponse? taskToDelete
 });
 
 
@@ -350,7 +358,7 @@ class __$GroupDetailsStateCopyWithImpl<$Res>
 
 /// Create a copy of GroupDetailsState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? tasks = null,Object? invites = null,Object? selectedDate = null,Object? listView = null,Object? userFilter = null,Object? completionFilter = null,Object? statusFilter = null,Object? priorityFilter = null,Object? dateSort = null,Object? prioritySort = null,Object? showLeaveDialog = null,Object? isRefreshing = null,Object? shouldGoBack = null,Object? showScrollToTopButton = null,Object? showSelectCurrentDate = null,Object? group = freezed,Object? currentUser = freezed,Object? userToFilterBy = freezed,Object? taskToDelete = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? tasks = null,Object? invites = null,Object? selectedDate = null,Object? listView = null,Object? userFilter = null,Object? completionFilter = null,Object? statusFilter = null,Object? priorityFilter = null,Object? dateSort = null,Object? prioritySort = null,Object? showLeaveDialog = null,Object? isRefreshing = null,Object? shouldGoBack = null,Object? showScrollToTopButton = null,Object? showSelectCurrentDate = null,Object? showTaskSearch = null,Object? taskSearchQuery = null,Object? firstDate = null,Object? lastDate = null,Object? group = freezed,Object? currentUser = freezed,Object? userToFilterBy = freezed,Object? taskToDelete = freezed,}) {
   return _then(_GroupDetailsState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,tasks: null == tasks ? _self._tasks : tasks // ignore: cast_nullable_to_non_nullable
@@ -368,7 +376,11 @@ as bool,isRefreshing: null == isRefreshing ? _self.isRefreshing : isRefreshing /
 as bool,shouldGoBack: null == shouldGoBack ? _self.shouldGoBack : shouldGoBack // ignore: cast_nullable_to_non_nullable
 as bool,showScrollToTopButton: null == showScrollToTopButton ? _self.showScrollToTopButton : showScrollToTopButton // ignore: cast_nullable_to_non_nullable
 as bool,showSelectCurrentDate: null == showSelectCurrentDate ? _self.showSelectCurrentDate : showSelectCurrentDate // ignore: cast_nullable_to_non_nullable
-as bool,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
+as bool,showTaskSearch: null == showTaskSearch ? _self.showTaskSearch : showTaskSearch // ignore: cast_nullable_to_non_nullable
+as bool,taskSearchQuery: null == taskSearchQuery ? _self.taskSearchQuery : taskSearchQuery // ignore: cast_nullable_to_non_nullable
+as String,firstDate: null == firstDate ? _self.firstDate : firstDate // ignore: cast_nullable_to_non_nullable
+as DateTime,lastDate: null == lastDate ? _self.lastDate : lastDate // ignore: cast_nullable_to_non_nullable
+as DateTime,group: freezed == group ? _self.group : group // ignore: cast_nullable_to_non_nullable
 as GroupResponse?,currentUser: freezed == currentUser ? _self.currentUser : currentUser // ignore: cast_nullable_to_non_nullable
 as UserData?,userToFilterBy: freezed == userToFilterBy ? _self.userToFilterBy : userToFilterBy // ignore: cast_nullable_to_non_nullable
 as UserResponse?,taskToDelete: freezed == taskToDelete ? _self.taskToDelete : taskToDelete // ignore: cast_nullable_to_non_nullable

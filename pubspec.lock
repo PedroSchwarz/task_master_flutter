@@ -126,7 +126,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "7377e37184b62158dc9781a184bd3f637f8c5bfa"
+      resolved-ref: "6302f4e2a17ee7afadb7b6a8573743d64bf40f64"
       url: "https://github.com/PedroSchwarz/calendar_pager.git"
     source: git
     version: "0.0.1"

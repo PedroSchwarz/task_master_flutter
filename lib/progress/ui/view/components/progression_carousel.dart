@@ -31,7 +31,7 @@ class ProgressionCarousel extends StatelessWidget {
     return SizedBox(
       height: height,
       child: PageView(
-        scrollDirection: Axis.horizontal,
+        scrollDirection: .horizontal,
         children: [
           ProgressionItem(
             label: localization.completion_summary,

@@ -19,11 +19,18 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   final bloc = getIt<DashboardCubit>();
+  final FocusNode _searchFocusNode = .new();
 
   @override
   void initState() {
     super.initState();
     bloc.load();
+  }
+
+  @override
+  void dispose() {
+    _searchFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -174,11 +181,36 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     padding: const .symmetric(horizontal: AppSpacing.s),
                     sliver: SliverToBoxAdapter(
                       child: Row(
-                        mainAxisAlignment: .spaceBetween,
                         children: [
                           Text(
                             localization.groups,
                             style: theme.textTheme.headlineSmall,
+                          ),
+                          const Spacer(),
+                          BlocSelector<DashboardCubit, DashboardState, bool>(
+                            bloc: bloc,
+                            selector: (state) => state.showGroupSearch,
+                            builder: (context, showGroupSearch) {
+                              return IconButton(
+                                onPressed: () {
+                                  final value = !showGroupSearch;
+                                  bloc.updateShowGroupSearch(value: value);
+                                  if (value) {
+                                    _searchFocusNode.requestFocus();
+                                  } else {
+                                    _searchFocusNode.unfocus();
+                                  }
+                                },
+                                icon: Icon(
+                                  showGroupSearch
+                                      ? Icons.search_off
+                                      : Icons.search,
+                                  color: showGroupSearch
+                                      ? theme.colorScheme.error
+                                      : theme.colorScheme.onPrimaryContainer,
+                                ),
+                              );
+                            },
                           ),
                           IconButton(
                             onPressed: state.groups.isEmpty
@@ -196,11 +228,31 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 },
               ),
+              BlocSelector<DashboardCubit, DashboardState, bool>(
+                bloc: bloc,
+                selector: (state) => state.showGroupSearch,
+                builder: (context, showGroupSearch) {
+                  return SliverToBoxAdapter(
+                    child: showGroupSearch
+                        ? Padding(
+                            padding: const .all(AppSpacing.s),
+                            child: AppSearchField(
+                              focusNode: _searchFocusNode,
+                              onChanged: bloc.updateGroupSearchQuery,
+                              hintText: localization.search,
+                              prefixIcon: Icons.search,
+                            ),
+                          ).animate().fade(delay: 200.ms).slide(delay: 100.ms)
+                        : const SizedBox.shrink(),
+                  );
+                },
+              ),
               BlocBuilder<DashboardCubit, DashboardState>(
                 bloc: bloc,
                 buildWhen: (previous, current) =>
                     previous.isLoading != current.isLoading || //
                     previous.groups != current.groups || //
+                    previous.groupSearchQuery != current.groupSearchQuery || //
                     previous.groupsListType != current.groupsListType,
                 builder: (context, state) {
                   if (state.isLoading) {
@@ -211,8 +263,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     return const GroupContentUnavailable();
                   }
 
+                  if (state.filteredGroups.isEmpty) {
+                    return const GroupFilteredContentUnavailable();
+                  }
+
                   return GroupsList(
-                    groups: state.groups,
+                    groups: state.filteredGroups,
                     listType: state.groupsListType,
                     currentUser: bloc.currentUser,
                     onSelected: (group) {

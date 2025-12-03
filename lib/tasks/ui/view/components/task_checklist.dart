@@ -116,7 +116,7 @@ class TaskChecklist extends StatelessWidget {
                 ),
               ),
               trailing: Row(
-                mainAxisSize: MainAxisSize.min,
+                mainAxisSize: .min,
                 children: [
                   IconButton(
                     color: Colors.orange,
