@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:task_master/app/logging/logging_repository.dart';
 import 'package:task_master/auth/data/data_sources/user_local_data_source.dart';
 import 'package:task_master/auth/data/models/user_data.dart';
 
 class UserRepository {
-  UserRepository({required this.userLocalDataSource});
+  UserRepository({
+    required this.userLocalDataSource,
+    required this.loggingRepository,
+  });
 
   @visibleForTesting
   final UserLocalDataSource userLocalDataSource;
+
+  @visibleForTesting
+  final LoggingRepository loggingRepository;
 
   @visibleForTesting
   final userController = BehaviorSubject<UserData?>.seeded(null);
@@ -25,9 +32,11 @@ class UserRepository {
     if (value == null) {
       userController.add(null);
       await userLocalDataSource.delete();
+      await loggingRepository.clearIdentifier();
     } else {
       userController.add(value);
       await userLocalDataSource.save(value);
+      await loggingRepository.setIdentifier(value.id);
     }
   }
 }
