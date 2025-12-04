@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -63,7 +65,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         headerSliverBuilder: (_, _) => [
           SliverAppBar.medium(
             title: const Text('Dashboard'),
+            actionsPadding: const .only(right: AppSpacing.s),
             actions: [
+              if (Platform.isMacOS)
+                IconButton(
+                  onPressed: bloc.refresh,
+                  icon: const Icon(Icons.refresh),
+                ),
               IconButton(
                 onPressed: () {
                   context.pushNamed(ProgressionScreen.routeName);

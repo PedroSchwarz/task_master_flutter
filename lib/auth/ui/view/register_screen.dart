@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
@@ -59,11 +61,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       minHeight: constraints.maxHeight,
                     ),
                     child: Padding(
-                      padding: const .fromLTRB(
+                      padding: .fromLTRB(
                         AppSpacing.s,
                         AppSpacing.s,
                         AppSpacing.s,
-                        0,
+                        Platform.isMacOS ? AppSpacing.s : 0,
                       ),
                       child: Column(
                         spacing: AppSpacing.s,
@@ -174,6 +176,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   );
                                 },
                               ),
+                              if (Platform.isMacOS) const Gap(AppSpacing.xs),
                               BlocSelector<RegisterCubit, RegisterState, bool>(
                                 bloc: bloc,
                                 selector: (state) => state.isSubmitting,

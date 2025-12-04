@@ -69,7 +69,7 @@ class _InvitesScreenState extends State<InvitesScreen> {
               return Center(
                 child: Text(
                   localization.empty_invites_description,
-                  style: theme.textTheme.bodyLarge,
+                  style: theme.textTheme.titleLarge,
                 ),
               );
             }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -60,11 +62,11 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                   selector: (state) => state.selection,
                   builder: (context, selection) {
                     return Padding(
-                      padding: const .fromLTRB(
+                      padding: .fromLTRB(
                         AppSpacing.s,
                         AppSpacing.s,
                         AppSpacing.s,
-                        0,
+                        Platform.isMacOS ? AppSpacing.s : 0,
                       ),
                       child: Row(
                         spacing: AppSpacing.s,

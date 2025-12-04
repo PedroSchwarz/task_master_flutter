@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -207,8 +209,12 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         mainAxisAlignment: .spaceBetween,
                         children: [
                           Flexible(
-                            child:
-                                BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                return BlocBuilder<
+                                  CreateTaskCubit,
+                                  CreateTaskState
+                                >(
                                   bloc: bloc,
                                   buildWhen: (previous, current) =>
                                       previous.isLoading !=
@@ -218,6 +224,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                     return AppSkeleton(
                                       isLoading: state.isLoading,
                                       child: DropdownMenu(
+                                        width: constraints.maxWidth,
                                         label: Row(
                                           spacing: AppSpacing.xs,
                                           mainAxisSize: .min,
@@ -226,7 +233,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                               state.priority.icon,
                                               color: state.priority.color,
                                             ),
-                                            Text(localization.priority),
+                                            Flexible(
+                                              child: Text(
+                                                localization.priority,
+                                              ),
+                                            ),
                                           ],
                                         ),
                                         initialSelection: state.priority,
@@ -236,16 +247,18 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                                 borderRadius: .circular(100),
                                               ),
                                               isCollapsed: true,
-                                              contentPadding: const .symmetric(
+                                              contentPadding: .symmetric(
                                                 horizontal: AppSpacing.s,
+                                                vertical: Platform.isMacOS
+                                                    ? AppSpacing.m
+                                                    : 0,
                                               ),
                                             ),
                                         menuStyle: MenuStyle(
-                                          backgroundColor:
-                                              WidgetStateProperty.all(
-                                                theme.scaffoldBackgroundColor,
-                                              ),
-                                          shape: WidgetStateProperty.all(
+                                          backgroundColor: .all(
+                                            theme.scaffoldBackgroundColor,
+                                          ),
+                                          shape: .all(
                                             RoundedRectangleBorder(
                                               borderRadius: .circular(20),
                                             ),
@@ -266,17 +279,26 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                                   priority.icon,
                                                   color: priority.color,
                                                 ),
+                                                style: ButtonStyle(
+                                                  padding: .all(null),
+                                                ),
                                               ),
                                             )
                                             .toList(),
                                       ),
                                     );
                                   },
-                                ),
+                                );
+                              },
+                            ),
                           ),
                           Flexible(
-                            child:
-                                BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                return BlocBuilder<
+                                  CreateTaskCubit,
+                                  CreateTaskState
+                                >(
                                   bloc: bloc,
                                   buildWhen: (previous, current) =>
                                       previous.isLoading !=
@@ -286,6 +308,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                     return AppSkeleton(
                                       isLoading: state.isLoading,
                                       child: DropdownMenu(
+                                        width: constraints.maxWidth,
                                         label: Row(
                                           spacing: AppSpacing.xs,
                                           mainAxisSize: .min,
@@ -294,7 +317,9 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                               state.status.icon,
                                               color: state.status.color,
                                             ),
-                                            const Text('Status'),
+                                            const Flexible(
+                                              child: Text('Status'),
+                                            ),
                                           ],
                                         ),
                                         initialSelection: state.status,
@@ -304,16 +329,18 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                                 borderRadius: .circular(100),
                                               ),
                                               isCollapsed: true,
-                                              contentPadding: const .symmetric(
+                                              contentPadding: .symmetric(
                                                 horizontal: AppSpacing.s,
+                                                vertical: Platform.isMacOS
+                                                    ? AppSpacing.m
+                                                    : 0,
                                               ),
                                             ),
                                         menuStyle: MenuStyle(
-                                          backgroundColor:
-                                              WidgetStateProperty.all(
-                                                theme.scaffoldBackgroundColor,
-                                              ),
-                                          shape: WidgetStateProperty.all(
+                                          backgroundColor: .all(
+                                            theme.scaffoldBackgroundColor,
+                                          ),
+                                          shape: .all(
                                             RoundedRectangleBorder(
                                               borderRadius: .circular(20),
                                             ),
@@ -334,13 +361,18 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                                   status.icon,
                                                   color: status.color,
                                                 ),
+                                                style: ButtonStyle(
+                                                  padding: .all(null),
+                                                ),
                                               ),
                                             )
                                             .toList(),
                                       ),
                                     );
                                   },
-                                ),
+                                );
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -381,12 +413,15 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                           bloc.updateDate(date);
                                         },
                                         child: Row(
+                                          mainAxisAlignment: .center,
                                           children: [
                                             const Icon(
                                               Icons.calendar_month_outlined,
                                             ),
                                             const Gap(AppSpacing.xs),
-                                            Text(state.formattedDate),
+                                            Flexible(
+                                              child: Text(state.formattedDate),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -414,12 +449,15 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                                           bloc.updateTime(time);
                                         },
                                         child: Row(
+                                          mainAxisAlignment: .center,
                                           children: [
                                             const Icon(
                                               Icons.watch_later_outlined,
                                             ),
                                             const Gap(AppSpacing.xs),
-                                            Text(state.formattedTime),
+                                            Flexible(
+                                              child: Text(state.formattedTime),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -620,8 +658,11 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 child: SafeArea(
                   top: false,
                   child: Padding(
-                    padding: const .symmetric(
-                      horizontal: AppSpacing.s,
+                    padding: .fromLTRB(
+                      AppSpacing.s,
+                      AppSpacing.s,
+                      AppSpacing.s,
+                      Platform.isMacOS ? AppSpacing.s : 0,
                     ),
                     child: BlocBuilder<CreateTaskCubit, CreateTaskState>(
                       bloc: bloc,

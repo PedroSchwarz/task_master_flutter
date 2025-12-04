@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -521,7 +523,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     ),
                   ),
                   AppSliverHeaderWrapper.pinned(
-                    maxSize: 128,
+                    maxSize: 140,
                     padding: 0,
                     child: Container(
                       decoration: BoxDecoration(
@@ -639,11 +641,11 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   SliverFillRemaining(
                     hasScrollBody: false,
                     child: Padding(
-                      padding: const .fromLTRB(
+                      padding: .fromLTRB(
                         AppSpacing.s,
                         AppSpacing.l,
                         AppSpacing.s,
-                        0,
+                        Platform.isMacOS ? AppSpacing.s : 0,
                       ),
                       child: Column(
                         mainAxisAlignment: .end,

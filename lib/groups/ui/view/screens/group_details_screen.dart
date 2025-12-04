@@ -114,9 +114,14 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
                               bloc: bloc,
                               selector: (state) => state.group?.name,
                               builder: (context, name) {
-                                return Text(name ?? title);
+                                return Text(
+                                  name ?? title,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                );
                               },
                             ),
+                        actionsPadding: const .only(right: AppSpacing.xs),
                         actions: [
                           BlocSelector<
                             GroupDetailsCubit,

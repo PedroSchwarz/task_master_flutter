@@ -27,7 +27,7 @@ class DashboardProgression extends StatelessWidget {
     }
 
     return ProgressionCarousel(
-      height: 150,
+      height: 156,
       progression: progression,
       onCompletionPressed: () {
         context.pushNamed(ProgressionScreen.routeName);

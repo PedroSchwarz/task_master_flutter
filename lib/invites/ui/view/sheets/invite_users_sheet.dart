@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:task_master/app/app.dart';
@@ -116,7 +118,12 @@ class _InviteUsersSheetState extends State<InviteUsersSheet> {
               ),
             ),
             Padding(
-              padding: const .symmetric(horizontal: AppSpacing.s),
+              padding: .fromLTRB(
+                AppSpacing.s,
+                AppSpacing.s,
+                AppSpacing.s,
+                Platform.isMacOS ? AppSpacing.s : 0,
+              ),
               child: FilledButton(
                 onPressed: () => widget.onPressed(_selectedIds),
                 child: Text(

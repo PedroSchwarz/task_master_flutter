@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -76,6 +78,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                           );
                         },
                       ),
+                      actionsPadding: const .only(right: AppSpacing.s),
                       actions: [
                         BlocBuilder<CreateGroupCubit, CreateGroupState>(
                           bloc: bloc,
@@ -216,9 +219,11 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                         ],
                                       ),
                                     ),
-                                    Text(
-                                      localization.group_members_selected(
-                                        state.selectedUsersIds.length,
+                                    Flexible(
+                                      child: Text(
+                                        localization.group_members_selected(
+                                          state.selectedUsersIds.length,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -232,7 +237,12 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     SliverFillRemaining(
                       hasScrollBody: false,
                       child: Padding(
-                        padding: const .symmetric(horizontal: AppSpacing.s),
+                        padding: .fromLTRB(
+                          AppSpacing.s,
+                          AppSpacing.s,
+                          AppSpacing.s,
+                          Platform.isMacOS ? AppSpacing.s : 0,
+                        ),
                         child: BlocBuilder<CreateGroupCubit, CreateGroupState>(
                           bloc: bloc,
                           buildWhen: (previous, current) =>

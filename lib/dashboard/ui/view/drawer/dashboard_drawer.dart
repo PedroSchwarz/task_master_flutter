@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:task_master/app/app.dart';
 
 class DashboardDrawer extends StatelessWidget {
@@ -31,7 +34,12 @@ class DashboardDrawer extends StatelessWidget {
     return Drawer(
       child: SafeArea(
         child: Padding(
-          padding: const .fromLTRB(AppSpacing.s, AppSpacing.s, AppSpacing.s, 0),
+          padding: .fromLTRB(
+            AppSpacing.s,
+            AppSpacing.s,
+            AppSpacing.s,
+            Platform.isMacOS ? AppSpacing.s : 0,
+          ),
           child: Column(
             spacing: AppSpacing.s,
             crossAxisAlignment: .stretch,
