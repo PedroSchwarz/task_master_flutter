@@ -27,6 +27,7 @@ dependencies:
   calendar_pager:
     git: 
       url: https://github.com/PedroSchwarz/calendar_pager.git
+      ref: main
   logging: ^1.3.0
   collection: ^1.19.1
   firebase_messaging: ^16.0.4
