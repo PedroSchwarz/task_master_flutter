@@ -178,7 +178,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get others => 'Others';
 
   @override
-  String get completion => 'Conpletion';
+  String get completion => 'Completion';
 
   @override
   String get pending => 'Pending';
