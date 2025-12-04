@@ -431,7 +431,7 @@ abstract class AppLocalizations {
   /// No description provided for @completion.
   ///
   /// In en, this message translates to:
-  /// **'Conpletion'**
+  /// **'Completion'**
   String get completion;
 
   /// No description provided for @pending.

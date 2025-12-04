@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:task_master/app/app.dart';
@@ -57,11 +59,11 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const .fromLTRB(
-          AppSpacing.m,
-          AppSpacing.m,
-          AppSpacing.m,
-          0,
+        padding: .fromLTRB(
+          AppSpacing.s,
+          AppSpacing.s,
+          AppSpacing.s,
+          Platform.isMacOS ? AppSpacing.s : 0,
         ),
         child: Column(
           spacing: AppSpacing.s,
@@ -79,6 +81,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
+                      runSpacing: AppSpacing.xs,
                       children: TaskListView.values
                           .map(
                             (view) => FilterChip(
@@ -102,6 +105,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
+                      runSpacing: AppSpacing.xs,
                       children: TaskUserFilter.values
                           .map(
                             (filter) => FilterChip(
@@ -121,6 +125,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                     if (userFilter == .others)
                       Wrap(
                         spacing: AppSpacing.xs,
+                        runSpacing: AppSpacing.xs,
                         children: assignedUsers
                             .map(
                               (user) => FilterChip(
@@ -149,6 +154,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
+                      runSpacing: AppSpacing.xs,
                       children: TaskCompletionFilter.values
                           .map(
                             (filter) => FilterChip(
@@ -173,6 +179,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
+                      runSpacing: AppSpacing.xs,
                       children: TaskStatusFilter.values
                           .map(
                             (filter) => FilterChip(
@@ -198,6 +205,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
+                      runSpacing: AppSpacing.xs,
                       children: TaskPriorityFilter.values
                           .map(
                             (filter) => FilterChip(
@@ -223,6 +231,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
+                      runSpacing: AppSpacing.xs,
                       children: TaskDateSort.values
                           .map(
                             (sort) => FilterChip(
@@ -246,6 +255,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                     const Divider(),
                     Wrap(
                       spacing: AppSpacing.xs,
+                      runSpacing: AppSpacing.xs,
                       children: TaskPrioritySort.values
                           .map(
                             (sort) => FilterChip(
@@ -262,6 +272,7 @@ class GroupDetailsFiltersDrawer extends StatelessWidget {
                           )
                           .toList(),
                     ),
+                    const Gap(AppSpacing.s),
                   ],
                 ),
               ),

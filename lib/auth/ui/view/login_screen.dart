@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,11 +62,11 @@ class _LoginScreenState extends State<LoginScreen> {
                       minHeight: constraints.maxHeight,
                     ),
                     child: Padding(
-                      padding: const .fromLTRB(
+                      padding: .fromLTRB(
                         AppSpacing.s,
                         AppSpacing.s,
                         AppSpacing.s,
-                        0,
+                        Platform.isMacOS ? AppSpacing.s : 0,
                       ),
                       child: Column(
                         spacing: AppSpacing.s,
@@ -141,6 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   );
                                 },
                               ),
+                              if (Platform.isMacOS) const Gap(AppSpacing.xs),
                               BlocSelector<LoginCubit, LoginState, bool>(
                                 bloc: bloc,
                                 selector: (state) => state.isSubmitting,

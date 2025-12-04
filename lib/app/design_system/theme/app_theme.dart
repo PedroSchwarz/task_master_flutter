@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:task_master/app/design_system/theme/app_spacing.dart';
 import 'package:task_master/app/design_system/theme/app_typography.dart';
 
 class AppTheme {
@@ -47,11 +50,40 @@ class AppTheme {
         borderRadius: .circular(12),
         borderSide: .none,
       ),
+      contentPadding: Platform.isMacOS
+          ? const EdgeInsets.symmetric(
+              horizontal: AppSpacing.s,
+              vertical: AppSpacing.m,
+            )
+          : null,
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        textStyle: AppTypography.defaultTextTheme.titleMedium,
+        padding: Platform.isMacOS
+            ? const EdgeInsets.symmetric(vertical: AppSpacing.m)
+            : null,
+        alignment: Alignment.center,
       ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        padding: Platform.isMacOS
+            ? const EdgeInsets.symmetric(
+                vertical: AppSpacing.m,
+                horizontal: AppSpacing.s,
+              )
+            : null,
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        padding: Platform.isMacOS
+            ? const EdgeInsets.symmetric(vertical: AppSpacing.m)
+            : null,
+      ),
+    ),
+    chipTheme: ChipThemeData(
+      padding: Platform.isMacOS ? const EdgeInsets.all(AppSpacing.s) : null,
     ),
     progressIndicatorTheme: ProgressIndicatorThemeData(
       trackGap: 3,
@@ -92,11 +124,40 @@ class AppTheme {
         borderRadius: .circular(12),
         borderSide: .none,
       ),
+      contentPadding: Platform.isMacOS
+          ? const EdgeInsets.symmetric(
+              horizontal: AppSpacing.s,
+              vertical: AppSpacing.m,
+            )
+          : null,
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
-        textStyle: AppTypography.defaultTextTheme.titleMedium,
+        padding: Platform.isMacOS
+            ? const EdgeInsets.symmetric(vertical: AppSpacing.m)
+            : null,
+        alignment: Alignment.center,
       ),
+    ),
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        padding: Platform.isMacOS
+            ? const EdgeInsets.symmetric(
+                vertical: AppSpacing.m,
+                horizontal: AppSpacing.s,
+              )
+            : null,
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        padding: Platform.isMacOS
+            ? const EdgeInsets.symmetric(vertical: AppSpacing.m)
+            : null,
+      ),
+    ),
+    chipTheme: ChipThemeData(
+      padding: Platform.isMacOS ? const EdgeInsets.all(AppSpacing.s) : null,
     ),
     progressIndicatorTheme: ProgressIndicatorThemeData(
       trackGap: 3,
