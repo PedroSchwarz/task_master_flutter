@@ -180,8 +180,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                     initialValue: state.description,
                                     onChanged: bloc.updateDescription,
                                     textCapitalization: .sentences,
-                                    keyboardType: .multiline,
-                                    textInputAction: .newline,
+                                    textInputAction: .done,
                                     maxLines: 5,
                                   ),
                                 );
