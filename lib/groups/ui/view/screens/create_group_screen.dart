@@ -171,7 +171,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                               bloc: bloc,
                               buildWhen: (previous, current) =>
                                   previous.isLoading != current.isLoading || //
-                                  previous.name != current.name,
+                                  previous.description != current.description,
                               builder: (context, state) {
                                 return AppSkeleton(
                                   isLoading: state.isLoading,
