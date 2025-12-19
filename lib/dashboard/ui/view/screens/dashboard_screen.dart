@@ -126,7 +126,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       previous.showingProgression != current.showingProgression,
                   builder: (context, state) {
                     if (state.showingProgression) {
-                      return DashboardProgressionFilters(
+                      return ProgressionFilters(
                         isLoading: state.isLoading,
                         selection: state.selection,
                         onSelection: bloc.updateSelection,
