@@ -60,586 +60,573 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
             }
           },
           child: Scaffold(
-            body: SafeArea(
-              top: false,
-              child: CustomScrollView(
-                slivers: [
-                  SliverAppBar.medium(
-                    title: BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
-                      bloc: bloc,
-                      buildWhen: (previous, current) =>
-                          previous.isLoading != current.isLoading || //
-                          previous.task != current.task,
-                      builder: (context, state) {
-                        final task = state.task;
+            body: CustomScrollView(
+              slivers: [
+                SliverAppBar.medium(
+                  title: BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
+                    bloc: bloc,
+                    buildWhen: (previous, current) =>
+                        previous.isLoading != current.isLoading || //
+                        previous.task != current.task,
+                    builder: (context, state) {
+                      final task = state.task;
 
-                        return AppSkeleton(
-                          isLoading: state.isLoading,
-                          child: Row(
-                            spacing: AppSpacing.xs,
-                            children: [
-                              if (task?.completed ?? false)
-                                Container(
-                                  padding: const .all(AppSpacing.xxs),
-                                  decoration: BoxDecoration(
-                                    shape: .circle,
-                                    border: .all(
-                                      color: Colors.green,
-                                      width: 3,
-                                    ),
-                                  ),
-                                  child: const Icon(
-                                    Icons.check_rounded,
+                      return AppSkeleton(
+                        isLoading: state.isLoading,
+                        child: Row(
+                          spacing: AppSpacing.xs,
+                          children: [
+                            if (task?.completed ?? false)
+                              Container(
+                                padding: const .all(AppSpacing.xxs),
+                                decoration: BoxDecoration(
+                                  shape: .circle,
+                                  border: .all(
                                     color: Colors.green,
+                                    width: 3,
                                   ),
-                                ).animate().fade(),
-                              Flexible(
-                                child: Tooltip(
-                                  message: task?.title ?? '',
-                                  textStyle: theme.textTheme.titleMedium
-                                      ?.copyWith(
-                                        color: theme.colorScheme.onPrimary,
-                                      ),
-                                  waitDuration: const Duration(
-                                    milliseconds: 100,
-                                  ),
-                                  showDuration: const Duration(seconds: 4),
-                                  child: Text(
-                                    maxLines: 1,
-                                    overflow: .ellipsis,
-                                    task?.title ?? '',
-                                    style: theme.textTheme.headlineLarge
-                                        ?.copyWith(
-                                          color: (task?.isOverdue ?? false)
-                                              ? Colors.red
-                                              : theme.colorScheme.primary,
-                                        ),
-                                  ),
+                                ),
+                                child: const Icon(
+                                  Icons.check_rounded,
+                                  color: Colors.green,
                                 ),
                               ).animate().fade(),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                    actionsPadding: const .only(right: AppSpacing.s),
-                    actions: [
-                      BlocSelector<
-                        TaskDetailsCubit,
-                        TaskDetailsState,
-                        TaskResponse?
-                      >(
-                        bloc: bloc,
-                        selector: (state) => state.task,
-                        builder: (context, task) {
-                          if (task == null) return const SizedBox.shrink();
-
-                          return IconButton.filledTonal(
-                            tooltip: task.completed
-                                ? localization.pending
-                                : localization.completed,
-                            iconSize: 25,
-                            onPressed: () {
-                              HapticFeedback.heavyImpact();
-                              bloc.toggleComplete();
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStatePropertyAll(
-                                task.completed
-                                    ? Colors.orange.withValues(alpha: 0.7)
-                                    : Colors.green.withValues(alpha: 0.7),
-                              ),
-                              side: WidgetStatePropertyAll(
-                                BorderSide(
-                                  color: task.completed
-                                      ? Colors.orange.withValues(alpha: 1)
-                                      : Colors.green.withValues(alpha: 1),
-                                  width: 2,
+                            Flexible(
+                              child: Tooltip(
+                                message: task?.title ?? '',
+                                textStyle: theme.textTheme.titleMedium
+                                    ?.copyWith(
+                                      color: theme.colorScheme.onPrimary,
+                                    ),
+                                waitDuration: const Duration(
+                                  milliseconds: 100,
+                                ),
+                                showDuration: const Duration(seconds: 4),
+                                child: Text(
+                                  maxLines: 1,
+                                  overflow: .ellipsis,
+                                  task?.title ?? '',
+                                  style: theme.textTheme.headlineLarge
+                                      ?.copyWith(
+                                        color: (task?.isOverdue ?? false)
+                                            ? Colors.red
+                                            : theme.colorScheme.primary,
+                                      ),
                                 ),
                               ),
-                            ),
-                            icon: Icon(
-                              task.completed ? Icons.close : Icons.check,
-                              color: Colors.white,
-                            ),
-                          ).animate().fade(delay: 100.ms);
-                        },
-                      ),
-                    ],
-                    bottom: PreferredSize(
-                      preferredSize: const Size(0, AppSpacing.s),
-                      child:
-                          BlocSelector<
-                            TaskDetailsCubit,
-                            TaskDetailsState,
-                            bool
-                          >(
-                            bloc: bloc,
-                            selector: (state) =>
-                                state.isLoading || state.isRefreshing,
-                            builder: (context, isLoading) => isLoading
-                                ? const LinearProgressIndicator()
-                                : const SizedBox.shrink(),
-                          ),
-                    ),
-                  ),
-                  SliverPadding(
-                    padding: const .all(AppSpacing.s),
-                    sliver: SliverToBoxAdapter(
-                      child: Column(
-                        crossAxisAlignment: .stretch,
-                        children: [
-                          BlocSelector<
-                            TaskDetailsCubit,
-                            TaskDetailsState,
-                            TaskResponse?
-                          >(
-                            bloc: bloc,
-                            selector: (state) => state.task,
-                            builder: (context, task) {
-                              if (task == null) return const SizedBox.shrink();
-
-                              final currentUserId = bloc.currentUser.id;
-                              final isOwner = task.owner.id == currentUserId;
-                              final isAssignee = task.assignedTo.any(
-                                (assignee) => assignee.id == currentUserId,
-                              );
-
-                              return Column(
-                                spacing: AppSpacing.xxs,
-                                crossAxisAlignment: .stretch,
-                                children: [
-                                  Text(
-                                    localization.actions,
-                                    style: theme.textTheme.bodyLarge,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: .spaceBetween,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          IconButton.filled(
-                                            tooltip:
-                                                localization.duplicate_task,
-                                            iconSize: 25,
-                                            onPressed: isOwner || isAssignee
-                                                ? () async {
-                                                    await _duplicateTask(
-                                                      context,
-                                                      task,
-                                                    );
-                                                  }
-                                                : null,
-                                            icon: Icon(
-                                              Icons.copy_all_rounded,
-                                              color:
-                                                  theme.colorScheme.onPrimary,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: AppSpacing.s,
-                                            child: VerticalDivider(
-                                              width: AppSpacing.s,
-                                              color: theme
-                                                  .colorScheme
-                                                  .onPrimaryContainer,
-                                            ),
-                                          ),
-                                          IconButton.filledTonal(
-                                            tooltip: localization.edit_task,
-                                            iconSize: 25,
-                                            onPressed: isOwner || isAssignee
-                                                ? () async {
-                                                    await _editTask(
-                                                      context,
-                                                      task,
-                                                    );
-                                                  }
-                                                : null,
-                                            icon: Icon(
-                                              Icons.edit_outlined,
-                                              color: theme
-                                                  .colorScheme
-                                                  .onPrimaryContainer,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      IconButton.outlined(
-                                        tooltip: localization.delete_task,
-                                        iconSize: 25,
-                                        onPressed: isOwner || isAssignee
-                                            ? () {
-                                                HapticFeedback.heavyImpact();
-                                                bloc.toggleDeleteDialog();
-                                              }
-                                            : null,
-                                        icon: const Icon(
-                                          Icons.delete_outline,
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ).animate().fade(delay: 150.ms);
-                            },
-                          ),
-                          const Gap(AppSpacing.s),
-                          BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
-                            bloc: bloc,
-                            buildWhen: (previous, current) =>
-                                previous.isLoading != current.isLoading || //
-                                previous.task != current.task,
-                            builder: (context, state) {
-                              final task = state.task;
-
-                              if (state.isLoading || task == null) {
-                                return const AppSkeleton(
-                                  isLoading: true,
-                                  child: SizedBox(
-                                    height: 50,
-                                    width: .infinity,
-                                  ),
-                                );
-                              }
-
-                              return Wrap(
-                                spacing: AppSpacing.s,
-                                runSpacing: AppSpacing.s,
-                                alignment: WrapAlignment.start,
-                                children: [
-                                  Chip(
-                                    label: Text(
-                                      switch (task.priority) {
-                                        .low => localization.low,
-                                        .medium => localization.medium,
-                                        .high => localization.high,
-                                      },
-                                      style: theme.textTheme.titleSmall
-                                          ?.copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: .circular(AppSpacing.xs),
-                                    ),
-                                    padding: const .all(AppSpacing.xs),
-                                    backgroundColor: task.priority.color,
-                                    side: .none,
-                                  ),
-                                  Chip(
-                                    label: Text(
-                                      switch (task.status) {
-                                        .todo => localization.to_do,
-                                        .inProgress => localization.in_progress,
-                                        .done => localization.done,
-                                      },
-                                      style: theme.textTheme.titleSmall
-                                          ?.copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: .circular(AppSpacing.xs),
-                                    ),
-                                    padding: const .all(AppSpacing.xs),
-                                    backgroundColor: task.status.color,
-                                    side: .none,
-                                  ),
-                                  if (task.recurring) ...[
-                                    Tooltip(
-                                      message:
-                                          '${localization.ending_on}: ${task.formatteRecurrenceEndDate ?? localization.never}',
-                                      child: Chip(
-                                        avatar: const Icon(
-                                          Icons.info_outline_rounded,
-                                        ),
-                                        label: Text(
-                                          switch (task.recurrencePattern) {
-                                            .daily =>
-                                              localization.recurrence_daily,
-                                            .weekly =>
-                                              localization.recurrence_weekly,
-                                            .monthly =>
-                                              localization.recurrence_monthly,
-                                            _ => localization.never,
-                                          },
-                                          style: theme.textTheme.titleMedium
-                                              ?.copyWith(
-                                                color: theme
-                                                    .colorScheme
-                                                    .onPrimaryContainer,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: .circular(
-                                            100,
-                                          ),
-                                        ),
-                                        padding: const .all(
-                                          AppSpacing.xs,
-                                        ),
-                                        backgroundColor:
-                                            theme.colorScheme.primaryContainer,
-                                        side: .none,
-                                      ),
-                                    ),
-                                  ],
-                                ],
-                              ).animate().fade(delay: 150.ms);
-                            },
-                          ),
-                          const Gap(AppSpacing.s),
-                          BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
-                            bloc: bloc,
-                            buildWhen: (previous, current) =>
-                                previous.isLoading != current.isLoading || //
-                                previous.task != current.task,
-                            builder: (context, state) {
-                              final task = state.task;
-
-                              if (state.isLoading || task == null) {
-                                return const AppSkeleton(
-                                  isLoading: true,
-                                  child: SizedBox(
-                                    height: 20,
-                                    width: .infinity,
-                                  ),
-                                );
-                              }
-
-                              return Text(
-                                '${localization.due_by}: ${task.formattedDueDate}',
-                                style: theme.textTheme.bodyLarge?.copyWith(
-                                  color: task.isOverdue ? Colors.red : null,
-                                  fontWeight: task.isOverdue
-                                      ? FontWeight.bold
-                                      : null,
-                                ),
-                              ).animate().fade(delay: 200.ms);
-                            },
-                          ),
-                          const Gap(AppSpacing.s),
-                          const Divider(),
-                          const Gap(AppSpacing.s),
-                          BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
-                            bloc: bloc,
-                            buildWhen: (previous, current) =>
-                                previous.isLoading != current.isLoading || //
-                                previous.task != current.task,
-                            builder: (context, state) {
-                              final task = state.task;
-
-                              if (state.isLoading || task == null) {
-                                return const AppSkeleton(
-                                  isLoading: true,
-                                  child: SizedBox(
-                                    height: 40,
-                                    width: .infinity,
-                                  ),
-                                );
-                              }
-
-                              if (task.assignedTo.isEmpty) {
-                                return const Wrap(
-                                  spacing: AppSpacing.xs,
-                                  children: [
-                                    CircleAvatar(child: Icon(Icons.close)),
-                                  ],
-                                ).animate().fade(delay: 200.ms);
-                              }
-
-                              return Wrap(
-                                spacing: AppSpacing.xs,
-                                children: task.assignedTo
-                                    .map(
-                                      (assignee) => CircleAvatar(
-                                        child: Text(assignee.initials),
-                                      ),
-                                    )
-                                    .toList(),
-                              ).animate().fade(delay: 200.ms);
-                            },
-                          ),
-                          const Gap(AppSpacing.m),
-                          BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
-                            bloc: bloc,
-                            buildWhen: (previous, current) =>
-                                previous.isLoading != current.isLoading || //
-                                previous.task != current.task,
-                            builder: (context, state) {
-                              final task = state.task;
-
-                              if (state.isLoading || task == null) {
-                                return const AppSkeleton(
-                                  isLoading: true,
-                                  child: SizedBox(
-                                    height: 150,
-                                    width: .infinity,
-                                  ),
-                                );
-                              }
-
-                              return Text(
-                                task.description ?? localization.no_description,
-                                style: theme.textTheme.bodyLarge,
-                              ).animate().fade(delay: 250.ms);
-                            },
-                          ),
-                          BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
-                            bloc: bloc,
-                            buildWhen: (previous, current) =>
-                                previous.isLoading != current.isLoading || //
-                                previous.task?.checklist !=
-                                    current.task?.checklist,
-                            builder: (context, state) {
-                              return TaskChecklist(
-                                isLoading: state.isLoading,
-                                task: state.task,
-                                onReorder: bloc.reorderChecklistItemOrder,
-                                onStatusChanged:
-                                    (item, position, status) async {
-                                      await bloc.updateChecklistItemStatus(
-                                        item: item,
-                                        position: position,
-                                        status: status,
-                                      );
-                                    },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SliverToBoxAdapter(
-                    child: Divider(
-                      indent: AppSpacing.s,
-                      endIndent: AppSpacing.s,
-                    ),
-                  ),
-                  AppSliverHeaderWrapper.pinned(
-                    maxSize: 140,
-                    padding: 0,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: theme.scaffoldBackgroundColor,
-                      ),
-                      child: Column(
-                        spacing: AppSpacing.xs,
-                        crossAxisAlignment: .stretch,
-                        children: [
-                          Padding(
-                            padding: const .fromLTRB(
-                              AppSpacing.s,
-                              AppSpacing.s,
-                              AppSpacing.s,
-                              0,
-                            ),
-                            child: Text(localization.comments),
-                          ),
-                          Padding(
-                            padding: const .symmetric(
-                              horizontal: AppSpacing.s,
-                            ),
-                            child: Row(
-                              spacing: AppSpacing.s,
-                              children: [
-                                Flexible(
-                                  child:
-                                      BlocSelector<
-                                        TaskDetailsCubit,
-                                        TaskDetailsState,
-                                        String
-                                      >(
-                                        bloc: bloc,
-                                        selector: (state) => state.comment,
-                                        builder: (context, comment) {
-                                          return AppTextField(
-                                            label: localization.comment,
-                                            initialValue: comment,
-                                            onChanged: bloc.updateComment,
-                                          );
-                                        },
-                                      ),
-                                ),
-                                BlocSelector<
-                                  TaskDetailsCubit,
-                                  TaskDetailsState,
-                                  bool
-                                >(
-                                  bloc: bloc,
-                                  selector: (state) => state.canSubmit,
-                                  builder: (context, canSubmit) {
-                                    return IconButton.filled(
-                                      onPressed: canSubmit
-                                          ? bloc.createComment
-                                          : null,
-                                      icon: const Icon(Icons.send),
-                                      padding: const .all(
-                                        AppSpacing.s,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                          BlocSelector<
-                            TaskDetailsCubit,
-                            TaskDetailsState,
-                            bool
-                          >(
-                            bloc: bloc,
-                            selector: (state) => state.isLoadingComments,
-                            builder: (context, isLoadingComments) {
-                              return Padding(
-                                padding: const .symmetric(
-                                  vertical: AppSpacing.xxs,
-                                ),
-                                child: SizedBox(
-                                  child: isLoadingComments
-                                      ? const LinearProgressIndicator()
-                                      : null,
-                                ),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
-                    bloc: bloc,
-                    builder: (context, state) {
-                      if (state.comments.isEmpty) {
-                        return SliverToBoxAdapter(
-                          child: Center(child: Text(localization.no_comments)),
-                        );
-                      }
-
-                      return SliverList.separated(
-                        itemCount: state.comments.length,
-                        itemBuilder: (context, position) {
-                          final comment = state.comments[position];
-                          return CommentItem(
-                            comment: comment,
-                            canDelete: comment.owner.id == bloc.currentUser.id,
-                            onDelete: () async {
-                              await bloc.deleteComment(comment.id);
-                            },
-                          );
-                        },
-                        separatorBuilder: (context, index) => const Divider(),
+                            ).animate().fade(),
+                          ],
+                        ),
                       );
                     },
                   ),
-                  SliverFillRemaining(
-                    hasScrollBody: false,
+                  actionsPadding: const .only(right: AppSpacing.s),
+                  actions: [
+                    BlocSelector<
+                      TaskDetailsCubit,
+                      TaskDetailsState,
+                      TaskResponse?
+                    >(
+                      bloc: bloc,
+                      selector: (state) => state.task,
+                      builder: (context, task) {
+                        if (task == null) return const SizedBox.shrink();
+
+                        return IconButton.filledTonal(
+                          tooltip: task.completed
+                              ? localization.pending
+                              : localization.completed,
+                          iconSize: 25,
+                          onPressed: () {
+                            HapticFeedback.heavyImpact();
+                            bloc.toggleComplete();
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStatePropertyAll(
+                              task.completed
+                                  ? Colors.orange.withValues(alpha: 0.7)
+                                  : Colors.green.withValues(alpha: 0.7),
+                            ),
+                            side: WidgetStatePropertyAll(
+                              BorderSide(
+                                color: task.completed
+                                    ? Colors.orange.withValues(alpha: 1)
+                                    : Colors.green.withValues(alpha: 1),
+                                width: 2,
+                              ),
+                            ),
+                          ),
+                          icon: Icon(
+                            task.completed ? Icons.close : Icons.check,
+                            color: Colors.white,
+                          ),
+                        ).animate().fade(delay: 100.ms);
+                      },
+                    ),
+                  ],
+                  bottom: PreferredSize(
+                    preferredSize: const Size(0, AppSpacing.s),
+                    child:
+                        BlocSelector<TaskDetailsCubit, TaskDetailsState, bool>(
+                          bloc: bloc,
+                          selector: (state) =>
+                              state.isLoading || state.isRefreshing,
+                          builder: (context, isLoading) => isLoading
+                              ? const LinearProgressIndicator()
+                              : const SizedBox.shrink(),
+                        ),
+                  ),
+                ),
+                SliverPadding(
+                  padding: const .all(AppSpacing.s),
+                  sliver: SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: .stretch,
+                      children: [
+                        BlocSelector<
+                          TaskDetailsCubit,
+                          TaskDetailsState,
+                          TaskResponse?
+                        >(
+                          bloc: bloc,
+                          selector: (state) => state.task,
+                          builder: (context, task) {
+                            if (task == null) return const SizedBox.shrink();
+
+                            final currentUserId = bloc.currentUser.id;
+                            final isOwner = task.owner.id == currentUserId;
+                            final isAssignee = task.assignedTo.any(
+                              (assignee) => assignee.id == currentUserId,
+                            );
+
+                            return Column(
+                              spacing: AppSpacing.xxs,
+                              crossAxisAlignment: .stretch,
+                              children: [
+                                Text(
+                                  localization.actions,
+                                  style: theme.textTheme.bodyLarge,
+                                ),
+                                Row(
+                                  mainAxisAlignment: .spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        IconButton.filled(
+                                          tooltip: localization.duplicate_task,
+                                          iconSize: 25,
+                                          onPressed: isOwner || isAssignee
+                                              ? () async {
+                                                  await _duplicateTask(
+                                                    context,
+                                                    task,
+                                                  );
+                                                }
+                                              : null,
+                                          icon: Icon(
+                                            Icons.copy_all_rounded,
+                                            color: theme.colorScheme.onPrimary,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: AppSpacing.s,
+                                          child: VerticalDivider(
+                                            width: AppSpacing.s,
+                                            color: theme
+                                                .colorScheme
+                                                .onPrimaryContainer,
+                                          ),
+                                        ),
+                                        IconButton.filledTonal(
+                                          tooltip: localization.edit_task,
+                                          iconSize: 25,
+                                          onPressed: isOwner || isAssignee
+                                              ? () async {
+                                                  await _editTask(
+                                                    context,
+                                                    task,
+                                                  );
+                                                }
+                                              : null,
+                                          icon: Icon(
+                                            Icons.edit_outlined,
+                                            color: theme
+                                                .colorScheme
+                                                .onPrimaryContainer,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    IconButton.outlined(
+                                      tooltip: localization.delete_task,
+                                      iconSize: 25,
+                                      onPressed: isOwner || isAssignee
+                                          ? () {
+                                              HapticFeedback.heavyImpact();
+                                              bloc.toggleDeleteDialog();
+                                            }
+                                          : null,
+                                      icon: const Icon(
+                                        Icons.delete_outline,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ).animate().fade(delay: 150.ms);
+                          },
+                        ),
+                        const Gap(AppSpacing.s),
+                        BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
+                          bloc: bloc,
+                          buildWhen: (previous, current) =>
+                              previous.isLoading != current.isLoading || //
+                              previous.task != current.task,
+                          builder: (context, state) {
+                            final task = state.task;
+
+                            if (state.isLoading || task == null) {
+                              return const AppSkeleton(
+                                isLoading: true,
+                                child: SizedBox(
+                                  height: 50,
+                                  width: .infinity,
+                                ),
+                              );
+                            }
+
+                            return Wrap(
+                              spacing: AppSpacing.s,
+                              runSpacing: AppSpacing.s,
+                              alignment: WrapAlignment.start,
+                              children: [
+                                Chip(
+                                  label: Text(
+                                    switch (task.priority) {
+                                      .low => localization.low,
+                                      .medium => localization.medium,
+                                      .high => localization.high,
+                                    },
+                                    style: theme.textTheme.titleSmall?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: .circular(AppSpacing.xs),
+                                  ),
+                                  padding: const .all(AppSpacing.xs),
+                                  backgroundColor: task.priority.color,
+                                  side: .none,
+                                ),
+                                Chip(
+                                  label: Text(
+                                    switch (task.status) {
+                                      .todo => localization.to_do,
+                                      .inProgress => localization.in_progress,
+                                      .done => localization.done,
+                                    },
+                                    style: theme.textTheme.titleSmall?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: .circular(AppSpacing.xs),
+                                  ),
+                                  padding: const .all(AppSpacing.xs),
+                                  backgroundColor: task.status.color,
+                                  side: .none,
+                                ),
+                                if (task.recurring) ...[
+                                  Tooltip(
+                                    message:
+                                        '${localization.ending_on}: ${task.formatteRecurrenceEndDate ?? localization.never}',
+                                    child: Chip(
+                                      avatar: const Icon(
+                                        Icons.info_outline_rounded,
+                                      ),
+                                      label: Text(
+                                        switch (task.recurrencePattern) {
+                                          .daily =>
+                                            localization.recurrence_daily,
+                                          .weekly =>
+                                            localization.recurrence_weekly,
+                                          .monthly =>
+                                            localization.recurrence_monthly,
+                                          _ => localization.never,
+                                        },
+                                        style: theme.textTheme.titleMedium
+                                            ?.copyWith(
+                                              color: theme
+                                                  .colorScheme
+                                                  .onPrimaryContainer,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: .circular(
+                                          100,
+                                        ),
+                                      ),
+                                      padding: const .all(
+                                        AppSpacing.xs,
+                                      ),
+                                      backgroundColor:
+                                          theme.colorScheme.primaryContainer,
+                                      side: .none,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ).animate().fade(delay: 150.ms);
+                          },
+                        ),
+                        const Gap(AppSpacing.s),
+                        BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
+                          bloc: bloc,
+                          buildWhen: (previous, current) =>
+                              previous.isLoading != current.isLoading || //
+                              previous.task != current.task,
+                          builder: (context, state) {
+                            final task = state.task;
+
+                            if (state.isLoading || task == null) {
+                              return const AppSkeleton(
+                                isLoading: true,
+                                child: SizedBox(
+                                  height: 20,
+                                  width: .infinity,
+                                ),
+                              );
+                            }
+
+                            return Text(
+                              '${localization.due_by}: ${task.formattedDueDate}',
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                color: task.isOverdue ? Colors.red : null,
+                                fontWeight: task.isOverdue
+                                    ? FontWeight.bold
+                                    : null,
+                              ),
+                            ).animate().fade(delay: 200.ms);
+                          },
+                        ),
+                        const Gap(AppSpacing.s),
+                        const Divider(),
+                        const Gap(AppSpacing.s),
+                        BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
+                          bloc: bloc,
+                          buildWhen: (previous, current) =>
+                              previous.isLoading != current.isLoading || //
+                              previous.task != current.task,
+                          builder: (context, state) {
+                            final task = state.task;
+
+                            if (state.isLoading || task == null) {
+                              return const AppSkeleton(
+                                isLoading: true,
+                                child: SizedBox(
+                                  height: 40,
+                                  width: .infinity,
+                                ),
+                              );
+                            }
+
+                            if (task.assignedTo.isEmpty) {
+                              return const Wrap(
+                                spacing: AppSpacing.xs,
+                                children: [
+                                  CircleAvatar(child: Icon(Icons.close)),
+                                ],
+                              ).animate().fade(delay: 200.ms);
+                            }
+
+                            return Wrap(
+                              spacing: AppSpacing.xs,
+                              children: task.assignedTo
+                                  .map(
+                                    (assignee) => CircleAvatar(
+                                      child: Text(assignee.initials),
+                                    ),
+                                  )
+                                  .toList(),
+                            ).animate().fade(delay: 200.ms);
+                          },
+                        ),
+                        const Gap(AppSpacing.m),
+                        BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
+                          bloc: bloc,
+                          buildWhen: (previous, current) =>
+                              previous.isLoading != current.isLoading || //
+                              previous.task != current.task,
+                          builder: (context, state) {
+                            final task = state.task;
+
+                            if (state.isLoading || task == null) {
+                              return const AppSkeleton(
+                                isLoading: true,
+                                child: SizedBox(
+                                  height: 150,
+                                  width: .infinity,
+                                ),
+                              );
+                            }
+
+                            return Text(
+                              task.description ?? localization.no_description,
+                              style: theme.textTheme.bodyLarge,
+                            ).animate().fade(delay: 250.ms);
+                          },
+                        ),
+                        BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
+                          bloc: bloc,
+                          buildWhen: (previous, current) =>
+                              previous.isLoading != current.isLoading || //
+                              previous.task?.checklist !=
+                                  current.task?.checklist,
+                          builder: (context, state) {
+                            return TaskChecklist(
+                              isLoading: state.isLoading,
+                              task: state.task,
+                              onReorder: bloc.reorderChecklistItemOrder,
+                              onStatusChanged: (item, position, status) async {
+                                await bloc.updateChecklistItemStatus(
+                                  item: item,
+                                  position: position,
+                                  status: status,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SliverToBoxAdapter(
+                  child: Divider(
+                    indent: AppSpacing.s,
+                    endIndent: AppSpacing.s,
+                  ),
+                ),
+                AppSliverHeaderWrapper.pinned(
+                  maxSize: 140,
+                  padding: 0,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: theme.scaffoldBackgroundColor,
+                    ),
+                    child: Column(
+                      spacing: AppSpacing.xs,
+                      crossAxisAlignment: .stretch,
+                      children: [
+                        Padding(
+                          padding: const .fromLTRB(
+                            AppSpacing.s,
+                            AppSpacing.s,
+                            AppSpacing.s,
+                            0,
+                          ),
+                          child: Text(localization.comments),
+                        ),
+                        Padding(
+                          padding: const .symmetric(
+                            horizontal: AppSpacing.s,
+                          ),
+                          child: Row(
+                            spacing: AppSpacing.s,
+                            children: [
+                              Flexible(
+                                child:
+                                    BlocSelector<
+                                      TaskDetailsCubit,
+                                      TaskDetailsState,
+                                      String
+                                    >(
+                                      bloc: bloc,
+                                      selector: (state) => state.comment,
+                                      builder: (context, comment) {
+                                        return AppTextField(
+                                          label: localization.comment,
+                                          initialValue: comment,
+                                          onChanged: bloc.updateComment,
+                                        );
+                                      },
+                                    ),
+                              ),
+                              BlocSelector<
+                                TaskDetailsCubit,
+                                TaskDetailsState,
+                                bool
+                              >(
+                                bloc: bloc,
+                                selector: (state) => state.canSubmit,
+                                builder: (context, canSubmit) {
+                                  return IconButton.filled(
+                                    onPressed: canSubmit
+                                        ? bloc.createComment
+                                        : null,
+                                    icon: const Icon(Icons.send),
+                                    padding: const .all(
+                                      AppSpacing.s,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        BlocSelector<TaskDetailsCubit, TaskDetailsState, bool>(
+                          bloc: bloc,
+                          selector: (state) => state.isLoadingComments,
+                          builder: (context, isLoadingComments) {
+                            return Padding(
+                              padding: const .symmetric(
+                                vertical: AppSpacing.xxs,
+                              ),
+                              child: SizedBox(
+                                child: isLoadingComments
+                                    ? const LinearProgressIndicator()
+                                    : null,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                BlocBuilder<TaskDetailsCubit, TaskDetailsState>(
+                  bloc: bloc,
+                  builder: (context, state) {
+                    if (state.comments.isEmpty) {
+                      return SliverToBoxAdapter(
+                        child: Center(child: Text(localization.no_comments)),
+                      );
+                    }
+
+                    return SliverList.separated(
+                      itemCount: state.comments.length,
+                      itemBuilder: (context, position) {
+                        final comment = state.comments[position];
+                        return CommentItem(
+                          comment: comment,
+                          canDelete: comment.owner.id == bloc.currentUser.id,
+                          onDelete: () async {
+                            await bloc.deleteComment(comment.id);
+                          },
+                        );
+                      },
+                      separatorBuilder: (context, index) => const Divider(),
+                    );
+                  },
+                ),
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: SafeArea(
+                    top: false,
                     child: Padding(
                       padding: .fromLTRB(
                         AppSpacing.s,
@@ -729,8 +716,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
