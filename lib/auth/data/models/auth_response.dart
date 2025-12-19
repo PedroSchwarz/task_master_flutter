@@ -8,11 +8,13 @@ abstract class AuthResponse with _$AuthResponse {
   const factory AuthResponse({
     required String id,
     @JsonKey(name: 'access_token') required String accessToken,
+    @JsonKey(name: 'refresh_token') required String refreshToken,
     required String firstName,
     required String lastName,
     required String email,
     required DateTime createdAt,
   }) = _AuthResponse;
 
-  factory AuthResponse.fromJson(Map<String, dynamic> json) => _$AuthResponseFromJson(json);
+  factory AuthResponse.fromJson(Map<String, dynamic> json) =>
+      _$AuthResponseFromJson(json);
 }
