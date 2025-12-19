@@ -40,12 +40,14 @@ class DashboardHighlights extends StatelessWidget {
               Expanded(
                 child: AppSkeleton(
                   isLoading: isLoading,
+                  radius: AppSpacing.xs,
                   child: UpcomingTasksListSheet(tasks: upcomingTasks),
                 ),
               ),
               Expanded(
                 child: AppSkeleton(
                   isLoading: isLoading,
+                  radius: AppSpacing.xs,
                   child: OverdueTasksListSheet(tasks: overdueTasks),
                 ),
               ),

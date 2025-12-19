@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -7,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
 import 'package:task_master/app/app.dart';
 import 'package:task_master/progress/progress.dart';
-import 'package:task_master/progress/ui/view/components/progression_item_chart.dart';
 import 'package:task_master/tasks/data/models/task_values.dart';
 
 class ProgressionScreen extends StatefulWidget {
@@ -61,30 +58,12 @@ class _ProgressionScreenState extends State<ProgressionScreen> {
                   bloc: bloc,
                   selector: (state) => state.selection,
                   builder: (context, selection) {
-                    return Padding(
-                      padding: .fromLTRB(
-                        AppSpacing.s,
-                        AppSpacing.s,
-                        AppSpacing.s,
-                        Platform.isMacOS ? AppSpacing.s : 0,
-                      ),
-                      child: Row(
-                        spacing: AppSpacing.s,
-                        children: TaskProgressionSelection.values.map((
-                          progression,
-                        ) {
-                          return ChoiceChip(
-                            label: Text(switch (progression) {
-                              .assigned => localization.filter_assigned,
-                              .owned => localization.filter_owned,
-                            }),
-                            selected: progression == selection,
-                            onSelected: (_) {
-                              bloc.updateSelection(progression);
-                            },
-                          );
-                        }).toList(),
-                      ),
+                    return ProgressionFilters(
+                      isLoading: false,
+                      selection: selection,
+                      onSelection: (selection) {
+                        bloc.updateSelection(selection);
+                      },
                     ).animate().fade(delay: 100.ms);
                   },
                 ),

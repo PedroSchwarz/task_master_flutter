@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CredentialsData {
 
- String get accessToken;
+ String get accessToken; String get refreshToken;
 /// Create a copy of CredentialsData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CredentialsDataCopyWith<CredentialsData> get copyWith => _$CredentialsDataCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CredentialsData&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CredentialsData&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accessToken);
+int get hashCode => Object.hash(runtimeType,accessToken,refreshToken);
 
 @override
 String toString() {
-  return 'CredentialsData(accessToken: $accessToken)';
+  return 'CredentialsData(accessToken: $accessToken, refreshToken: $refreshToken)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CredentialsDataCopyWith<$Res>  {
   factory $CredentialsDataCopyWith(CredentialsData value, $Res Function(CredentialsData) _then) = _$CredentialsDataCopyWithImpl;
 @useResult
 $Res call({
- String accessToken
+ String accessToken, String refreshToken
 });
 
 
@@ -65,9 +65,10 @@ class _$CredentialsDataCopyWithImpl<$Res>
 
 /// Create a copy of CredentialsData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? accessToken = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? accessToken = null,Object? refreshToken = null,}) {
   return _then(_self.copyWith(
 accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
+as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -153,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String accessToken)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String accessToken,  String refreshToken)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CredentialsData() when $default != null:
-return $default(_that.accessToken);case _:
+return $default(_that.accessToken,_that.refreshToken);case _:
   return orElse();
 
 }
@@ -174,10 +175,10 @@ return $default(_that.accessToken);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String accessToken)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String accessToken,  String refreshToken)  $default,) {final _that = this;
 switch (_that) {
 case _CredentialsData():
-return $default(_that.accessToken);case _:
+return $default(_that.accessToken,_that.refreshToken);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +195,10 @@ return $default(_that.accessToken);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String accessToken)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String accessToken,  String refreshToken)?  $default,) {final _that = this;
 switch (_that) {
 case _CredentialsData() when $default != null:
-return $default(_that.accessToken);case _:
+return $default(_that.accessToken,_that.refreshToken);case _:
   return null;
 
 }
@@ -209,10 +210,11 @@ return $default(_that.accessToken);case _:
 @JsonSerializable()
 
 class _CredentialsData implements CredentialsData {
-  const _CredentialsData({required this.accessToken});
+  const _CredentialsData({required this.accessToken, required this.refreshToken});
   factory _CredentialsData.fromJson(Map<String, dynamic> json) => _$CredentialsDataFromJson(json);
 
 @override final  String accessToken;
+@override final  String refreshToken;
 
 /// Create a copy of CredentialsData
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CredentialsData&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CredentialsData&&(identical(other.accessToken, accessToken) || other.accessToken == accessToken)&&(identical(other.refreshToken, refreshToken) || other.refreshToken == refreshToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accessToken);
+int get hashCode => Object.hash(runtimeType,accessToken,refreshToken);
 
 @override
 String toString() {
-  return 'CredentialsData(accessToken: $accessToken)';
+  return 'CredentialsData(accessToken: $accessToken, refreshToken: $refreshToken)';
 }
 
 
@@ -247,7 +249,7 @@ abstract mixin class _$CredentialsDataCopyWith<$Res> implements $CredentialsData
   factory _$CredentialsDataCopyWith(_CredentialsData value, $Res Function(_CredentialsData) _then) = __$CredentialsDataCopyWithImpl;
 @override @useResult
 $Res call({
- String accessToken
+ String accessToken, String refreshToken
 });
 
 
@@ -264,9 +266,10 @@ class __$CredentialsDataCopyWithImpl<$Res>
 
 /// Create a copy of CredentialsData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? accessToken = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? accessToken = null,Object? refreshToken = null,}) {
   return _then(_CredentialsData(
 accessToken: null == accessToken ? _self.accessToken : accessToken // ignore: cast_nullable_to_non_nullable
+as String,refreshToken: null == refreshToken ? _self.refreshToken : refreshToken // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

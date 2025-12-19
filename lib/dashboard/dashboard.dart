@@ -5,6 +5,5 @@ export './ui/cubit/dashboard_cubit.dart';
 export './ui/view/components/dashboard_highlights.dart';
 export './ui/view/components/dashboard_invites_button.dart';
 export './ui/view/components/dashboard_progression.dart';
-export './ui/view/components/dashboard_progression_filters.dart';
 export './ui/view/drawer/dashboard_drawer.dart';
 export './ui/view/screens/dashboard_screen.dart';

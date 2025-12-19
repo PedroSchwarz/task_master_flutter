@@ -653,43 +653,33 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                   },
                 ),
               ),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: SafeArea(
-                  top: false,
-                  child: Padding(
-                    padding: .fromLTRB(
-                      AppSpacing.s,
-                      AppSpacing.s,
-                      AppSpacing.s,
-                      Platform.isMacOS ? AppSpacing.s : 0,
-                    ),
-                    child: BlocBuilder<CreateTaskCubit, CreateTaskState>(
-                      bloc: bloc,
-                      buildWhen: (previous, current) =>
-                          previous.canSubmit != current.canSubmit || //
-                          previous.isUpdating != current.isUpdating,
-                      builder: (context, state) {
-                        return Column(
-                          crossAxisAlignment: .stretch,
-                          mainAxisAlignment: .end,
-                          children: [
-                            FilledButton(
-                              onPressed: state.canSubmit ? bloc.saveTask : null,
-                              child: Text(
-                                state.isUpdating
-                                    ? localization.update
-                                    : localization.create,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
             ],
+          ),
+          bottomNavigationBar: SafeArea(
+            child: Padding(
+              padding: .fromLTRB(
+                AppSpacing.s,
+                AppSpacing.s,
+                AppSpacing.s,
+                Platform.isMacOS ? AppSpacing.s : 0,
+              ),
+              child: BlocBuilder<CreateTaskCubit, CreateTaskState>(
+                bloc: bloc,
+                buildWhen: (previous, current) =>
+                    previous.canSubmit != current.canSubmit || //
+                    previous.isUpdating != current.isUpdating,
+                builder: (context, state) {
+                  return FilledButton(
+                    onPressed: state.canSubmit ? bloc.saveTask : null,
+                    child: Text(
+                      state.isUpdating
+                          ? localization.update
+                          : localization.create,
+                    ),
+                  );
+                },
+              ),
+            ),
           ),
         ),
       ),

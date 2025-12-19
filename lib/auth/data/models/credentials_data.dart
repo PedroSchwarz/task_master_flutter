@@ -5,7 +5,11 @@ part 'credentials_data.g.dart';
 
 @freezed
 abstract class CredentialsData with _$CredentialsData {
-  const factory CredentialsData({required String accessToken}) = _CredentialsData;
+  const factory CredentialsData({
+    required String accessToken,
+    required String refreshToken,
+  }) = _CredentialsData;
 
-  factory CredentialsData.fromJson(Map<String, dynamic> json) => _$CredentialsDataFromJson(json);
+  factory CredentialsData.fromJson(Map<String, dynamic> json) =>
+      _$CredentialsDataFromJson(json);
 }

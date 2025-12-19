@@ -60,7 +60,6 @@ class Locators extends BaseServiceLocators {
         ),
         aOptions: AndroidOptions(
           sharedPreferencesName: 'task_master_secure_storage',
-          encryptedSharedPreferences: true,
         ),
       ),
     );

@@ -3,7 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:task_master/auth/auth.dart';
 
 class AuthInterceptor extends Interceptor {
-  const AuthInterceptor({required this.authRepository, required this.credentialsRepository, required this.dio});
+  const AuthInterceptor({
+    required this.authRepository,
+    required this.credentialsRepository,
+    required this.dio,
+  });
 
   @visibleForTesting
   final AuthRepository authRepository;
@@ -15,7 +19,10 @@ class AuthInterceptor extends Interceptor {
   final Dio dio;
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
     final credentials = await credentialsRepository.getCredentials();
 
     if (credentials != null) {
@@ -28,18 +35,22 @@ class AuthInterceptor extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
-      await authRepository.signOut();
-      // final newToken = await refreshToken();
-      // if (newToken != null) {
-      //   await saveToken(newToken);
+      try {
+        // Refresh the credentials
+        final refreshedCredentials = await authRepository.refreshToken();
+        await credentialsRepository.updateCredentials(refreshedCredentials);
 
-      //   // retry the original request
-      //   final clonedRequest = err.requestOptions;
-      //   clonedRequest.headers['Authorization'] = 'Bearer $newToken';
-      //   final response = await Dio().fetch(clonedRequest);
-      //   return handler.resolve(response);
-      // }
+        // Retry the original request
+        final clonedRequest = err.requestOptions;
+        clonedRequest.headers['Authorization'] =
+            'Bearer ${refreshedCredentials.accessToken}';
+        final response = await dio.fetch(clonedRequest);
+        return handler.resolve(response);
+      } catch (e) {
+        await authRepository.signOut();
+      }
     }
+
     return handler.next(err);
   }
 }
