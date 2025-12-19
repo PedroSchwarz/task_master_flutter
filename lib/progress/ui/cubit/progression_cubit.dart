@@ -34,15 +34,18 @@ class ProgressionCubit extends Cubit<ProgressionState> {
     final selection = await progressRepository.getProgressionSelection();
     emit(state.copyWith(selection: selection));
 
-    await loadProgression();
+    await loadProgression(selection: selection);
 
     emit(state.copyWith(isLoading: false));
   }
 
-  Future<void> loadProgression({int weeks = 4}) async {
+  Future<void> loadProgression({
+    required TaskProgressionSelection selection,
+    int weeks = 4,
+  }) async {
     try {
       final progression = await getTasksProgressionForWeeksUseCase(
-        selection: state.selection,
+        selection: selection,
         weeks: weeks,
       );
       emit(state.copyWith(progression: progression));
@@ -54,7 +57,7 @@ class ProgressionCubit extends Cubit<ProgressionState> {
   Future<void> updateSelection(TaskProgressionSelection selection) async {
     emit(state.copyWith(isRefreshing: true, selection: selection));
     await Future.wait([
-      loadProgression(),
+      loadProgression(selection: selection),
       progressRepository.setProgressionSelection(selection),
     ]);
     emit(state.copyWith(isRefreshing: false));
@@ -65,7 +68,7 @@ class ProgressionCubit extends Cubit<ProgressionState> {
 
     emit(state.copyWith(period: period));
 
-    await loadProgression(weeks: period.weeks);
+    await loadProgression(selection: state.selection, weeks: period.weeks);
 
     emit(state.copyWith(isRefreshing: false));
   }

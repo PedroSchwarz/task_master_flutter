@@ -106,7 +106,7 @@ class DashboardCubit extends Cubit<DashboardState> {
       final isInOverdue = overdueIds.any((taskId) => taskId == id);
 
       await Future.wait([
-        if (isInProgression) loadProgression(),
+        if (isInProgression) loadProgression(selection: state.selection),
         if (isInUpcoming) loadUpcomingTasks(),
         if (isInOverdue) loadOverdueTasks(),
       ]);
@@ -122,7 +122,7 @@ class DashboardCubit extends Cubit<DashboardState> {
       loadInvites(),
       loadUpcomingTasks(),
       loadOverdueTasks(),
-      loadProgression(),
+      loadProgression(selection: selection),
       usersRepository.updateDeviceToken(),
     ]);
 
@@ -136,7 +136,7 @@ class DashboardCubit extends Cubit<DashboardState> {
       loadInvites(),
       loadUpcomingTasks(),
       loadOverdueTasks(),
-      loadProgression(),
+      loadProgression(selection: state.selection),
     ]);
     emit(state.copyWith(isRefreshing: false));
   }
@@ -205,10 +205,12 @@ class DashboardCubit extends Cubit<DashboardState> {
     }
   }
 
-  Future<void> loadProgression() async {
+  Future<void> loadProgression({
+    required TaskProgressionSelection selection,
+  }) async {
     try {
       final progression = await getTasksProgressionForWeeksUseCase(
-        selection: state.selection,
+        selection: selection,
       );
       emit(state.copyWith(progression: progression));
     } catch (e) {
@@ -235,7 +237,7 @@ class DashboardCubit extends Cubit<DashboardState> {
   Future<void> updateSelection(TaskProgressionSelection selection) async {
     emit(state.copyWith(isRefreshing: true, selection: selection));
     await Future.wait([
-      loadProgression(),
+      loadProgression(selection: selection),
       progressRepository.setProgressionSelection(selection),
     ]);
     emit(state.copyWith(isRefreshing: false));
